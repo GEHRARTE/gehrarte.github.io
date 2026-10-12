@@ -1,0 +1,876 @@
+{
+ "id": "muvvi-site-xilogravura",
+ "nome": "MUVVI — site do museu (Xilogravura do Ivaí)",
+ "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Xilogravura do Ivaí: Tirada do ícone de patrimônio imaterial: vermelho das letras sobre papel de gravura, com o verde-água do rio no acento.",
+ "categoria": "MUVVI",
+ "tipo": "site",
+ "tema": {
+  "fundo": "#fbf6ec",
+  "texto": "#1d1a14",
+  "suave": "#5a5146",
+  "escuro": "#a8230f",
+  "sobreEscuro": "#ffffff",
+  "acento": "#1f6f66",
+  "sobreAcento": "#ffffff",
+  "superficie": "#f1e6d3",
+  "fonteTitulo": "Libre Caslon Text",
+  "fonteTexto": "Andika",
+  "raio": 14
+ },
+ "compartilhado": {
+  "topo": [
+   {
+    "tipo": "topo",
+    "marca": "MUVVI",
+    "logo": {
+     "rotulo": "Logomarca MUVVI",
+     "altura": 44,
+     "proporcao": 3.45,
+     "sozinha": true
+    },
+    "abas": true
+   }
+  ],
+  "rodape": [
+   {
+    "tipo": "rodape",
+    "texto": "MUVVI · Museu Virtual do Vale do Ivaí\nProjeto de extensão Patrimônio em Diálogo — LAEE, curso de História, UEM / Campus Regional do Vale do Ivaí\nmuseuvirtualdovaledoivai@gmail.com",
+    "links": [
+     {
+      "rotulo": "Material da equipe",
+      "aba": "material"
+     },
+     {
+      "rotulo": "Painel administrativo",
+      "href": "https://gehrarte.github.io/editor/"
+     }
+    ]
+   }
+  ]
+ },
+ "abas": [
+  {
+   "id": "inicio",
+   "nome": "Início",
+   "titulo": "Início",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Museu Virtual do Vale do Ivaí",
+     "titulo": "O que faz você pertencer ao Vale do Ivaí?",
+     "texto": "Uma paisagem, um rio, uma construção, uma festa, uma lembrança de infância? Quais lugares, objetos, saberes e histórias fazem parte da sua memória e ajudam a construir sua relação com esse território?",
+     "imagem": true,
+     "imagemRotulo": "Arte de abertura",
+     "botao": {
+      "rotulo": "Conhecer o museu",
+      "aba": "sobre"
+     }
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Foi a partir dessas perguntas, propostas aos estudantes do primeiro ano do curso de História da Universidade Estadual de Maringá (UEM), no Campus Regional do Vale do Ivaí (CRV), durante a disciplina de Patrimônio Cultural, entre 2025 e 2026, que nasceu a ideia do Museu Virtual do Vale do Ivaí (MUVVI).",
+      "As reflexões produzidas em sala de aula revelaram a importância de olhar para o Vale do Ivaí a partir das referências culturais das pessoas que nele vivem, reconhecendo a diversidade de experiências, memórias e identidades que constituem sua paisagem cultural.",
+      "O MUVVI nasceu, assim, como uma proposta de museu colaborativo, dedicado à identificação, à documentação, à pesquisa e à divulgação do patrimônio cultural e natural do Vale do Ivaí.",
+      "Entendemos que o patrimônio não se limita aos grandes monumentos, às construções antigas ou aos bens oficialmente reconhecidos. Ele também está presente nos lugares cotidianos, nos objetos guardados pelas famílias, nas celebrações, nos saberes transmitidos entre gerações, nas paisagens e nas histórias que atribuem sentidos aos territórios.",
+      "Mais do que apresentar o patrimônio do Vale do Ivaí, queremos construir um espaço de diálogo entre a universidade e as comunidades, no qual diferentes pessoas possam compartilhar suas memórias, reconhecer suas referências culturais e participar da construção de narrativas sobre a região."
+     ]
+    },
+    {
+     "tipo": "faixa",
+     "texto": "Cinco caminhos para entrar no Vale"
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Sala do museu",
+     "titulo": "Patrimônio Natural",
+     "texto": "Rios, cachoeiras, florestas e formações rochosas — paisagens que carregam histórias e significados para quem vive com elas.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Natural",
+     "botao": {
+      "rotulo": "Entrar nesta sala",
+      "aba": "natural"
+     }
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Sala do museu",
+     "titulo": "Patrimônio Arqueológico",
+     "texto": "Vestígios materiais que permitem investigar modos de vida anteriores à formação dos municípios.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Arqueológico",
+     "botao": {
+      "rotulo": "Entrar nesta sala",
+      "aba": "arqueologico"
+     }
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Sala do museu",
+     "titulo": "Patrimônio Arquitetônico",
+     "texto": "Casas, igrejas, pontes e estações — e os sentidos que as pessoas atribuem a elas.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Arquitetônico",
+     "botao": {
+      "rotulo": "Entrar nesta sala",
+      "aba": "arquitetonico"
+     }
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Sala do museu",
+     "titulo": "Patrimônio Histórico",
+     "texto": "Fotografias, documentos, objetos de família e coleções que testemunham a vida cotidiana.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Histórico",
+     "botao": {
+      "rotulo": "Entrar nesta sala",
+      "aba": "historico"
+     }
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Sala do museu",
+     "titulo": "Patrimônio Imaterial",
+     "texto": "Saberes, fazeres, celebrações e as histórias contadas de geração em geração.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Imaterial",
+     "botao": {
+      "rotulo": "Entrar nesta sala",
+      "aba": "imaterial"
+     }
+    },
+    {
+     "tipo": "cards",
+     "titulo": "Outros caminhos",
+     "colunas": 3,
+     "itens": [
+      {
+       "titulo": "Mapa Interativo",
+       "texto": "O acervo localizado no território, ponto a ponto.",
+       "aba": "mapa"
+      },
+      {
+       "titulo": "Nossos artistas",
+       "texto": "Quem desenha e pinta o que você vê aqui.",
+       "aba": "artistas"
+      },
+      {
+       "titulo": "Material da equipe",
+       "texto": "Bastidores: o que já foi reunido e o que falta.",
+       "aba": "material"
+      }
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Este museu é um convite",
+     "texto": "Conhecer, compartilhar e reconhecer as múltiplas histórias do Vale do Ivaí. Porque o patrimônio cultural também é aquilo que faz sentido para você.",
+     "botao": {
+      "rotulo": "Fale conosco",
+      "aba": "contato"
+     }
+    }
+   ]
+  },
+  {
+   "id": "sobre",
+   "nome": "Sobre",
+   "titulo": "Sobre nós",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "escuro",
+     "kicker": "Quem faz",
+     "titulo": "Sobre nós",
+     "texto": "Uma iniciativa acadêmica e extensionista do curso de História da UEM, no Campus Regional do Vale do Ivaí."
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "O Museu Virtual do Vale do Ivaí (MUVVI) é uma iniciativa acadêmica e extensionista desenvolvida por estudantes do curso de História da Universidade Estadual de Maringá (UEM), CRV, Sede e EAD, atualmente vinculada ao projeto de extensão Patrimônio em Diálogo: Arqueologia Pública e Comunicação Museológica no LAEE-UEM.",
+      "Todas as etapas de construção do museu são realizadas pelos estudantes, desde a pesquisa e a identificação das referências culturais até a seleção, a organização e a produção dos conteúdos disponibilizados na plataforma.",
+      "Nosso trabalho parte do entendimento de que o patrimônio cultural é constituído pelas referências culturais às quais as pessoas e os grupos sociais atribuem sentidos, valores e significados. Por isso, buscamos conhecer as memórias, os saberes e as experiências das comunidades do Vale do Ivaí, reconhecendo seus habitantes como sujeitos de suas próprias histórias.",
+      "O MUVVI é, assim, um espaço de produção e compartilhamento de conhecimentos, que aproxima a universidade das comunidades e procura construir narrativas plurais sobre o patrimônio cultural e natural da região."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "natural",
+   "nome": "Natural",
+   "titulo": "Patrimônio Natural",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Eixo 1 · O Rio que dá nome ao Vale",
+     "titulo": "Patrimônio Natural",
+     "texto": "Rios, cachoeiras, florestas, formações rochosas, animais e plantas compõem o patrimônio natural e fazem parte das paisagens que caracterizam o Vale do Ivaí. Mais do que elementos da natureza, essas paisagens podem carregar histórias, memórias e significados para as comunidades que com elas convivem.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Natural"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "O Rio Ivaí, que dá nome à região, é um importante elemento dessa paisagem, relacionado aos modos de vida, ao trabalho, às travessias e às experiências de diferentes gerações.",
+      "Conhecer o patrimônio natural é também compreender as relações que as pessoas estabelecem com o ambiente, reconhecendo seus valores ecológicos, paisagísticos, históricos e culturais, bem como a importância de sua preservação."
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Tem algo para contar sobre este eixo?",
+     "texto": "O museu é colaborativo: memórias, fotografias e objetos da sua família podem integrar o acervo.",
+     "botao": {
+      "rotulo": "Fale conosco",
+      "aba": "contato"
+     }
+    }
+   ]
+  },
+  {
+   "id": "arqueologico",
+   "nome": "Arqueológico",
+   "titulo": "Patrimônio Arqueológico",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Eixo 2 · Vestígios do Tempo",
+     "titulo": "Patrimônio Arqueológico",
+     "texto": "O patrimônio arqueológico é constituído pelos vestígios materiais das atividades humanas que permitem investigar diferentes modos de vida ao longo do tempo. Objetos de pedra, fragmentos de cerâmica, estruturas, marcas na paisagem e outros vestígios ajudam a compreender a presença e as experiências dos grupos humanos que ocuparam o território.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Arqueológico"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "No Vale do Ivaí, os sítios arqueológicos e as coleções domésticas revelam histórias que antecedem a formação dos municípios atuais, especialmente aquelas relacionadas às populações indígenas.",
+      "Conhecer esse patrimônio significa reconhecer a profundidade temporal da ocupação humana na região, valorizar a diversidade de seus habitantes e compreender a importância da pesquisa e da preservação dos vestígios arqueológicos."
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Tem algo para contar sobre este eixo?",
+     "texto": "O museu é colaborativo: memórias, fotografias e objetos da sua família podem integrar o acervo.",
+     "botao": {
+      "rotulo": "Fale conosco",
+      "aba": "contato"
+     }
+    }
+   ]
+  },
+  {
+   "id": "arquitetonico",
+   "nome": "Arquitetônico",
+   "titulo": "Patrimônio Arquitetônico",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Eixo 3 · Arquiteturas da Memória",
+     "titulo": "Patrimônio Arquitetônico",
+     "texto": "Casas, igrejas, capelas, pontes, estações ferroviárias, edifícios públicos e outras construções fazem parte das paisagens do Vale do Ivaí. Suas formas, materiais, técnicas construtivas e diferentes usos expressam aspectos das transformações históricas, sociais e culturais da região.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Arquitetônico"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Entretanto, o valor de uma construção não está apenas em sua antiguidade, monumentalidade ou estilo arquitetônico, mas também nos sentidos e nas memórias que as pessoas lhe atribuem.",
+      "Uma casa de família, uma antiga escola ou um espaço de encontro podem constituir importantes referências culturais para uma comunidade. Conhecer o patrimônio arquitetônico é, portanto, compreender as relações entre os espaços construídos, as experiências humanas e as memórias dos lugares."
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Tem algo para contar sobre este eixo?",
+     "texto": "O museu é colaborativo: memórias, fotografias e objetos da sua família podem integrar o acervo.",
+     "botao": {
+      "rotulo": "Fale conosco",
+      "aba": "contato"
+     }
+    }
+   ]
+  },
+  {
+   "id": "historico",
+   "nome": "Histórico",
+   "titulo": "Patrimônio Histórico",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Eixo 4 · Coleções, Memórias e Cotidianos",
+     "titulo": "Patrimônio Histórico",
+     "texto": "Fotografias, cartas, documentos, objetos de família, ferramentas de trabalho e coleções particulares ou comunitárias são testemunhos das experiências de pessoas e grupos que participaram da construção histórica do Vale do Ivaí.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Histórico"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Esses bens permitem conhecer diferentes aspectos da vida cotidiana, das relações de trabalho, das transformações sociais e das memórias familiares e coletivas.",
+      "O patrimônio histórico não se limita aos acontecimentos oficiais ou às trajetórias de personagens considerados importantes. Ele também está presente nas histórias de pessoas comuns, nos objetos guardados por afeto e nas lembranças compartilhadas entre gerações.",
+      "Conhecer esse patrimônio é reconhecer a diversidade de sujeitos e experiências que constituem a história da região."
+     ]
+    },
+    {
+     "tipo": "faixa",
+     "texto": "Eixo 4 — Coleções, Memórias e Cotidianos"
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Acervo · item 1",
+     "titulo": "Bichos de crochê: fios que tecem histórias e afetos",
+     "texto": "Uma coleção de brinquedos de crochê do acervo pessoal de Eva da Silva Sartor, moradora de Cruzmaltina.",
+     "imagem": true,
+     "imagemRotulo": "Coleção de bichos de crochê"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Uma coleção de brinquedos confeccionados com linhas coloridas de crochê faz parte do acervo pessoal de Eva da Silva Sartor, moradora de Cruzmaltina, no Vale do Ivaí.",
+      "Produzidas a partir de 2023, as peças representam diferentes personagens e animais, elaborados artesanalmente com linhas, miçangas e botões. Parte dos materiais utilizados corresponde a sobras de outras produções, reaproveitadas pela artesã.",
+      "Os brinquedos foram confeccionados tanto para satisfação pessoal quanto para presentear familiares e pessoas próximas. Alguns também foram utilizados por crianças da família. Atualmente, parte da coleção permanece guardada e é utilizada como decoração."
+     ],
+     "titulo": "Conheça o objeto"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "A história dessa coleção está diretamente relacionada à trajetória de sua criadora.",
+      "Segundo o relato registrado na pesquisa, Eva começou a aprender crochê aos 13 anos, quando trabalhava como diarista e morava no local de trabalho. Foi com sua empregadora, nos momentos de folga, que aprendeu os primeiros pontos de crochê e técnicas de costura.",
+      "Em uma infância marcada por dificuldades financeiras, o artesanato tornou-se uma maneira de realizar desejos, entre eles o de possuir bonecas e objetos para decorar a casa.",
+      "Ao longo dos anos, Eva produziu tapetes, toalhas e capas para eletrodomésticos. Mais recentemente, passou a confeccionar brinquedos, ampliando suas possibilidades de criação.",
+      "Embora o artesanato também tenha representado uma fonte de renda, sua principal motivação, segundo o relato, sempre foi o prazer de produzir. Muitas de suas peças foram presenteadas a familiares, amigas e crianças de seu convívio.",
+      "Os brinquedos, portanto, guardam mais do que o trabalho manual de sua criadora. Eles expressam experiências de infância, aprendizado, criatividade, generosidade e afeto."
+     ],
+     "titulo": "Histórias e memórias"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "A coleção de Eva permite compreender como os objetos artesanais podem adquirir significados que ultrapassam sua função como brinquedos ou elementos decorativos.",
+      "O crochê reúne conhecimentos técnicos, escolhas criativas e experiências pessoais. No caso de Eva, cada peça também representa uma forma de expressão e de construção de vínculos afetivos.",
+      "Ao apresentar essa coleção, o Museu Virtual do Vale do Ivaí valoriza a trajetória de uma artesã de Cruzmaltina e reconhece a importância das histórias individuais e familiares para a compreensão das referências culturais da região."
+     ],
+     "titulo": "Por que preservar essa memória?"
+    },
+    {
+     "tipo": "texto",
+     "titulo": "Ficha técnica",
+     "paragrafos": [
+      "Coleção de bichos de crochê. Artesã e proprietária: Eva da Silva Sartor. Localidade: Cruzmaltina (PR). Produção: a partir de 2023. Pesquisa, inventário e fotografia: Nicole Cristine da Silva Sartor, 2026. Acervo pessoal de Eva da Silva Sartor."
+     ]
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Acervo · item 2",
+     "titulo": "Esfregão de ferro: trabalho doméstico e memórias de família",
+     "texto": "Utensílio que pertenceu a Zenaide Aparecida Rocha, adquirido por volta de 1980 em Faxinal.",
+     "imagem": true,
+     "imagemRotulo": "Esfregão de ferro"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "O esfregão de ferro é um utensílio doméstico utilizado para limpar, escovar e polir pisos, especialmente os de madeira.",
+      "O exemplar pesquisado pertenceu a Zenaide Aparecida Rocha e foi adquirido por volta de 1980, em uma venda localizada em Faxinal, no Vale do Ivaí.",
+      "Com uma estrutura pesada de metal, cabo de madeira e acessórios de limpeza, o esfregão era utilizado para retirar a cera antiga, limpar o piso e aplicar uma nova camada, deixando a madeira com aparência brilhante.",
+      "Atualmente, o objeto não é mais utilizado e apresenta sinais de desgaste e oxidação."
+     ],
+     "titulo": "Conheça o objeto"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Na família de Zenaide, o esfregão fazia parte das atividades de manutenção da casa de madeira onde viviam.",
+      "Seus filhos, Vanderlei, Vanderleia e João, eram responsáveis por algumas tarefas domésticas, entre elas a limpeza e o polimento dos pisos.",
+      "Segundo as memórias registradas na pesquisa, o esfregão era pesado e difícil de movimentar, tornando o trabalho bastante cansativo.",
+      "Nos finais de semana, os filhos de Zenaide também ajudavam a cuidar da casa de sua avó Filomena, que morava nas proximidades. Depois da limpeza, eram recebidos com um café da tarde preparado pela avó.",
+      "Apesar do esforço exigido pelas tarefas, essas experiências permaneceram associadas a lembranças afetuosas da infância e da convivência familiar.",
+      "A pesquisa também registra que o utensílio foi adquirido em Faxinal, em um período no qual a família realizava deslocamentos a cavalo para buscar determinados produtos em localidades próximas.",
+      "Assim, o esfregão guarda memórias que envolvem não apenas o trabalho doméstico, mas também a organização familiar, os deslocamentos e as relações entre diferentes gerações."
+     ],
+     "titulo": "Histórias e memórias"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "O esfregão de ferro permite conhecer práticas de limpeza e manutenção das casas de madeira, além de aspectos do trabalho doméstico no cotidiano familiar.",
+      "Entretanto, seu significado não se limita à função para a qual foi produzido.",
+      "Para a família de Zenaide, o objeto também remete à infância, às tarefas compartilhadas e aos encontros na casa de Filomena.",
+      "Ao documentar esse utensílio, o Museu Virtual do Vale do Ivaí procura reconhecer a importância das experiências cotidianas e das memórias familiares na construção das histórias da região."
+     ],
+     "titulo": "Por que preservar essa memória?"
+    },
+    {
+     "tipo": "texto",
+     "titulo": "Ficha técnica",
+     "paragrafos": [
+      "Esfregão de ferro. Antiga proprietária: Zenaide Aparecida Rocha. Local de aquisição: Faxinal (PR). Aquisição aproximada: 1980. Pesquisa e inventário: Nicole Cristine da Silva Sartor, 28/07/2026. Fotografia: Nicole Cristine da Silva Sartor, 15/08/2026. Acervo familiar."
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Tem algo para contar sobre este eixo?",
+     "texto": "O museu é colaborativo: memórias, fotografias e objetos da sua família podem integrar o acervo.",
+     "botao": {
+      "rotulo": "Fale conosco",
+      "aba": "contato"
+     }
+    }
+   ]
+  },
+  {
+   "id": "imaterial",
+   "nome": "Imaterial",
+   "titulo": "Patrimônio Imaterial",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Eixo 5 · Saberes, Fazeres e Festas",
+     "titulo": "Patrimônio Imaterial",
+     "texto": "O patrimônio imaterial está presente nos saberes, fazeres, celebrações, formas de expressão e práticas culturais que as comunidades reconhecem como parte de suas referências culturais.",
+     "imagem": true,
+     "imagemRotulo": "Ícone — Patrimônio Imaterial"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "No Vale do Ivaí, ele pode ser encontrado nas festas populares e religiosas, nas músicas, nas danças, nas receitas de família, nas histórias contadas, nos conhecimentos tradicionais e nos diferentes modos de viver e de se relacionar com o território.",
+      "Transmitidas, compartilhadas e recriadas ao longo do tempo, essas manifestações expressam a diversidade cultural da região.",
+      "Conhecer o patrimônio imaterial é reconhecer as pessoas como produtoras e detentoras de conhecimentos, valorizando as práticas que dão sentido à vida coletiva e às experiências de pertencimento."
+     ]
+    },
+    {
+     "tipo": "faixa",
+     "texto": "Eixo 5 — Narrativas orais e saberes populares"
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Lenda · 1",
+     "titulo": "A Lenda da Mãe do Ouro",
+     "texto": "A guardiã das riquezas da terra, entre a bola de fogo que atravessa a noite e a mulher luminosa.",
+     "imagem": true,
+     "imagemRotulo": "Pintura “Mãe do Ouro”, de Adryan Gabriel Santos Andreoli"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Na pintura Mãe do Ouro, produzida em 2026, Adryan Gabriel Santos Andreoli apresenta uma figura feminina envolvida por chamas que parecem surgir da própria paisagem. Os tons de vermelho, laranja e dourado contrastam com o azul intenso do céu noturno, enquanto a presença da lua, das estrelas e da vegetação reforça a atmosfera de mistério.",
+      "A composição aproxima duas representações presentes na tradição oral: a bola de fogo que atravessa a noite e a mulher luminosa associada à proteção das riquezas da terra. A obra constitui uma interpretação artística contemporânea da lenda, estabelecendo um diálogo entre a criação visual e as narrativas populares que circulam no Vale do Ivaí."
+     ],
+     "titulo": "A lenda na arte"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Conta-se que, em certas noites, uma luz misteriosa aparece no céu ou sobre a terra, deslocando-se pela escuridão. Algumas pessoas dizem que se trata de uma bola de fogo que surge e desaparece em diferentes lugares. Outras afirmam que essa luz revela a presença de tesouros escondidos, guardados por uma entidade conhecida como Mãe do Ouro.",
+      "Segundo a tradição popular, a Mãe do Ouro também pode assumir a aparência de uma bela mulher, com cabelos e vestes reluzentes, adornada por peças douradas. Ela seria a guardiã das riquezas da terra, protegendo o ouro oculto nas montanhas, nos rios e em outros lugares da natureza.",
+      "Uma das versões da lenda conta a história de Antônio, um homem escravizado que trabalhava para um proprietário de minas. Obrigado a entregar diariamente determinada quantidade de ouro e ameaçado com castigos violentos, Antônio recebeu a ajuda da Mãe do Ouro, que lhe revelou a localização de uma rica jazida. Em troca, exigiu que mantivesse o segredo.",
+      "Entretanto, ao perceber a quantidade de ouro apresentada por Antônio, o proprietário passou a exigir que ele revelasse sua origem. Após sofrer agressões, Antônio contou onde estava a jazida, com a permissão da Mãe do Ouro. O proprietário organizou uma escavação, mas, segundo a narrativa, morreu durante um desabamento.",
+      "Assim, a Mãe do Ouro aparece não apenas como protetora dos tesouros escondidos, mas também como uma figura capaz de enfrentar a ganância e a injustiça. Essa é uma das muitas histórias contadas sobre a misteriosa guardiã das riquezas da terra."
+     ],
+     "titulo": "Conheça a lenda"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "A lenda da Mãe do Ouro faz parte do folclore brasileiro, especialmente nas regiões Centro-Oeste, Sudeste e Sul, sendo também conhecida no Vale do Ivaí.",
+      "Sua origem é tradicionalmente associada ao período colonial e ao imaginário relacionado à mineração, particularmente entre os séculos XVII e XVIII. As histórias sobre tesouros escondidos, riquezas subterrâneas e aparições luminosas expressam diferentes maneiras de compreender o mundo e de atribuir significados aos fenômenos da natureza.",
+      "Transmitida oralmente entre familiares e membros das comunidades, a lenda apresenta diferentes versões, que podem ser modificadas e reinterpretadas ao longo do tempo.",
+      "No Vale do Ivaí, sua presença revela como narrativas de circulação mais ampla também podem integrar as referências culturais das comunidades. Seu valor como patrimônio imaterial está nas histórias compartilhadas, nas experiências de quem as transmite e nos significados que continuam sendo atribuídos à personagem."
+     ],
+     "titulo": "Uma história que faz parte da memória"
+    },
+    {
+     "tipo": "texto",
+     "titulo": "Ficha técnica",
+     "paragrafos": [
+      "Pesquisa e inventário: Adryan Gabriel Santos Andreoli, 2026. Obra artística: pintura de Adryan Gabriel Santos Andreoli, 2026. Técnica e dimensões: A COMPLETAR — a obra precisa ser digitalizada e a ficha fechada com a técnica e as medidas. Museu Virtual do Vale do Ivaí (MUVVI) — Projeto Patrimônio em Diálogo, UEM."
+     ]
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Lenda · 2",
+     "titulo": "A Lenda da Noiva da Mata Suíça",
+     "texto": "Na PR-082, entre Lunardelli e São João do Ivaí, uma mulher de branco pede carona para chegar ao casamento.",
+     "imagem": true,
+     "imagemRotulo": "Pintura “Noiva da Mata Suíça”, de Adryan Gabriel Santos Andreoli"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Na pintura Noiva da Mata Suíça, produzida em 2026, Adryan Gabriel Santos Andreoli representa uma mulher vestida de noiva no centro de uma estrada, sob a luz da lua.",
+      "A figura feminina, envolvida por um vestido branco que parece se movimentar na paisagem, contrasta com os tons escuros do céu e do asfalto. A vegetação, as plantações e os postes de energia situam a aparição em um ambiente rural atravessado pela infraestrutura rodoviária. A obra estabelece uma relação direta entre a personagem e o lugar ao qual sua história está associada. A estrada deixa de ser apenas um espaço de passagem e se transforma em cenário de uma narrativa compartilhada por moradores e viajantes.",
+      "Ao representar artisticamente a Noiva da Mata Suíça, o artista oferece uma interpretação contemporânea dessa tradição oral, aproximando memória, paisagem e imaginário popular."
+     ],
+     "titulo": "A lenda na arte"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Conta-se que, há muitos anos, uma jovem que vivia na região de São João do Ivaí estava prestes a realizar seu casamento. Na expectativa da cerimônia, preparava cuidadosamente seu enxoval e sonhava com o vestido que usaria naquele dia especial.",
+      "Segundo uma das versões da história, situada na década de 1970, a jovem viajou com seu pai até Ivaiporã para buscar o vestido de noiva. Naquela época, a estrada que ligava as localidades ainda não era asfaltada, e o trajeto atravessava áreas rurais e trechos de mata.",
+      "Durante o retorno, nas proximidades da Mata Suíça, os dois teriam sofrido um acidente. Algumas versões mencionam uma colisão com um caminhão carregado de algodão; outras contam que a jovem e seu pai viajavam em uma carroça que teria tombado. Segundo a narrativa, ambos perderam a vida antes da realização do casamento.",
+      "Desde então, histórias sobre uma misteriosa noiva passaram a circular entre moradores e viajantes que percorrem a PR-082, entre Lunardelli e São João do Ivaí.",
+      "Dizem que, durante a noite, uma mulher vestida de branco aparece à beira da estrada, pedindo carona para chegar ao casamento. Alguns relatos contam que ela surge inesperadamente no banco traseiro de automóveis; outros afirmam que acompanha motociclistas ou bate nas janelas dos caminhões.",
+      "A figura desapareceria tão misteriosamente quanto surgiu, deixando entre os viajantes o medo e a dúvida sobre aquilo que teriam visto."
+     ],
+     "titulo": "Conheça a lenda"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "A lenda da Noiva da Mata Suíça está associada a um trecho da PR-082, entre os municípios de Lunardelli e São João do Ivaí, no Vale do Ivaí.",
+      "Sua narrativa é tradicionalmente situada na década de 1970, quando a estrada ainda não possuía pavimentação asfáltica. Entretanto, não há, na documentação reunida no inventário, comprovação histórica das circunstâncias do acidente que teria dado origem à história.",
+      "A lenda apresenta diferentes versões, que envolvem acidentes, conflitos amorosos e aparições sobrenaturais. Essas variações revelam como as narrativas orais são constantemente recriadas pelas pessoas que as transmitem.",
+      "Ao longo do tempo, a história passou a atribuir novos significados à paisagem. A rodovia, além de conectar municípios e permitir a circulação de pessoas, tornou-se um lugar associado ao mistério, às lembranças e às experiências compartilhadas.",
+      "A pesquisa realizada para o Museu Virtual do Vale do Ivaí reuniu relatos, referências bibliográficas e registros fotográficos da rodovia, produzidos em julho de 2026. A importância cultural da Noiva da Mata Suíça não está na comprovação de suas aparições, mas na maneira como essa narrativa participa da memória coletiva e da construção de sentidos sobre um lugar específico do Vale do Ivaí."
+     ],
+     "titulo": "Uma história que faz parte da memória"
+    },
+    {
+     "tipo": "texto",
+     "titulo": "Ficha técnica",
+     "paragrafos": [
+      "Pesquisa e inventário: Adryan Gabriel Santos Andreoli, 2026. Obra artística: pintura de Adryan Gabriel Santos Andreoli, 2026. Técnica e dimensões: A COMPLETAR — a obra precisa ser digitalizada e a ficha fechada com a técnica e as medidas. Museu Virtual do Vale do Ivaí (MUVVI) — Projeto Patrimônio em Diálogo, UEM."
+     ]
+    },
+    {
+     "tipo": "faixa",
+     "texto": "Eixo 5 — Saberes, Fazeres e Festas"
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Celebração · 1",
+     "titulo": "Festa de São José: fé, trabalho e tradição em Arapuã",
+     "texto": "Dedicada ao padroeiro do município e da paróquia, a festa combina devoção, encontros familiares e confraternização.",
+     "imagem": true,
+     "imagemRotulo": "Imagem do santo — fotografia de Dione Canestri (pedir o arquivo original)"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Em Arapuã, no Vale do Ivaí, a Festa de São José reúne moradores e visitantes em uma celebração dedicada ao padroeiro do município e da paróquia local. Associada ao dia 19 de março, a festividade combina práticas religiosas, encontros familiares e atividades de confraternização.",
+      "Organizada pela Paróquia São José, a celebração inclui missas e momentos de devoção, além de almoços comunitários, bingos e leilões. Essas atividades mobilizam fiéis, famílias e participantes de diferentes localidades, transformando a festa em uma ocasião de encontro e convivência.",
+      "A preparação dos alimentos também integra as práticas festivas. Entre elas, destaca-se a produção dos tradicionais pãezinhos de São José, registrada na pesquisa realizada para o Museu Virtual do Vale do Ivaí.",
+      "A festa reúne, portanto, diferentes dimensões da vida comunitária: a devoção religiosa, a organização dos festejos, a partilha dos alimentos e os momentos de confraternização que aproximam seus participantes."
+     ],
+     "titulo": "Conheça a celebração"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Segundo o inventário realizado em 2026, a devoção a São José está relacionada à história das famílias que participaram da formação de Arapuã, em um contexto marcado pela expansão das atividades agrícolas, especialmente pelo cultivo do algodão.",
+      "Ao longo do tempo, a celebração passou por transformações. A pesquisa registra períodos de interrupção e retomada das festividades, além de sua aproximação com a chamada Festa da Produção, que associa a devoção religiosa à valorização do trabalho agrícola e dos frutos da terra.",
+      "As mudanças também alcançaram os espaços de realização da festa. A Praça da Matriz passou por intervenções e recebeu, em 2025, uma imagem de São José, contribuindo para a transformação da paisagem relacionada às celebrações.",
+      "Essas experiências demonstram como as manifestações culturais são continuamente reorganizadas pelas comunidades. Embora preservem elementos reconhecidos como tradicionais, suas formas de realização e seus significados podem se transformar ao longo das gerações.",
+      "A Festa de São José constitui uma referência cultural para os grupos que dela participam, articulando religiosidade, trabalho, saberes culinários e práticas de convivência. Sua importância patrimonial está nas experiências compartilhadas, nas memórias construídas e nos sentidos atribuídos à celebração pelas pessoas da comunidade."
+     ],
+     "titulo": "Uma celebração que faz parte da memória"
+    },
+    {
+     "tipo": "texto",
+     "titulo": "Ficha técnica",
+     "paragrafos": [
+      "Pesquisa e inventário: Dione Canestri, 2026. Acervo fotográfico: Dione Canestri, 2026. Uso autorizado pelo autor. Museu Virtual do Vale do Ivaí (MUVVI) — Projeto Patrimônio em Diálogo, UEM."
+     ]
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Celebração · 2",
+     "titulo": "Festa de São Cristóvão: fé e tradição nas estradas de Romeópolis",
+     "texto": "A carreata e a bênção dos veículos reúnem motoristas, agricultores e visitantes no distrito de Romeópolis.",
+     "imagem": true,
+     "imagemRotulo": "Imagem do santo — fotografia de Dione Canestri (pedir o arquivo original)"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "No distrito de Romeópolis, município de Arapuã, a Festa de São Cristóvão reúne moradores, motoristas, agricultores e visitantes em uma celebração dedicada ao santo reconhecido pela tradição católica como protetor dos motoristas e viajantes.",
+      "Realizada no mês de julho, a festividade tem como uma de suas principais manifestações a carreata e a bênção dos veículos. Carros, motocicletas e máquinas agrícolas, como tratores e colheitadeiras, participam de uma prática religiosa que expressa pedidos de proteção para os deslocamentos e as atividades cotidianas de trabalho.",
+      "Segundo a pesquisa realizada para o Museu Virtual do Vale do Ivaí, a programação inclui uma procissão que parte da comunidade de Alto Lajeado em direção a Romeópolis, seguida de missa em homenagem ao santo.",
+      "Após as atividades religiosas, a celebração continua com um almoço comunitário, tradicionalmente acompanhado de churrasco, e momentos de confraternização. A programação também inclui apresentações musicais e uma matinê dançante, reunindo participantes de Romeópolis e de localidades vizinhas.",
+      "A Festa de São Cristóvão combina, assim, práticas de devoção religiosa, encontros familiares e atividades festivas que integram a vida comunitária."
+     ],
+     "titulo": "Conheça a celebração"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "A Festa de São Cristóvão tem suas referências na devoção católica ao santo protetor dos viajantes e motoristas. Em Romeópolis, essa tradição adquiriu características relacionadas às experiências da comunidade, especialmente à circulação pelas estradas e às atividades agrícolas.",
+      "O inventário elaborado em 2026 registra o dia 21 de julho de 1975 como marco inicial da celebração. Entretanto, a documentação reunida ainda não permite confirmar essa data nem identificar as pessoas responsáveis por sua organização inicial.",
+      "Uma das características da festa é a bênção de veículos e máquinas agrícolas. Essa prática aproxima a religiosidade das experiências de trabalho e deslocamento, evidenciando a presença da fé em diferentes aspectos da vida cotidiana.",
+      "A celebração também constitui um momento de encontro entre moradores de Romeópolis, Arapuã e comunidades vizinhas. A participação nas atividades religiosas, nos almoços e nas festividades contribui para a continuidade das práticas compartilhadas entre familiares e integrantes da comunidade.",
+      "Como referência cultural, a Festa de São Cristóvão permite compreender relações entre religiosidade, trabalho, mobilidade e sociabilidade. Sua importância patrimonial está nas práticas transmitidas, nas experiências de participação e nos significados atribuídos à celebração pelas pessoas que a realizam."
+     ],
+     "titulo": "Uma celebração que faz parte da memória"
+    },
+    {
+     "tipo": "texto",
+     "titulo": "Ficha técnica",
+     "paragrafos": [
+      "Pesquisa e inventário: Dione Canestri, 2026. Acervo fotográfico: Dione Canestri, 2026. Uso autorizado pelo autor. FOTOGRAFIA PENDENTE — pedir ao Dione o arquivo original da festa. Museu Virtual do Vale do Ivaí (MUVVI) — Projeto Patrimônio em Diálogo, UEM."
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Tem algo para contar sobre este eixo?",
+     "texto": "O museu é colaborativo: memórias, fotografias e objetos da sua família podem integrar o acervo.",
+     "botao": {
+      "rotulo": "Fale conosco",
+      "aba": "contato"
+     }
+    }
+   ]
+  },
+  {
+   "id": "mapa",
+   "nome": "Mapa",
+   "titulo": "Mapa Interativo",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "escuro",
+     "kicker": "O acervo no território",
+     "titulo": "Mapa Interativo",
+     "texto": "Cada ponto do mapa é um bem do acervo no lugar onde ele existe: a paisagem, a construção, o objeto, a celebração. Dá para percorrer o Vale e abrir a ficha de cada referência cultural.",
+     "botao": {
+      "rotulo": "Abrir o Mapa Interativo",
+      "href": "../mapa/"
+     }
+    },
+    {
+     "tipo": "galeria",
+     "titulo": "O mapa entra aqui",
+     "quantidade": 1,
+     "colunas": 2
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "O mapa é organizado por tags livres: cada ponto recebe as palavras que quem cadastrou considerou importantes, e a barra do topo permite filtrar por elas.",
+      "Quem quiser contribuir cadastra o ponto no próprio navegador — nada é enviado para a internet — e envia a pasta gerada para a equipe do museu, que confere antes de publicar.",
+      "O traçado do rio Ivaí vem de fonte declarada (IBGE ou OpenStreetMap, à escolha), e não de desenho à mão."
+     ],
+     "titulo": "Como ele funciona"
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Conhece um lugar que precisa estar no mapa?",
+     "texto": "Fotografias, memórias e referências culturais do Vale podem integrar o acervo.",
+     "botao": {
+      "rotulo": "Fale conosco",
+      "aba": "contato"
+     }
+    }
+   ]
+  },
+  {
+   "id": "artistas",
+   "nome": "Artistas",
+   "titulo": "Nossos artistas",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Quem desenha o museu",
+     "titulo": "Nossos artistas",
+     "texto": "A identidade visual do MUVVI — a logomarca, os ícones das cinco salas e as pinturas que acompanham as lendas — é feita por estudantes do próprio projeto."
+    },
+    {
+     "tipo": "hero",
+     "fundo": "claro",
+     "kicker": "Artista",
+     "titulo": "Adryan Gabriel Santos Andreoli",
+     "texto": "MINIBIOGRAFIA A COMPLETAR — um texto curto sobre o artista e sua arte, escrito por ele. Pedido pela coordenação em 12/10/2026.",
+     "imagem": true,
+     "imagemRotulo": "Retrato ou obra do artista"
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "A logomarca do MUVVI, com cada letra ilustrada a partir de referências culturais do Vale.",
+      "Os ícones das cinco salas do museu: Patrimônio Natural, Arqueológico, Arquitetônico, Histórico e Imaterial.",
+      "As pinturas Mãe do Ouro e Noiva da Mata Suíça, interpretações contemporâneas de duas lendas que circulam na região, apresentadas na sala de Patrimônio Imaterial.",
+      "Além do site, esses materiais podem ser reaproveitados em panfletos, banners e outras peças do museu."
+     ],
+     "titulo": "O que ele fez para o museu"
+    },
+    {
+     "tipo": "cards",
+     "titulo": "Espaço para os próximos",
+     "colunas": 2,
+     "itens": [
+      {
+       "titulo": "Artista — nome",
+       "texto": "Bloco reservado: repita este cartão para cada integrante da equipe de arte, com minibiografia e obras."
+      },
+      {
+       "titulo": "Pesquisador(a) — nome",
+       "texto": "Bloco reservado para quem assina pesquisa e inventário dos itens do acervo."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "material",
+   "nome": "Material da equipe",
+   "titulo": "Material da equipe",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "escuro",
+     "kicker": "Bastidores do museu",
+     "titulo": "O que já está reunido",
+     "texto": "Esta página é o painel de trabalho da equipe: o material que já chegou ao Drive do MUVVI, de onde vem cada peça e o que ainda falta para publicar. Ela existe para a equipe — some antes de o site ir ao ar."
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Painel administrativo",
+     "texto": "É por ele que se edita o site: páginas, textos e imagens. O acesso é da equipe que mantém o museu.",
+     "botao": {
+      "rotulo": "Abrir o painel",
+      "href": "https://gehrarte.github.io/editor/"
+     }
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "O documento “TEXTOS DO SITE”, escrito por Leilane Patricia de Lima, é a fonte de tudo o que está escrito neste modelo: apresentação, sobre nós, fale conosco, os textos de cada um dos cinco eixos e os textos elaborados a partir das fichas de inventário de patrimônio histórico e imaterial.",
+      "É uma versão experimental, feita para apresentar o museu no XIV SAB Sul. Os conteúdos continuam sendo ampliados e aperfeiçoados depois do evento."
+     ],
+     "titulo": "Textos"
+    },
+    {
+     "tipo": "cards",
+     "titulo": "Ícones dos eixos",
+     "colunas": 3,
+     "itens": [
+      {
+       "titulo": "Patrimônio Imaterial",
+       "texto": "Entregue. Boca, livro de saberes e ave — oralidade e fazeres. Arquivo de 1600 × 1600."
+      },
+      {
+       "titulo": "Patrimônio Histórico",
+       "texto": "Entregue. Objetos, documentos e ferramentas em torno da memória. Arquivo de 1600 × 1600."
+      },
+      {
+       "titulo": "Patrimônio Arqueológico",
+       "texto": "Entregue. Arquivo de 1600 × 1600."
+      },
+      {
+       "titulo": "Patrimônio Arquitetônico",
+       "texto": "Entregue. Arquivo de 1600 × 1600."
+      },
+      {
+       "titulo": "Patrimônio Natural",
+       "texto": "FALTA. É o único dos cinco que ainda não chegou."
+      },
+      {
+       "titulo": "Ícone da ave sobre o rio",
+       "texto": "Entregue antes, feito no ArtAtk. Foi dele que saiu a paleta do museu."
+      }
+     ]
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "Usar sempre os arquivos ORIGINAIS, baixados direto do Drive. As imagens que vieram dentro do documento de textos foram recomprimidas pelo editor de texto e perderam qualidade — servem para conferir o que é cada foto, não para publicar.",
+      "Pinturas do Adryan (Mãe do Ouro e Noiva da Mata Suíça): digitalizar as obras e completar a ficha técnica com a técnica utilizada e as dimensões. Nas duas fichas deste modelo o campo está marcado como A COMPLETAR.",
+      "Fotografias das festas religiosas: pedir ao Dione as imagens originais, feitas por ele, das festas de São José e de São Cristóvão.",
+      "Não publicar imagem sem autorização de uso. As imagens não podem mostrar os rostos das pessoas. Entre as fotos das festas, a prioridade é a imagem dos santos."
+     ],
+     "titulo": "Imagens: o que precisa ser resolvido antes de publicar"
+    },
+    {
+     "tipo": "cards",
+     "titulo": "O que falta, em uma olhada",
+     "colunas": 2,
+     "itens": [
+      {
+       "titulo": "Ícone do Patrimônio Natural",
+       "texto": "Ainda não entregue pela equipe de arte."
+      },
+      {
+       "titulo": "Pinturas digitalizadas",
+       "texto": "Mãe do Ouro e Noiva da Mata Suíça, com técnica e dimensões."
+      },
+      {
+       "titulo": "Fotos originais do Dione",
+       "texto": "Festas de São José e de São Cristóvão, priorizando as imagens dos santos."
+      },
+      {
+       "titulo": "Autorizações de uso",
+       "texto": "Conferir uma a uma antes de publicar, e verificar se há rostos nas imagens."
+      },
+      {
+       "titulo": "Fotos em alta do Drive",
+       "texto": "Substituir todas as imagens que vieram do documento de texto."
+      },
+      {
+       "titulo": "Revisão dos textos pela equipe",
+       "texto": "A Leilane pediu que todos leiam e opinem antes do evento."
+      }
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "Como trocar as imagens",
+     "texto": "Cada retângulo cinza deste modelo é um lugar de imagem: arraste o arquivo do Drive por cima dele no editor e a arte entra no lugar, no tamanho certo.",
+     "botao": {
+      "rotulo": "Voltar ao início",
+      "aba": "inicio"
+     }
+    }
+   ]
+  },
+  {
+   "id": "contato",
+   "nome": "Contato",
+   "titulo": "Fale conosco",
+   "secoes": [
+    {
+     "tipo": "hero",
+     "fundo": "acento",
+     "kicker": "Fale conosco",
+     "titulo": "O que faz você pertencer ao Vale do Ivaí?",
+     "texto": "Essa pergunta deu origem ao nosso museu e continua orientando nossas pesquisas."
+    },
+    {
+     "tipo": "texto",
+     "paragrafos": [
+      "O Museu Virtual do Vale do Ivaí é um espaço dedicado ao conhecimento, à valorização e à divulgação das referências culturais e das memórias das comunidades da região.",
+      "Neste primeiro momento, os conteúdos apresentados no museu são pesquisados, selecionados e produzidos pelos estudantes do curso de História da Universidade Estadual de Maringá (UEM), no âmbito do projeto de extensão Patrimônio em Diálogo.",
+      "Se você deseja conhecer melhor o projeto, conversar sobre o patrimônio cultural do Vale do Ivaí ou estabelecer contato com nossa equipe, escreva para nós."
+     ]
+    },
+    {
+     "tipo": "chamada",
+     "titulo": "museuvirtualdovaledoivai@gmail.com",
+     "texto": "O Vale do Ivaí é feito de muitas histórias. Queremos conhecer a sua!",
+     "botao": {
+      "rotulo": "Escrever um e-mail",
+      "href": "mailto:museuvirtualdovaledoivai@gmail.com"
+     }
+    }
+   ]
+  }
+ ]
+}

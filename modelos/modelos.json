@@ -3,8 +3,43 @@
  "modelos": [
   {
    "id": "muvvi-site",
-   "nome": "MUVVI — site do museu (provisório)",
-   "descricao": "Projeto de site do Museu Virtual do Vale do Ivaí: identidade do protótipo (verde, creme, Libre Caslon Text e Andika) e as abas do Roteiro Curatorial Digital — entrada, cinco salas virtuais (eixos) e participação. Textos tirados do roteiro; imagens são quadros para trocar. Será substituído pelo modelo do POC do setor de design.",
+   "nome": "MUVVI — site do museu",
+   "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu.",
+   "categoria": "MUVVI",
+   "tipo": "site"
+  },
+  {
+   "id": "muvvi-site-arquivo",
+   "nome": "MUVVI — site do museu (Papel de arquivo)",
+   "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Papel de arquivo: Neutra, para leitura longa de documento e de acervo: sobra o verde institucional e a cor sai da frente do conteúdo.",
+   "categoria": "MUVVI",
+   "tipo": "site"
+  },
+  {
+   "id": "muvvi-site-barranco",
+   "nome": "MUVVI — site do museu (Barranco)",
+   "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Barranco: Terra quente: o vermelho do ícone puxado para o ocre do barranco, com verde de mata no acento.",
+   "categoria": "MUVVI",
+   "tipo": "site"
+  },
+  {
+   "id": "muvvi-site-mata",
+   "nome": "MUVVI — site do museu (Mata ciliar)",
+   "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Mata ciliar: Os verdes do ícone no comando e o vermelho reservado para o acento. Clima de mata, não de barro.",
+   "categoria": "MUVVI",
+   "tipo": "site"
+  },
+  {
+   "id": "muvvi-site-rio-fundo",
+   "nome": "MUVVI — site do museu (Rio fundo (escura))",
+   "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Rio fundo (escura): Versão noturna, feita para o mapa e para telas que ficam muito tempo abertas.",
+   "categoria": "MUVVI",
+   "tipo": "site"
+  },
+  {
+   "id": "muvvi-site-xilogravura",
+   "nome": "MUVVI — site do museu (Xilogravura do Ivaí)",
+   "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Xilogravura do Ivaí: Tirada do ícone de patrimônio imaterial: vermelho das letras sobre papel de gravura, com o verde-água do rio no acento.",
    "categoria": "MUVVI",
    "tipo": "site"
   },

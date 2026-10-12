@@ -187,6 +187,24 @@ function motor(spec, T, inicio = { d: 0, m: 0 }, site = null) {
   const faixa = (nome, cor, yd, hd, ym, hm) => el('shape', nome, { shape: 'rect', s: { fill: cor, radius: 0, stroke: null, sw: 0 } }, { x: 0, y: yd, w: W.d, h: hd }, { x: 0, y: ym, w: W.m, h: hm });
   const botao = (rotulo, lig, yd, ym, centrado = false, invertido = false) => el('shape', `Botão ${rotulo}`, { shape: 'rect', label: rotulo, link: lnk(lig), s: { fill: invertido ? T.escuro : T.acento, radius: 9999, stroke: null, sw: 0 }, ls: { fontFamily: T.fonteTexto, fontSize: 20, fontWeight: 600, color: invertido ? T.sobreEscuro : T.sobreAcento } },
     { x: centrado ? (W.d - 240) / 2 : D.mx, y: yd, w: 240, h: 56 }, { x: centrado ? (W.m - 220) / 2 : M.mx, y: ym, w: 220, h: 50, fs: 17 });
+  // Logomarca no canto esquerdo da barra do topo, antes do nome. `logo: true` dá um quadro
+  // quadrado; um objeto aceita `altura`, `proporcao` (largura ÷ altura, para marca deitada),
+  // `rotulo` e `sozinha` — quando a logomarca já traz o nome escrito, repetir o nome ao lado é
+  // ruído. Modelo não leva imagem enviada: o que vai é o quadro, para a pessoa soltar o arquivo
+  // em cima. Devolve o quanto o nome precisa andar para a direita.
+  const marcaLogo = (s, yd, ym, topoD = 14, topoM = 10) => {
+    if (!s.logo) return { dx: 0, mx: 0, sozinha: false };
+    const o = typeof s.logo === 'object' ? s.logo : {};
+    const hd = o.altura || 48, prop = o.proporcao || 1, gap = 16;
+    const ld = Math.round(hd * prop), hm = Math.round(hd * 0.78), lm = Math.round(hm * prop);
+    // Rótulo em corpo pequeno: com o 18 px padrão do quadroImagem o texto transborda do quadro
+    // e vai por cima do nome da marca.
+    el('shape', 'Logomarca', { shape: 'rect', label: o.rotulo || 'Logo',
+      s: { fill: PLACEHOLDER_IMG, radius: Math.min(T.raio, 10), stroke: null, sw: 0 },
+      ls: { fontFamily: T.fonteTexto, fontSize: 11, fontWeight: 600, color: '#6a6458' } },
+      { x: D.mx, y: yd + topoD, w: ld, h: hd }, { x: M.mx, y: ym + topoM, w: lm, h: hm, fs: 9 });
+    return { dx: ld + gap, mx: lm + 10, sozinha: !!o.sozinha };
+  };
   const quadroImagem = (nome, d, m, rotulo = 'Imagem') => el('shape', nome, { shape: 'rect', label: rotulo, s: { fill: PLACEHOLDER_IMG, radius: T.raio, stroke: null, sw: 0 }, ls: { fontFamily: T.fonteTexto, fontSize: 18, fontWeight: 500, color: '#6a6458' } }, d, { fs: 14, ...m });
 
   const secoes = {
@@ -199,7 +217,8 @@ function motor(spec, T, inicio = { d: 0, m: 0 }, site = null) {
         const rd = linhas(15, D.cw, 22), rm = linhas(14, M.cw, 19);
         const hd = 64 + rd * 34 + 12, hm = 56 + rm * 30 + 12, yd = cur.d, ym = cur.m;
         faixa('Barra do topo', T.escuro, yd, hd, ym, hm);
-        texto('Marca', s.marca || 'Marca', estilo(T.fonteTitulo, 26, 700, T.sobreEscuro, { lh: 1.1 }), estilo(T.fonteTitulo, 22, 700, T.sobreEscuro, { lh: 1.1 }), D.mx, yd + 20, 600, M.mx, ym + 14, M.cw);
+        const lg = marcaLogo(s, yd, ym);
+        if (!lg.sozinha) texto('Marca', s.marca || 'Marca', estilo(T.fonteTitulo, 26, 700, T.sobreEscuro, { lh: 1.1 }), estilo(T.fonteTitulo, 22, 700, T.sobreEscuro, { lh: 1.1 }), D.mx + lg.dx, yd + 20, 600 - lg.dx, M.mx + lg.mx, ym + 14, M.cw - lg.mx);
         el('abas', 'Barra de abas', { ls: { fontFamily: T.fonteTexto, fontSize: 15, fontWeight: 600, color: T.sobreEscuro }, abas: { ...ABAS_PADRAO, estilo: 'sublinhado', corAtiva: T.acento, gap: 22 } },
           { x: D.mx, y: yd + 64, w: D.cw, h: rd * 34 }, { x: M.mx, y: ym + 56, w: M.cw, h: rm * 30, fs: 14 });
         cur.d += hd; cur.m += hm;
@@ -213,7 +232,8 @@ function motor(spec, T, inicio = { d: 0, m: 0 }, site = null) {
       const linhasM = links.length ? linha + 1 : 0;
       const hd = 72, hm = 58 + linhasM * 28 + (linhasM ? 8 : 0), yd = cur.d, ym = cur.m;
       faixa('Barra do topo', T.escuro, yd, hd, ym, hm);
-      texto('Marca', s.marca || 'Marca', estilo(T.fonteTitulo, 26, 700, T.sobreEscuro, { lh: 1.1 }), estilo(T.fonteTitulo, 22, 700, T.sobreEscuro, { lh: 1.1 }), D.mx, yd + 22, 400, M.mx, ym + 18, M.cw);
+      const lg2 = marcaLogo(s, yd, ym, 22, 18);
+      if (!lg2.sozinha) texto('Marca', s.marca || 'Marca', estilo(T.fonteTitulo, 26, 700, T.sobreEscuro, { lh: 1.1 }), estilo(T.fonteTitulo, 22, 700, T.sobreEscuro, { lh: 1.1 }), D.mx + lg2.dx, yd + 22, 400 - lg2.dx, M.mx + lg2.mx, ym + 18, M.cw - lg2.mx);
       let xd = W.d - D.mx;
       const dx = []; for (let i = links.length - 1; i >= 0; i--) { const w = larg(links[i], 15); xd -= w; dx[i] = { x: xd, w }; xd -= 26; }   // do último para o primeiro: o primeiro fica mais à esquerda
       links.forEach((l, i) => {
@@ -238,7 +258,9 @@ function motor(spec, T, inicio = { d: 0, m: 0 }, site = null) {
       if (s.botao) { itens.push(botao(s.botao.rotulo, s.botao, dd, dm, false, s.fundo === 'acento')); dd += 56 + 8; dm += 50 + 8; }
       const hdTotal = Math.max(dd + D.pad - yd, s.imagem ? 480 : 0), hmTotal = dm + M.pad - ym + (s.imagem ? 220 + 28 : 0);
       if (fundo) { const f = faixa('Fundo do destaque', fundo, yd, hdTotal, ym, hmTotal); els.splice(els.indexOf(f), 1); els.splice(els.length - itens.length, 0, f); }
-      if (s.imagem) { const q = quadroImagem('Imagem do destaque', { x: 680, y: yd + 48, w: 420, h: hdTotal - 96 }, { x: M.mx, y: dm, w: M.cw, h: 220 }, s.imagemRotulo || 'Imagem'); itens.push(q); }
+      // O nome do elemento é o rótulo do quadro: na lista de camadas do editor, "Ícone — Patrimônio
+      // Natural" diz o que é, e doze "Imagem do destaque" não dizem nada.
+      if (s.imagem) { const r = s.imagemRotulo || 'Imagem do destaque'; const q = quadroImagem(r, { x: 680, y: yd + 48, w: 420, h: hdTotal - 96 }, { x: M.mx, y: dm, w: M.cw, h: 220 }, r); itens.push(q); }
       if (anim) itens.forEach((e, i) => entra(e, i * 0.12));
       cur.d = yd + hdTotal; cur.m = ym + hmTotal;
     },
