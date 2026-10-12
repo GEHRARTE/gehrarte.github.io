@@ -4,15 +4,29 @@
 // Por que existe: quem monta uma página do MUVVI não devia precisar lembrar que o verde é #0e3e20 nem que o título é Libre Caslon
 // Text. A folha põe isso a um clique de distância, ao lado das ferramentas, e o resultado sai consistente entre páginas e pessoas.
 //
-// Uma folha é { id, nome, descricao, cores[], fontes[], formas[], svgs[], raio }:
-//   cores  { id, nome, valor, papel }   papel: 'fundo' | 'superficie' | 'texto' | 'suave' | 'marca' | 'acento' | 'sobre'
-//   fontes { nome, uso }                `nome` precisa existir em core/fonts.js, senão o editor não carrega a família
-//   formas { nome, shape, s, label? }   `shape` é um dos SHAPE_LIST (core/render.js); `s` é o estilo pronto
-//   svgs   { nome, code, bg? }          SVG inteiro, como na biblioteca; `bg` marca os que servem de fundo de página
+// Uma folha é { id, nome, descricao, cores[], fontes[], formas[], svgs[], imagens[], raio }:
+//   cores   { id, nome, valor, papel }   papel: 'fundo' | 'superficie' | 'texto' | 'suave' | 'marca' | 'acento' | 'sobre'
+//   fontes  { nome, uso }                `nome` precisa existir em core/fonts.js, senão o editor não carrega a família
+//   formas  { nome, shape, s, label? }   `shape` é um dos SHAPE_LIST (core/render.js); `s` é o estilo pronto
+//   svgs    { nome, code, bg? }          SVG inteiro, como na biblioteca; `bg` marca os que servem de fundo de página
+//   imagens { nome, src, alt?, nota? }   arquivo de marca (logomarca, ícone) servido pelo site — ver abaixo
+//
+// Por que `imagens` não é `svgs`: logomarca e ícone chegam do artista em PNG/WebP, não em vetor, e
+// embutir 500 KB de base64 no código seria absurdo. Então `src` é um CAMINHO RELATIVO para dentro do
+// próprio site (`assets/marca/...`), e o editor busca o arquivo na hora de inserir — o que entra no
+// projeto é a imagem embutida como qualquer outra, pelo mesmo caminho de `insertImageFile`.
+// `src` é propositalmente restrito: sem `//`, sem `:` e sem `..`, para que uma folha vinda de fora
+// não consiga apontar para outro servidor nem escapar da pasta do site.
 
 const PAPEIS = new Set(['fundo', 'superficie', 'texto', 'suave', 'marca', 'acento', 'sobre']);
 const HEX = /^#[0-9a-f]{6}$/i;
 const limpar = (v, max) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
+// Caminho de imagem aceito numa folha: relativo, dentro do site, com extensão de imagem.
+const SRC_OK = /^[a-z0-9][a-z0-9/_-]*\.(png|jpe?g|webp|gif|svg)$/i;
+const srcSeguro = (v) => {
+  const s = limpar(v, 200);
+  return s && SRC_OK.test(s) && !s.includes('..') && !s.includes('//') ? s : '';
+};
 
 // ---------- contraste (WCAG 2.1) ----------
 // Luminância relativa de um hex #rrggbb. Serve para dizer, na própria folha, quais pares de cor dão para ler.
@@ -79,12 +93,24 @@ export function normalizarFolha(bruta) {
     .filter((s) => s && typeof s.code === 'string' && s.code.includes('<svg'))
     .slice(0, 24)
     .map((s) => ({ nome: limpar(s.nome, 40) || 'Desenho', code: s.code, bg: !!s.bg }));
+  // Arquivos de marca. `src` que não passa por srcSeguro é descartado em silêncio, como o resto:
+  // folha vinda de fora não escolhe de onde o editor busca arquivo.
+  const imagens = (Array.isArray(bruta.imagens) ? bruta.imagens : [])
+    .map((i) => (i ? { ...i, src: srcSeguro(i.src) } : null))
+    .filter((i) => i && i.src)
+    .slice(0, 24)
+    .map((i) => ({
+      nome: limpar(i.nome, 40) || 'Imagem',
+      src: i.src,
+      alt: limpar(i.alt, 160),
+      nota: limpar(i.nota, 200),
+    }));
   return {
     id,
     nome: limpar(bruta.nome, 60) || id,
     descricao: limpar(bruta.descricao, 300),
     raio: Number.isFinite(+bruta.raio) ? Math.min(400, Math.max(0, +bruta.raio)) : 12,
-    cores, fontes, formas, svgs,
+    cores, fontes, formas, svgs, imagens,
   };
 }
 

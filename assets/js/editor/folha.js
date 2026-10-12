@@ -6,6 +6,7 @@
 //   fonte   → a família do texto (ou do rótulo da forma) selecionado.
 //   forma   → insere a forma já com o estilo da folha (preenchimento, traço, raio).
 //   desenho → insere o SVG; os marcados como fundo entram como fundo de página.
+//   marca   → busca o arquivo no site e o insere como imagem embutida no projeto (logomarca, ícones).
 // A folha escolhida fica gravada NO DOCUMENTO (`doc.folha`), não no navegador: quem abrir o projeto depois vê a mesma folha.
 // As contas (contraste, onde a cor entra, normalização) estão em core/folhas.js — puras e testadas.
 import { h } from '../core/dom.js';
@@ -15,8 +16,14 @@ import { FONTS, fontStack, loadFonts } from '../core/fonts.js';
 import { shapeSvg } from '../core/render.js';
 import { makeElement, fontOwner } from '../core/model.js';
 import { S, on, emit, selEls, mutate, setPage, touch } from './state.js';
-import { createShape, insertSvg, insertSvgBackground } from './tools.js';
+import { createShape, insertSvg, insertSvgBackground, insertImageFile } from './tools.js';
 import { section, hint, btn, toast } from './ui.js';
+
+// As imagens da folha guardam `src` relativo à RAIZ DO SITE, e o editor vive em /editor/ — resolver
+// contra location.href apontaria para /editor/assets/… Este módulo está em assets/js/editor/, então
+// a raiz do site fica três níveis acima dele. Vale no Pages, em localhost e dentro do app.
+const RAIZ_DO_SITE = new URL('../../../', import.meta.url);
+const urlDaMarca = (src) => new URL(src, RAIZ_DO_SITE).href;
 
 const nomeDoPapel = {
   fundo: 'fundo da página', superficie: 'blocos e cartões', texto: 'texto', suave: 'texto secundário',
@@ -131,6 +138,20 @@ export function initFolhaPanel(root) {
       hint('A forma entra na página já com o preenchimento, o traço e o canto da folha.'),
     ], { aberta: true, chave: 'folha-formas' }));
 
+    // Marca: logomarca e ícones do projeto. O arquivo vive no site; o que entra na página é a
+    // imagem EMBUTIDA no projeto, pelo mesmo caminho de qualquer imagem enviada à mão.
+    if (folha.imagens?.length) {
+      root.append(section('Marca', [
+        h('div', { class: 'grid marca' }, folha.imagens.map((im) => h('button', {
+          class: 'cell wide', type: 'button', title: im.nota ? `Inserir ${im.nome} — ${im.nota}` : `Inserir: ${im.nome}`,
+          onclick: () => { gravarNoDoc(); return inserirImagem(im); },
+        },
+        h('div', { class: 'pv', style: sobreOFundo }, h('img', { src: urlDaMarca(im.src), alt: '', loading: 'lazy' })),
+        h('span', {}, im.nome)))),
+        hint('O arquivo vem do site e entra embutido no projeto — quem abrir depois vê a imagem, sem depender da pasta.'),
+      ], { aberta: true, chave: 'folha-marca' }));
+    }
+
     root.append(section('Desenhos', [
       h('div', { class: 'grid svgs' }, folha.svgs.map((s) => h('button', {
         class: 'cell wide' + (s.bg ? ' bgcell' : ''), type: 'button', title: s.bg ? `${s.nome} (fundo de página)` : s.nome,
@@ -143,6 +164,22 @@ export function initFolhaPanel(root) {
     root.append(h('div', { class: 'pad fd-rodape' },
       fundo ? btn({ label: 'Pôr o fundo da folha na página', ic: 'fit', onClick: () => aplicarCor(fundo, false) }) : null,
       hint('A folha fica gravada no projeto: quem abrir este arquivo depois vê a mesma.')));
+  }
+
+  // Traz o arquivo de marca do site e o insere como imagem do projeto. Erro de rede ou arquivo
+  // ausente precisa DIZER qual peça falhou: a folha lista sete, e "não consegui" sozinho não ajuda.
+  async function inserirImagem(im) {
+    try {
+      const r = await fetch(urlDaMarca(im.src));
+      if (!r.ok) throw new Error(`o arquivo respondeu ${r.status}`);
+      const blob = await r.blob();
+      const nome = im.src.split('/').pop() || 'imagem';
+      const tipo = blob.type || (nome.endsWith('.png') ? 'image/png' : 'image/webp');
+      return await insertImageFile(new File([blob], nome, { type: tipo }));
+    } catch (e) {
+      toast(`Não consegui trazer “${im.nome}”: ${e.message}.`, 'err');
+      return null;
+    }
   }
 
   // O documento manda: ao abrir outro arquivo, a folha dele (ou a do modelo de onde veio) é a que aparece.
