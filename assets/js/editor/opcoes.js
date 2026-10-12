@@ -18,6 +18,7 @@ import { openExportPdf } from './pdf.js';
 import { openExportPng } from './png.js';
 import { exportProject, exportHtml, importProject, buildProject } from './publish.js';
 import { saveCopyToDrive } from './drive.js';
+import { abrirCriador } from './library.js';
 import { reguasVisiveis, alternarReguas, gradeAtual, alternarGrade } from './reguas.js';
 import { viewerQuery } from '../core/model.js';
 import { BASE } from '../core/util.js';
@@ -91,6 +92,8 @@ export function abrirOpcoes(ancora) {
     { label: 'Novo arquivo…', icon: 'plus', onClick: goToNovoArquivo },
     { label: 'Arquivos', icon: 'stack', onClick: () => goToDocuments() },
     ...(S.host?.capacidades.publicar ? [{ label: 'Ver página publicada', icon: 'eye', onClick: verPublicada }] : []),
+    // também vive como aba na barra do topo, que some em tela estreita: aqui é o caminho que nunca some
+    { label: 'Animador (SVG animado)…', icon: 'wand', onClick: () => abrirCriador({}) },
     '-',
     { label: reguasVisiveis() ? 'Ocultar réguas' : 'Mostrar réguas', icon: 'layers', hint: 'Alt+R', onClick: alternarReguas },
     { label: gradeAtual().visivel ? 'Ocultar grade' : 'Mostrar grade', icon: 'grip', hint: 'Alt+G', onClick: alternarGrade },
