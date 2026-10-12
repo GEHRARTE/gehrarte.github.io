@@ -319,6 +319,14 @@ export function createDrive({
       return j.files || [];
     },
 
+    // As pastas do próprio Drive da pessoa. Precisa do escopo de leitura: pasta (ou arquivo) que ela
+    // mesma pôs lá pelo Drive na web é invisível para o `drive.file`, que só vê o que ESTE app criou.
+    async minhasPastas() {
+      const q = `'me' in owners and mimeType='${FOLDER_MIME}' and trashed=false`;
+      const j = await json(`${API}/files?${new URLSearchParams({ q, orderBy: 'modifiedTime desc', pageSize: '100', fields: 'files(id,name,modifiedTime)' })}`, undefined, { equipe: true });
+      return j.files || [];
+    },
+
     // Conteúdo de uma pasta compartilhada: subpastas e arquivos de uma vez, para montar as seções.
     async listarPasta(id, { pageToken, pageSize = 100 } = {}) {
       const p = new URLSearchParams({ q: `'${id}' in parents and trashed=false`, orderBy: 'folder,name', pageSize: String(pageSize), fields: `nextPageToken,files(${FILE_FIELDS})` });

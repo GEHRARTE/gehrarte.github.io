@@ -388,12 +388,6 @@ kbd{background:var(--p3);color:var(--tx);border-radius:5px;padding:1px 6px;margi
 .drv-folder:hover{border-color:var(--sel);background:var(--p3)}
 .drv-folder b{font:600 11.5px var(--f);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .drv-folder small{color:var(--dim);font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.drv-share{margin-top:10px;border-top:1px solid var(--line)}
-.drv-share-form{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.drv-email{flex:1 1 150px;min-width:0;background:var(--p2);border:1px solid var(--line);border-radius:7px;color:var(--tx);padding:6px 9px;font:inherit;font-size:12px}
-.drv-papel{background:var(--p2);border:1px solid var(--line);border-radius:7px;color:var(--tx);padding:6px;font:inherit;font-size:12px}
-.drv-acessos{margin:4px 0 0;padding-left:30px;list-style:disc;color:var(--tx);font-size:12px;line-height:1.6}
-.drv-acessos small{color:var(--dim)}
 .lib-body.drop{outline:2px dashed var(--sel);outline-offset:-6px}
 .btn.sm{height:26px;padding:0 9px;font-size:12px}
 .btn.danger{background:#7a2b2b;color:#fff}.btn.danger:hover{background:#9a3636}

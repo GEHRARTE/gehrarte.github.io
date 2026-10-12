@@ -1,27 +1,41 @@
 // Aba "Drive" da biblioteca: os materiais da pessoa, na pasta "Gehrarte — materiais" do Google Drive dela.
 // Enviar (botão ou arrastar), ver, inserir imagem na página, importar projeto (.json) e abrir o resto no Drive.
 //
-// Duas coisas que a tela garante, e que valem a leitura antes de mexer:
+// Três coisas que a tela garante, e que valem a leitura antes de mexer:
 //
 // 1. **Projetos e materiais aparecem separados** (D-0046). As subpastas "Projetos" e "Materiais"
 //    organizam o Drive de verdade (é para lá que o envio vai), mas a SEPARAÇÃO DA TELA é por tipo
-//    de arquivo, não por pasta — assim ela vale também na pasta da equipe, que vem organizada do
-//    jeito de quem a montou.
-// 2. **A pasta da equipe é outra conexão** (D-0047). Ver a pasta que outra pessoa compartilhou exige
-//    o escopo de leitura, que só é pedido quando alguém clica em "Abrir uma pasta da equipe" — nunca
-//    na abertura da aba.
+//    de arquivo, não por pasta — assim ela vale em qualquer pasta que a pessoa abrir, inclusive as
+//    que ela organizou do jeito dela, muito antes de existir esta aba.
+// 2. **"Abrir uma pasta do Drive" é outra conexão** (D-0047). O escopo do dia a dia (`drive.file`)
+//    só enxerga o que ESTE aplicativo criou: arquivo que a pessoa colocou pelo Drive na web é
+//    invisível, e é por isso que a pasta podia aparecer vazia tendo coisa dentro. Para ler o que
+//    não é do app — pasta própria ou compartilhada por outra pessoa — é preciso o escopo de
+//    leitura, pedido só quando alguém clica nesse botão.
+// 3. **`replaceChildren` é nativo e não filtra `null`** — ele insere o texto "null" na tela. O
+//    `h()` de core/dom.js filtra, o DOM não. Por isso a lista de filhos passa por `visiveis()`.
 import { h } from '../core/dom.js';
 import { S } from './state.js';
 import { btn, toast } from './ui.js';
 import { icon } from './icons.js';
 import { getDrive, uploadAll } from '../core/drive-ui.js';
 import { FOLDER_NAME, SUB_PROJETOS, SUB_MATERIAIS, folderUrl, humanSize, isImage, isProject } from '../core/drive.js';
-import { loadUsers, hashEmail } from '../core/auth.js';
 import { insertImageFile } from './tools.js';
 import { importProject } from './publish.js';
 import { NOME_ARQUIVO } from '../core/preferencias.js';
 
-const fmtQuota = (c) => (c.limite ? `${humanSize(c.usado)} de ${humanSize(c.limite)} usados no seu Drive` : `${humanSize(c.usado)} usados no seu Drive`);
+// Em conta Workspace (como a da UEM) o que o Google devolve é o POOL DO DOMÍNIO, não o espaço da
+// pessoa — na tela isso apareceu como "358 TB de 757 TB usados no seu Drive", o que é mentira.
+// Acima de 2 TB o número é institucional: conta de pessoa física não chega lá.
+const TETO_PESSOAL = 2 * 1024 ** 4;
+const fmtQuota = (c) => {
+  if (!c.limite) return `${humanSize(c.usado)} usados no seu Drive`;
+  if (c.limite > TETO_PESSOAL) return `${humanSize(c.usado)} de ${humanSize(c.limite)} usados no armazenamento da instituição`;
+  return `${humanSize(c.usado)} de ${humanSize(c.limite)} usados no seu Drive`;
+};
+
+// `replaceChildren` nativo transforma null no texto "null". Sempre passe os filhos por aqui.
+const visiveis = (...kids) => kids.flat(Infinity).filter((k) => k != null && k !== false);
 
 // O arquivo de preferências (disposição dos painéis) não é material de ninguém.
 const semPreferencias = (fs) => fs.filter((f) => f.name !== NOME_ARQUIVO);
@@ -34,13 +48,13 @@ export function driveTab(body) {
   body.append(view);
   let drive = null, info = null, folder = null;
   let meus = { projetos: [], materiais: [] };
-  let eq = null;         // pasta da equipe aberta: { raiz, caminho: [{id,name}], pastas, projetos, materiais }
-  let eqPastas = null;   // lista de pastas compartilhadas, na hora de escolher
-  let acessos = null;    // quem já tem acesso à minha pasta (painel de compartilhar)
-  const uploads = new Map();   // índice -> estado de cada arquivo em envio
+  let aberta = null;      // pasta do Drive aberta: { raiz, caminho: [{id,name}], pastas, projetos, materiais }
+  let escolher = null;    // { minhas: [], compartilhadas: [] } enquanto a pessoa escolhe a pasta
+  const uploads = new Map();
   let alive = true;
 
-  const fail = (e) => { if (alive) view.replaceChildren(h('p', { class: 'hint bad pad' }, e.message || String(e)), btn({ label: 'Tentar de novo', cls: 'sm', onClick: boot })); };
+  const pinta = (...kids) => view.replaceChildren(...visiveis(kids));
+  const fail = (e) => { if (alive) pinta(h('p', { class: 'hint bad pad' }, e.message || String(e)), btn({ label: 'Tentar de novo', cls: 'sm', onClick: boot })); };
   const erroDeConexao = (e) => e.reason === 'expired' || e.reason === 'noToken';
 
   async function connect() {
@@ -51,7 +65,7 @@ export function driveTab(body) {
   }
 
   function disconnected(erro) {
-    view.replaceChildren(
+    pinta(
       h('div', { class: 'pad drv-intro' },
         h('p', {}, h('b', {}, 'Seus materiais, sempre à mão.'), ' Imagens, fontes, PSD e PDF ficam no ', h('b', {}, 'seu Google Drive institucional'), `, na pasta “${FOLDER_NAME}” — e aparecem aqui enquanto você edita.`),
         h('p', { class: 'hint' }, 'O Gehrarte só enxerga o que for enviado por aqui. O resto do seu Drive continua invisível para o site.'),
@@ -59,9 +73,9 @@ export function driveTab(body) {
         btn({ label: drive?.wasConnected() ? 'Reconectar ao Drive' : 'Conectar ao Google Drive', ic: 'cloud', cls: 'primary', onClick: connect })));
   }
 
-  // Lê a minha pasta inteira: as duas subpastas e a raiz (onde ficou o que foi enviado antes da separação).
+  // Lê a pasta de materiais: as duas subpastas e a raiz (onde ficou o que foi enviado antes da separação).
   async function load() {
-    view.replaceChildren(h('p', { class: 'hint pad' }, 'Abrindo o seu Drive…'));
+    pinta(h('p', { class: 'hint pad' }, 'Abrindo o seu Drive…'));
     try {
       if (!info) info = await drive.about();
       folder ||= await drive.ensureFolder();
@@ -91,9 +105,9 @@ export function driveTab(body) {
   }
 
   // Trazer para a página: imagem entra no canvas, projeto é importado, o resto abre no Drive.
-  // `daEquipe` troca o token usado no download (a pasta da equipe é lida com o escopo de leitura).
-  async function use(f, daEquipe = false) {
-    const baixar = () => (daEquipe ? drive.baixarDaEquipe(f.id) : drive.download(f.id));
+  // `lido` = veio de uma pasta aberta com o escopo de leitura, então o download usa aquele token.
+  async function use(f, lido = false) {
+    const baixar = () => (lido ? drive.baixarDaEquipe(f.id) : drive.download(f.id));
     try {
       if (isImage(f.mimeType)) {
         toast('Trazendo a imagem do Drive…');
@@ -106,64 +120,43 @@ export function driveTab(body) {
     } catch (e) { toast(e.message, 'err'); }
   }
 
-  // ---------- pasta da equipe ----------
+  // ---------- abrir uma pasta do Drive (escopo de leitura) ----------
 
-  async function abrirEquipe() {
+  async function abrirEscolha() {
     try {
       if (!drive.equipeConectada()) await drive.conectarEquipe();
-      eqPastas = await drive.pastasCompartilhadas();
-      if (!eqPastas.length) toast('Ninguém compartilhou pasta com você ainda.', 'err');
+      pinta(h('p', { class: 'hint pad' }, 'Procurando as suas pastas…'));
+      const [minhas, compartilhadas] = await Promise.all([drive.minhasPastas(), drive.pastasCompartilhadas()]);
+      escolher = { minhas, compartilhadas };
+      if (!minhas.length && !compartilhadas.length) toast('Não achei pasta nenhuma neste Drive.', 'err');
       paint();
-    } catch (e) { toast(e.message, 'err'); }
+    } catch (e) { toast(e.message, 'err'); paint(); }
   }
 
   async function entrarNaPasta(p, { raiz = false } = {}) {
-    const deRaiz = raiz || !eq;
+    const deRaiz = raiz || !aberta;
     try {
-      view.replaceChildren(h('p', { class: 'hint pad' }, `Abrindo “${p.name}”…`));
+      pinta(h('p', { class: 'hint pad' }, `Abrindo “${p.name}”…`));
       const r = await drive.listarPasta(p.id);
-      const caminho = deRaiz ? [p] : [...eq.caminho, p];
-      eq = { raiz: deRaiz ? p : eq.raiz, caminho, pastas: r.pastas, ...separar(semPreferencias(r.arquivos)) };
-      if (deRaiz) drive.lembrarPastaEquipe(p);   // só a pasta de entrada vale lembrar
-      eqPastas = null;
+      const caminho = deRaiz ? [p] : [...aberta.caminho, p];
+      aberta = { raiz: deRaiz ? p : aberta.raiz, caminho, pastas: r.pastas, ...separar(semPreferencias(r.arquivos)) };
+      if (deRaiz) drive.lembrarPastaEquipe(p);
+      escolher = null;
       paint();
     } catch (e) {
-      if (e.reason === 'expiredEquipe') eq = null;
+      if (e.reason === 'expiredEquipe') aberta = null;
       toast(e.message, 'err');
       paint();
     }
   }
 
   async function voltarPara(i) {
-    const alvo = eq.caminho[i];
-    eq = { ...eq, caminho: eq.caminho.slice(0, i) };   // entrarNaPasta reempilha o alvo
+    const alvo = aberta.caminho[i];
+    aberta = { ...aberta, caminho: aberta.caminho.slice(0, i) };
     await entrarNaPasta(alvo, { raiz: i === 0 });
   }
 
-  function fecharEquipe() { drive.desconectarEquipe(); eq = null; eqPastas = null; paint(); }
-
-  // ---------- compartilhar a minha pasta ----------
-
-  async function abrirCompartilhar() {
-    try {
-      acessos = await drive.compartilhamentos(folder);
-      paint();
-    } catch (e) { toast(e.message, 'err'); }
-  }
-
-  async function compartilhar(email, papel) {
-    const alvo = String(email || '').trim();
-    if (!alvo) return toast('Escreva o e-mail de quem vai receber.', 'err');
-    try {
-      // users.json guarda só o hash do e-mail (o arquivo é público), então o nome vem da conferência.
-      const [users, hash] = await Promise.all([loadUsers(), hashEmail(alvo)]);
-      const quem = users.find((u) => u.emailHash === hash);
-      await drive.compartilhar(folder, alvo, papel);
-      toast(quem ? `Pasta compartilhada com ${quem.nome}.` : `Pasta compartilhada com ${alvo} — essa conta não é da equipe do site.`, 'ok');
-      acessos = await drive.compartilhamentos(folder);
-      paint();
-    } catch (e) { toast(e.message, 'err'); }
-  }
+  function fecharPasta() { drive.desconectarEquipe(); aberta = null; escolher = null; paint(); }
 
   // ---------- desenho ----------
 
@@ -174,103 +167,89 @@ export function driveTab(body) {
       u.estado === 'erro' ? h('em', {}, u.erro) : h('i', { style: { width: Math.round(u.progresso * 100) + '%' } }))));
   }
 
-  function card(f, daEquipe = false) {
+  function card(f, lido = false) {
     const act = isImage(f.mimeType) ? 'Inserir na página' : isProject(f) ? 'Importar projeto' : 'Abrir no Drive';
     const thumb = h('div', { class: 'drv-th' });
     if (f.thumbnailLink) thumb.append(h('img', { src: f.thumbnailLink, alt: '', referrerpolicy: 'no-referrer', loading: 'lazy', onerror: (e) => e.target.replaceWith(h('span', { html: icon('image', 22) })) }));
     else thumb.append(h('span', { html: icon(isProject(f) ? 'stack' : 'download', 22) }));
-    return h('button', { class: 'drv-file', title: `${f.name} — ${act}`, onclick: () => use(f, daEquipe) }, thumb,
+    return h('button', { class: 'drv-file', title: `${f.name} — ${act}`, onclick: () => use(f, lido) }, thumb,
       h('b', {}, f.name), h('small', {}, [humanSize(f.size), act].filter(Boolean).join(' · ')));
   }
 
-  // Uma seção com título e contagem; quando vazia, explica o que colocar nela.
-  function secao(titulo, arquivos, vazio, daEquipe = false) {
+  function secao(titulo, arquivos, vazio, lido = false) {
     return h('section', { class: 'drv-sec' },
       h('h4', { class: 'pad' }, titulo, arquivos.length ? h('span', { class: 'drv-n' }, String(arquivos.length)) : null),
       arquivos.length
-        ? h('div', { class: 'drv-grid' }, arquivos.map((f) => card(f, daEquipe)))
-        : h('p', { class: 'hint pad' }, vazio));
+        ? h('div', { class: 'drv-grid' }, arquivos.map((f) => card(f, lido)))
+        : (vazio ? h('p', { class: 'hint pad' }, vazio) : null));
   }
 
-  function pastaBotao(p) {
-    return h('button', { class: 'drv-folder', title: `Abrir “${p.name}”`, onclick: () => entrarNaPasta(p) },
-      h('span', { html: icon('folder', 20) }), h('b', {}, p.name));
-  }
+  const pastaBotao = (p, extra) => h('button', { class: 'drv-folder', title: `Abrir “${p.name}”`, onclick: () => entrarNaPasta(p, extra) },
+    h('span', { html: icon('folder', 20) }), h('b', {}, p.name));
 
-  function blocoEquipe() {
-    // 1. nem conectado: só o convite, com o aviso do que o botão vai pedir
-    if (!eq && !eqPastas) {
+  function blocoPasta() {
+    // 1. nem conectado: o convite, dizendo para que serve e o que vai ser pedido
+    if (!aberta && !escolher) {
       return h('section', { class: 'drv-sec drv-equipe' },
-        h('h4', { class: 'pad' }, 'Pasta da equipe'),
-        h('p', { class: 'hint pad' }, 'Para abrir uma pasta que outra pessoa compartilhou com você, o Google exige uma permissão de leitura à parte — ela é pedida só quando você clica aqui, e vale apenas para ver.'),
-        h('div', { class: 'pad' }, btn({ label: 'Abrir uma pasta da equipe', ic: 'cloud', cls: 'sm', onClick: abrirEquipe })));
+        h('h4', { class: 'pad' }, 'Abrir uma pasta do Drive'),
+        h('p', { class: 'hint pad' }, 'Para carregar um projeto ou material que ', h('b', {}, 'já está no seu Drive'), ' — ou numa pasta que alguém compartilhou com você — o Google exige uma permissão de leitura à parte. Ela é pedida só quando você clica aqui, e vale apenas para ver.'),
+        h('p', { class: 'hint pad' }, 'É por aqui que se abre o que você colocou pelo Drive na web: as seções acima mostram só o que foi enviado por este editor.'),
+        h('div', { class: 'pad' }, btn({ label: 'Abrir uma pasta do Drive', ic: 'cloud', cls: 'sm', onClick: abrirEscolha })));
     }
-    // 2. conectado, escolhendo qual pasta
-    if (eqPastas) {
+    // 2. escolhendo a pasta
+    if (escolher) {
+      const { minhas, compartilhadas } = escolher;
       return h('section', { class: 'drv-sec drv-equipe' },
-        h('h4', { class: 'pad' }, 'Pastas compartilhadas com você'),
-        eqPastas.length
-          ? h('div', { class: 'drv-folders' }, eqPastas.map((p) => h('button', { class: 'drv-folder', onclick: () => entrarNaPasta(p, { raiz: true }) },
+        h('h4', { class: 'pad' }, 'Qual pasta?'),
+        minhas.length ? h('p', { class: 'hint pad' }, 'Suas pastas') : null,
+        minhas.length ? h('div', { class: 'drv-folders' }, minhas.map((p) => pastaBotao(p, { raiz: true }))) : null,
+        compartilhadas.length ? h('p', { class: 'hint pad' }, 'Compartilhadas com você') : null,
+        compartilhadas.length
+          ? h('div', { class: 'drv-folders' }, compartilhadas.map((p) => h('button', { class: 'drv-folder', onclick: () => entrarNaPasta(p, { raiz: true }) },
             h('span', { html: icon('folder', 20) }),
             h('b', {}, p.name),
             h('small', {}, `de ${p.owners?.[0]?.displayName || p.owners?.[0]?.emailAddress || 'alguém da equipe'}`))))
-          : h('p', { class: 'hint pad' }, 'Nada compartilhado com você por enquanto.'),
-        h('div', { class: 'pad' }, btn({ label: 'Cancelar', cls: 'sm', onClick: () => { eqPastas = null; paint(); } })));
+          : null,
+        !minhas.length && !compartilhadas.length ? h('p', { class: 'hint pad' }, 'Não achei pasta nenhuma neste Drive.') : null,
+        h('div', { class: 'pad' }, btn({ label: 'Cancelar', cls: 'sm', onClick: () => { escolher = null; paint(); } })));
     }
     // 3. pasta aberta: caminho, subpastas e o conteúdo separado
+    const nada = !aberta.pastas.length && !aberta.projetos.length && !aberta.materiais.length;
     return h('section', { class: 'drv-sec drv-equipe' },
       h('div', { class: 'pad drv-head' },
-        h('b', {}, 'Pasta da equipe'),
+        h('b', {}, 'Pasta do Drive'),
         h('span', { class: 'drv-sp' }),
-        btn({ label: 'Trocar', cls: 'sm', onClick: abrirEquipe }),
-        btn({ ic: 'x', title: 'Fechar a pasta da equipe e dispensar a permissão de leitura', cls: 'icon sm', onClick: fecharEquipe })),
-      h('p', { class: 'hint pad drv-caminho' }, ...eq.caminho.map((p, i) => i === eq.caminho.length - 1
+        btn({ label: 'Trocar', cls: 'sm', onClick: abrirEscolha }),
+        btn({ ic: 'x', title: 'Fechar e dispensar a permissão de leitura', cls: 'icon sm', onClick: fecharPasta })),
+      h('p', { class: 'hint pad drv-caminho' }, ...aberta.caminho.map((p, i) => i === aberta.caminho.length - 1
         ? h('b', {}, p.name)
         : h('span', {}, h('a', { href: '#', onclick: (e) => { e.preventDefault(); voltarPara(i); } }, p.name), ' / '))),
-      eq.pastas.length ? h('div', { class: 'drv-folders' }, eq.pastas.map(pastaBotao)) : null,
-      eq.projetos.length ? secao('Projetos', eq.projetos, '', true) : null,
-      eq.materiais.length ? secao('Materiais', eq.materiais, '', true) : null,
-      !eq.pastas.length && !eq.projetos.length && !eq.materiais.length ? h('p', { class: 'hint pad' }, 'Esta pasta está vazia.') : null);
-  }
-
-  function blocoCompartilhar() {
-    if (!acessos) return null;
-    const inp = h('input', { type: 'email', class: 'drv-email', placeholder: 'nome@uem.br', onkeydown: (e) => { if (e.key === 'Enter') { e.preventDefault(); compartilhar(inp.value, sel.value); } } });
-    const sel = h('select', { class: 'drv-papel' }, h('option', { value: 'reader' }, 'pode ver'), h('option', { value: 'writer' }, 'pode ver e mexer'));
-    const outros = acessos.filter((p) => p.role !== 'owner');
-    return h('section', { class: 'drv-sec drv-share' },
-      h('h4', { class: 'pad' }, 'Compartilhar a pasta'),
-      h('p', { class: 'hint pad' }, 'Quem receber vê esta pasta no Drive e pode abri-la aqui no ArtAtk, em “Pasta da equipe”.'),
-      h('div', { class: 'pad drv-share-form' }, inp, sel, btn({ label: 'Compartilhar', cls: 'primary sm', onClick: () => compartilhar(inp.value, sel.value) })),
-      outros.length
-        ? h('ul', { class: 'drv-acessos pad' }, outros.map((p) => h('li', {}, p.emailAddress || p.type, h('small', {}, p.role === 'writer' ? ' · pode mexer' : ' · pode ver'))))
-        : h('p', { class: 'hint pad' }, 'Ninguém além de você tem acesso ainda.'),
-      h('div', { class: 'pad' }, btn({ label: 'Fechar', cls: 'sm', onClick: () => { acessos = null; paint(); } })));
+      aberta.pastas.length ? h('div', { class: 'drv-folders' }, aberta.pastas.map((p) => pastaBotao(p))) : null,
+      aberta.projetos.length ? secao('Projetos', aberta.projetos, '', true) : null,
+      aberta.materiais.length ? secao('Materiais', aberta.materiais, '', true) : null,
+      nada ? h('p', { class: 'hint pad' }, 'Esta pasta está vazia.') : null);
   }
 
   function paint() {
     const pick = h('input', { type: 'file', multiple: true, hidden: true, onchange: () => { send(pick.files); pick.value = ''; } });
     const vazia = !meus.projetos.length && !meus.materiais.length;
-    view.replaceChildren(
+    pinta(
       h('div', { class: 'pad drv-head' },
         h('b', {}, info?.email || 'Google Drive'),
         h('span', { class: 'drv-sp' }),
         btn({ ic: 'reset', title: 'Atualizar a lista', cls: 'icon sm', onClick: () => load() }),
-        btn({ ic: 'x', title: 'Desconectar o Drive neste navegador', cls: 'icon sm', onClick: () => { drive.disconnect(); info = null; folder = null; eq = null; eqPastas = null; acessos = null; disconnected(); } })),
+        btn({ ic: 'x', title: 'Desconectar o Drive neste navegador', cls: 'icon sm', onClick: () => { drive.disconnect(); info = null; folder = null; aberta = null; escolher = null; disconnected(); } })),
       info?.cota ? h('p', { class: 'hint pad' }, fmtQuota(info.cota)) : null,
-      h('div', { class: 'pad drv-acoes' },
-        btn({ label: 'Enviar arquivos', ic: 'upload', cls: 'primary', onClick: () => pick.click() }), pick,
-        btn({ label: 'Compartilhar…', ic: 'cloud', cls: 'sm', onClick: abrirCompartilhar })),
+      h('div', { class: 'pad drv-acoes' }, btn({ label: 'Enviar arquivos', ic: 'upload', cls: 'primary', onClick: () => pick.click() }), pick),
       h('p', { class: 'hint pad' }, 'Ou arraste arquivos para cá — projeto vai para “Projetos”, o resto para “Materiais”. ',
         h('a', { href: folder ? folderUrl(folder) : '#', target: '_blank', rel: 'noopener' }, 'Abrir a pasta no Drive ↗')),
       upBox,
-      blocoCompartilhar(),
       vazia
-        ? h('p', { class: 'hint pad' }, 'A pasta ainda está vazia. Envie os materiais que você vai usar nas suas páginas.')
+        ? h('p', { class: 'hint pad' }, 'Nada enviado por este editor ainda. O que você colocou pelo Drive na web não aparece aqui — abra pela seção abaixo.')
         : h('div', {},
           secao('Projetos', meus.projetos, 'Nenhum projeto aqui. Envie um .json do ArtAtk, ou use “Salvar cópia no Drive” no menu ⋯.'),
           secao('Materiais', meus.materiais, 'Nenhum material ainda. Envie imagens, fontes, PSD ou PDF.')),
-      blocoEquipe());
+      blocoPasta());
     paintUploads();
   }
 
@@ -280,7 +259,7 @@ export function driveTab(body) {
   body.addEventListener('drop', (e) => { body.classList.remove('drop'); if (drive?.isConnected() && e.dataTransfer?.files?.length) { e.preventDefault(); send(e.dataTransfer.files); } });
 
   async function boot() {
-    view.replaceChildren(h('p', { class: 'hint pad' }, 'Carregando…'));
+    pinta(h('p', { class: 'hint pad' }, 'Carregando…'));
     try { drive = await getDrive(S.slug); } catch (e) { return fail(e); }
     if (drive.isConnected()) load(); else disconnected();
   }
