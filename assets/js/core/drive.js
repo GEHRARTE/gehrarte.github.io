@@ -5,11 +5,21 @@
 // Não é escopo sensível — não exige verificação do Google — e o Gehrarte nunca vê o resto do Drive de ninguém.
 // Sem servidor: o navegador fala direto com a API do Drive usando um token de acesso de ~1 h (Google Identity Services).
 //
+// SEGUNDO escopo, de leitura (`drive.readonly`), para a PASTA DA EQUIPE: `drive.file` concede acesso
+// arquivo por arquivo, nunca ao conteúdo de uma pasta que outra pessoa compartilhou — nem pelo Google
+// Picker. Então quem precisa abrir a pasta de outro artista pede esse escopo, e **só nesse momento**
+// (`conectarEquipe`), com token guardado à parte: as chamadas do dia a dia nunca o usam. É escopo
+// restrito no Google: funciona para os testadores cadastrados enquanto o app está em "Testando";
+// publicar exigirá avaliação de segurança. Decisão D-0047.
+//
 // createDrive() recebe tudo que toca o navegador/rede como parâmetro (requestToken, fetchImpl, put, storage),
 // então a lógica é testável em Node (tests/drive.test.mjs).
 import './migracao.js';
 export const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+export const DRIVE_SCOPE_EQUIPE = 'https://www.googleapis.com/auth/drive.readonly';
 export const FOLDER_NAME = 'Gehrarte — materiais';
+export const SUB_PROJETOS = 'Projetos';
+export const SUB_MATERIAIS = 'Materiais';
 export const FOLDER_MIME = 'application/vnd.google-apps.folder';
 const API = 'https://www.googleapis.com/drive/v3';
 const UPLOAD = 'https://www.googleapis.com/upload/drive/v3';
@@ -21,7 +31,11 @@ export class DriveError extends Error {
 
 export const folderUrl = (id) => `https://drive.google.com/drive/folders/${id}`;
 export const isImage = (mime) => /^image\/(png|jpe?g|webp|gif|svg\+xml)$/.test(mime || '');
-export const isProject = (f) => /^gehr?arte-.+\.json$/i.test(f?.name || '');
+// Candidato a projeto do ArtAtk: qualquer .json. Antes isto exigia o nome começando em "gehrarte-",
+// o que deixava de fora projeto vindo de fora (muvvi-site.json, por exemplo) — e o cartão oferecia
+// "Abrir no Drive" em vez de "Importar projeto". Quem valida de verdade é importProject(), que lê o
+// campo `format` do arquivo e avisa com clareza quando não é projeto.
+export const isProject = (f) => /\.json$/i.test(f?.name || '') || (f?.mimeType || '') === 'application/json';
 export const humanSize = (n) => {
   n = Number(n);
   if (!Number.isFinite(n) || n < 0) return '';
@@ -99,21 +113,33 @@ export function createDrive({
   now = () => Date.now(),
   revoke = (t) => safe(() => google.accounts.oauth2.revoke(t, () => {})),
 } = {}) {
-  const K = { token: `gehrarte.drive.token.${slug}`, folder: `gehrarte.drive.folder.${slug}`, on: `gehrarte.drive.on.${slug}` };
+  const K = {
+    token: `gehrarte.drive.token.${slug}`, folder: `gehrarte.drive.folder.${slug}`, on: `gehrarte.drive.on.${slug}`,
+    tokenEquipe: `gehrarte.drive.equipe.token.${slug}`, pastaEquipe: `gehrarte.drive.equipe.pasta.${slug}`,
+  };
   let tok = safe(() => JSON.parse(session.getItem(K.token) || 'null'));
+  let tokEquipe = safe(() => JSON.parse(session.getItem(K.tokenEquipe) || 'null'));
   let folderId = null;
+  const subIds = new Map();   // nome da subpasta -> id, nesta sessão
 
-  const valid = () => !!tok && tok.exp > now() + 60e3;
+  const vivo = (t) => !!t && t.exp > now() + 60e3;
+  const valid = () => vivo(tok);
   const saveTok = (t) => { tok = t; if (t) session.setItem(K.token, JSON.stringify(t)); else session.removeItem(K.token); };
+  const saveTokEquipe = (t) => { tokEquipe = t; if (t) session.setItem(K.tokenEquipe, JSON.stringify(t)); else session.removeItem(K.tokenEquipe); };
 
-  async function api(url, init = {}) {
-    if (!valid()) throw new DriveError('Conecte ao Google Drive primeiro.', 401, 'noToken');
-    const r = await fetchImpl(url, { ...init, headers: { ...(init.headers || {}), Authorization: `Bearer ${tok.access_token}` } });
-    if (r.status === 401) { saveTok(null); throw new DriveError('A conexão com o Drive expirou. Conecte de novo.', 401, 'expired'); }
+  // `equipe: true` usa o token de leitura da pasta compartilhada; o padrão é o token estreito (drive.file).
+  async function api(url, init = {}, { equipe = false } = {}) {
+    const t = equipe ? tokEquipe : tok;
+    if (!vivo(t)) throw new DriveError(equipe ? 'Abra uma pasta da equipe primeiro.' : 'Conecte ao Google Drive primeiro.', 401, 'noToken');
+    const r = await fetchImpl(url, { ...init, headers: { ...(init.headers || {}), Authorization: `Bearer ${t.access_token}` } });
+    if (r.status === 401) {
+      if (equipe) { saveTokEquipe(null); throw new DriveError('O acesso à pasta da equipe expirou. Abra de novo.', 401, 'expiredEquipe'); }
+      saveTok(null); throw new DriveError('A conexão com o Drive expirou. Conecte de novo.', 401, 'expired');
+    }
     if (!r.ok) throw await toDriveError(r);
     return r;
   }
-  const json = async (url, init) => (await api(url, init)).json();
+  const json = async (url, init, opts) => (await api(url, init, opts)).json();
 
   const self = {
     isConnected: () => valid(),
@@ -134,7 +160,15 @@ export function createDrive({
       local.setItem(K.on, '1');
       return info;
     },
-    disconnect() { const t = tok?.access_token; saveTok(null); folderId = null; local.removeItem(K.on); if (t) revoke(t); },
+    // Desconectar é para valer: derruba também o acesso de leitura à pasta da equipe, se houver.
+    disconnect() {
+      const t = tok?.access_token, te = tokEquipe?.access_token;
+      saveTok(null); saveTokEquipe(null);
+      folderId = null; subIds.clear();
+      local.removeItem(K.on); local.removeItem(K.pastaEquipe);
+      if (t) revoke(t);
+      if (te) revoke(te);
+    },
 
     async about() {
       const j = await json(`${API}/about?fields=${encodeURIComponent('user(emailAddress,displayName),storageQuota(limit,usage)')}`);
@@ -162,22 +196,54 @@ export function createDrive({
       return (folderId = id);
     },
 
-    async list({ pageToken, pageSize = 60 } = {}) {
+    // Subpasta de dentro da pasta de materiais — "Projetos" ou "Materiais". Cria se não existir (D-0046).
+    async ensureSubfolder(nome) {
+      if (subIds.has(nome)) return subIds.get(nome);
       const parent = await self.ensureFolder();
-      const p = new URLSearchParams({ q: `'${parent}' in parents and trashed=false`, orderBy: 'modifiedTime desc', pageSize: String(pageSize), fields: `nextPageToken,files(${FILE_FIELDS})` });
+      const chave = `${K.folder}.${nome}`;
+      const cached = local.getItem(chave);
+      if (cached) {
+        try {
+          const f = await json(`${API}/files/${encodeURIComponent(cached)}?fields=id,trashed`);
+          if (!f.trashed) { subIds.set(nome, cached); return cached; }
+        } catch (e) { if (e.status !== 404) throw e; }
+      }
+      const q = `mimeType='${FOLDER_MIME}' and name='${esc(nome)}' and '${parent}' in parents and trashed=false`;
+      const found = await json(`${API}/files?${new URLSearchParams({ q, fields: 'files(id)', pageSize: '1' })}`);
+      let id = found.files?.[0]?.id;
+      if (!id) {
+        id = (await json(`${API}/files?fields=id`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: nome, mimeType: FOLDER_MIME, parents: [parent] }) })).id;
+      }
+      local.setItem(chave, id);
+      subIds.set(nome, id);
+      return id;
+    },
+
+    // Onde um arquivo deve cair: projeto (.json) em "Projetos", o resto em "Materiais".
+    pastaDe: (f) => (isProject(f) ? SUB_PROJETOS : SUB_MATERIAIS),
+
+    // `parent` lista uma pasta específica (ex.: a subpasta "Projetos"); sem ele, a raiz dos materiais.
+    async list({ pageToken, pageSize = 60, parent } = {}) {
+      const alvo = parent || await self.ensureFolder();
+      const p = new URLSearchParams({ q: `'${alvo}' in parents and trashed=false`, orderBy: 'modifiedTime desc', pageSize: String(pageSize), fields: `nextPageToken,files(${FILE_FIELDS})` });
       if (pageToken) p.set('pageToken', pageToken);
       const j = await json(`${API}/files?${p}`);
-      return { files: j.files || [], next: j.nextPageToken || null };
+      const files = (j.files || []).filter((f) => f.mimeType !== FOLDER_MIME);   // subpastas não são material
+      return { files, next: j.nextPageToken || null };
     },
 
     // Envio retomável (aguenta arquivos grandes). onProgress(0..1).
-    async upload(file, { onProgress, name = file.name } = {}) {
-      const parent = await self.ensureFolder();
+    // `pasta` escolhe o destino: um nome de subpasta, ou null para a raiz dos materiais.
+    // Sem `pasta`, o tipo decide — projeto vai para "Projetos", o resto para "Materiais".
+    async upload(file, { onProgress, name = file.name, pasta } = {}) {
+      const destino = pasta === null
+        ? await self.ensureFolder()
+        : await self.ensureSubfolder(pasta || self.pastaDe({ name, mimeType: file.type }));
       const type = file.type || 'application/octet-stream';
       const init = await api(`${UPLOAD}/files?uploadType=resumable&fields=${FILE_FIELDS}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json; charset=UTF-8', 'X-Upload-Content-Type': type, 'X-Upload-Content-Length': String(file.size) },
-        body: JSON.stringify({ name, parents: [parent], mimeType: type }),
+        body: JSON.stringify({ name, parents: [destino], mimeType: type }),
       });
       const loc = init.headers.get('Location');
       if (!loc) throw new DriveError('O Drive não abriu a sessão de envio. Tente de novo.');
@@ -188,8 +254,8 @@ export function createDrive({
     async trash(id) { return json(`${API}/files/${encodeURIComponent(id)}?fields=id`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ trashed: true }) }); },
 
     // Lê o texto de um arquivo da pasta pelo nome (o que `saveText` gravou). null se não existe.
-    async loadText(name) {
-      const parent = await self.ensureFolder();
+    async loadText(name, { pasta } = {}) {
+      const parent = pasta ? await self.ensureSubfolder(pasta) : await self.ensureFolder();
       const q = `'${parent}' in parents and name='${esc(name)}' and trashed=false`;
       const found = await json(`${API}/files?${new URLSearchParams({ q, fields: 'files(id)', pageSize: '1' })}`);
       const id = found.files?.[0]?.id;
@@ -197,8 +263,9 @@ export function createDrive({
     },
 
     // Grava um texto (ex.: cópia do projeto .json) na pasta; se já existe arquivo com esse nome, atualiza.
-    async saveText(name, text, mime = 'application/json') {
-      const parent = await self.ensureFolder();
+    // `pasta` manda para uma subpasta; sem ela, fica na raiz (é onde vive o arquivo de preferências).
+    async saveText(name, text, mime = 'application/json', { pasta } = {}) {
+      const parent = pasta ? await self.ensureSubfolder(pasta) : await self.ensureFolder();
       const q = `'${parent}' in parents and name='${esc(name)}' and trashed=false`;
       const found = await json(`${API}/files?${new URLSearchParams({ q, fields: 'files(id)', pageSize: '1' })}`);
       const id = found.files?.[0]?.id;
@@ -209,6 +276,64 @@ export function createDrive({
         method: id ? 'PATCH' : 'POST', headers: { 'Content-Type': `multipart/related; boundary=${boundary}` }, body,
       });
     },
+
+    // ---------- compartilhar o que é meu (cabe no drive.file: a pasta foi criada por aqui) ----------
+
+    // Dá acesso a alguém, por e-mail. `role: 'reader'` (ver) ou `'writer'` (ver e mexer). D-0048.
+    async compartilhar(id, email, role = 'reader') {
+      return json(`${API}/files/${encodeURIComponent(id)}/permissions?${new URLSearchParams({ sendNotificationEmail: 'true', fields: 'id,role,emailAddress' })}`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role, type: 'user', emailAddress: email }),
+      });
+    },
+
+    // Quem já tem acesso — para a tela não oferecer de novo a mesma pessoa.
+    async compartilhamentos(id) {
+      const j = await json(`${API}/files/${encodeURIComponent(id)}/permissions?${new URLSearchParams({ fields: 'permissions(id,role,type,emailAddress)' })}`);
+      return j.permissions || [];
+    },
+
+    // ---------- pasta da equipe (escopo de leitura, pedido só aqui) ----------
+
+    equipeConectada: () => vivo(tokEquipe),
+    pastaEquipeLembrada: () => safe(() => JSON.parse(local.getItem(K.pastaEquipe) || 'null')),
+    lembrarPastaEquipe(p) { if (p) local.setItem(K.pastaEquipe, JSON.stringify({ id: p.id, name: p.name })); else local.removeItem(K.pastaEquipe); },
+
+    // Pede o escopo de leitura. Tem de vir de um clique — abre a janela do Google.
+    async conectarEquipe() {
+      if (!clientId) throw new DriveError('O login com Google ainda não foi configurado neste site.');
+      const r = await requestToken({ clientId, scope: DRIVE_SCOPE_EQUIPE });
+      saveTokEquipe({ access_token: r.access_token, exp: now() + (Number(r.expires_in) || 3600) * 1000 });
+      return true;
+    },
+    desconectarEquipe() {
+      const t = tokEquipe?.access_token;
+      saveTokEquipe(null); local.removeItem(K.pastaEquipe);
+      if (t) revoke(t);
+    },
+
+    // As pastas que outras pessoas compartilharam com quem está logado.
+    async pastasCompartilhadas() {
+      const q = `sharedWithMe=true and mimeType='${FOLDER_MIME}' and trashed=false`;
+      const j = await json(`${API}/files?${new URLSearchParams({ q, orderBy: 'modifiedTime desc', pageSize: '50', fields: 'files(id,name,modifiedTime,owners(displayName,emailAddress))' })}`, undefined, { equipe: true });
+      return j.files || [];
+    },
+
+    // Conteúdo de uma pasta compartilhada: subpastas e arquivos de uma vez, para montar as seções.
+    async listarPasta(id, { pageToken, pageSize = 100 } = {}) {
+      const p = new URLSearchParams({ q: `'${id}' in parents and trashed=false`, orderBy: 'folder,name', pageSize: String(pageSize), fields: `nextPageToken,files(${FILE_FIELDS})` });
+      if (pageToken) p.set('pageToken', pageToken);
+      const j = await json(`${API}/files?${p}`, undefined, { equipe: true });
+      const todos = j.files || [];
+      return {
+        pastas: todos.filter((f) => f.mimeType === FOLDER_MIME),
+        arquivos: todos.filter((f) => f.mimeType !== FOLDER_MIME),
+        next: j.nextPageToken || null,
+      };
+    },
+
+    // Baixa um arquivo da pasta da equipe (com o token de leitura, não o do dia a dia).
+    async baixarDaEquipe(id) { return (await api(`${API}/files/${encodeURIComponent(id)}?alt=media`, {}, { equipe: true })).blob(); },
   };
   return self;
 }

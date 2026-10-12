@@ -362,6 +362,24 @@ kbd{background:var(--p3);color:var(--tx);border-radius:5px;padding:1px 6px;margi
 .drv-up i{position:absolute;left:0;top:0;bottom:0;background:#1e4a39;transition:width .2s}
 .drv-up.erro em{color:var(--err);font-style:normal;display:block;font-size:11px}
 .drv-up.ok i{background:#1e4a39}
+.drv-acoes{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding-bottom:4px}
+.drv-sec{padding-top:2px}
+.drv-sec h4{margin:10px 0 2px;display:flex;align-items:center;gap:6px;font:700 11px var(--f);text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+.drv-n{font:600 10px var(--f);letter-spacing:0;background:var(--p2);border:1px solid var(--line);border-radius:9px;padding:1px 6px;color:var(--dim)}
+.drv-equipe{margin-top:12px;border-top:1px solid var(--line);padding-top:4px}
+.drv-caminho{display:flex;flex-wrap:wrap;gap:2px;align-items:baseline}
+.drv-caminho a{color:var(--sel)}
+.drv-folders{display:flex;flex-wrap:wrap;gap:6px;padding:4px 14px}
+.drv-folder{display:flex;align-items:center;gap:6px;background:var(--p2);border:1px solid var(--line);border-radius:9px;padding:6px 9px;cursor:pointer;color:var(--tx);min-width:0;max-width:100%}
+.drv-folder:hover{border-color:var(--sel);background:var(--p3)}
+.drv-folder b{font:600 11.5px var(--f);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drv-folder small{color:var(--dim);font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drv-share{margin-top:10px;border-top:1px solid var(--line)}
+.drv-share-form{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.drv-email{flex:1 1 150px;min-width:0;background:var(--p2);border:1px solid var(--line);border-radius:7px;color:var(--tx);padding:6px 9px;font:inherit;font-size:12px}
+.drv-papel{background:var(--p2);border:1px solid var(--line);border-radius:7px;color:var(--tx);padding:6px;font:inherit;font-size:12px}
+.drv-acessos{margin:4px 0 0;padding-left:30px;list-style:disc;color:var(--tx);font-size:12px;line-height:1.6}
+.drv-acessos small{color:var(--dim)}
 .lib-body.drop{outline:2px dashed var(--sel);outline-offset:-6px}
 .btn.sm{height:26px;padding:0 9px;font-size:12px}
 .btn.danger{background:#7a2b2b;color:#fff}.btn.danger:hover{background:#9a3636}

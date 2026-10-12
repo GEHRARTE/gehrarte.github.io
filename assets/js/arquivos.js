@@ -407,7 +407,7 @@ function cartaoDrive(slug) {
         h('div', { class: 'tit' }, h('h3', {}, 'Materiais no Drive')),
         h('div', { class: 'chips' }, h('span', { class: 'chip tipo-drive' }, 'Google Drive'), h('span', { class: `chip ${conectado ? 'st-publicada' : 'st-inventario'}` }, conectado ? 'Conectado' : 'Não conectado')),
         h('dl', {},
-          linha('O que é', `Imagens, fontes, PSD e PDF que você vai usar nas páginas. Ficam no seu Drive institucional, na pasta “${FOLDER_NAME}”, e aparecem na aba Drive do editor.`),
+          linha('O que é', `Imagens, fontes, PSD e PDF que você vai usar nas páginas. Ficam no seu Drive institucional, na pasta “${FOLDER_NAME}”, e aparecem na aba Drive do editor — projeto em “Projetos”, o resto em “Materiais”.`),
           conectado ? linha('Conta', info.email) : null,
           conectado ? linha('Espaço', info.cota.limite ? `${humanSize(info.cota.usado)} de ${humanSize(info.cota.limite)} usados` : `${humanSize(info.cota.usado)} usados no seu Drive`) : null,
           conectado ? null : linha('Privacidade', 'O Gehrarte só enxerga o que for enviado por aqui — o resto do seu Drive continua invisível.')),
