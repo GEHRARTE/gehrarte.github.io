@@ -1,5 +1,5 @@
 // Criação de elementos e ferramentas "inteligentes" (alinhar, distribuir, empilhar no celular...).
-import { makeElement, K, W, pageH, pageW as pageWDoc, ehUnico, ehFixa, frameOf, setFrame, aabb, unionBox, TEXT_DEFAULTS } from '../core/model.js';
+import { makeElement, K, W, pageH, pageW as pageWDoc, ehUnico, ehFixa, frameOf, setFrame, aabb, unionBox, alturaDoConteudo, TEXT_DEFAULTS } from '../core/model.js';
 import { sanitizeSvg, svgNaturalSize } from '../core/sanitize.js';
 import { sha256Hex, clamp, round } from '../core/util.js';
 import { Store } from '../core/store.js';
@@ -288,12 +288,25 @@ export function resetMobile() {
   commit();
 }
 
-export function fitPageHeight() {
-  const els = S.doc.elements.filter((e) => !e.hide);
-  const bottoms = els.filter((e) => !isBackdrop(e, pageH(S.doc, 'd')) || S.dev === 'm').map((e) => { const b = aabb(frameOf(e, S.dev)); return b.y + b.h; });
-  const h = Math.ceil((bottoms.length ? Math.max(...bottoms) : 600) + 60);
-  setPage((p) => { p.h[S.dev] = h; });
+// "Ajustar ao conteúdo": leva a altura até onde o conteúdo vai — encolhendo, que é o que a
+// expansão automática de ensureHeight() nunca faz. A conta é pura e vive em core/model.js.
+export function fitPageHeight(dev = S.dev) {
+  setPage((p) => { p.h[dev] = alturaDoConteudo(S.doc, dev); });
   commit();
+}
+
+// A altura é POR DISPOSITIVO: quem ajustava olhando o PC deixava o celular inflado, e o branco
+// reaparecia no telefone. Isto ajusta os dois de uma vez — e devolve quais ajustou, para a tela
+// poder dizer o que fez.
+//
+// O celular só entra se ele JÁ tiver altura própria (`page.h.m`). Sem ela, a versão de celular é
+// derivada da do PC por proporção, e criar um valor aqui a congelaria — é justamente o que
+// resetMobile() desfaz. Nesse caso, ajustar o PC já leva o celular junto.
+export function fitPageHeightTodos() {
+  const devs = ['d', ...(!ehUnico(S.doc) && S.doc.page.h.m != null ? ['m'] : [])];
+  setPage((p) => { for (const d of devs) p.h[d] = alturaDoConteudo(S.doc, d); });
+  commit();
+  return devs;
 }
 
 // Expande a altura da página se algo foi arrastado para além do fim.

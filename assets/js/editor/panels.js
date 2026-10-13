@@ -1,7 +1,7 @@
 // Painel direito: propriedades contextuais do que está selecionado (ou da página).
 import { h } from '../core/dom.js';
 import { debounce, round } from '../core/util.js';
-import { W, K, frameOf, setFrame, pageH, fontOwner, DEV_LABEL, ABAS_PADRAO, ehUnico, ehFixa } from '../core/model.js';
+import { W, K, frameOf, setFrame, pageH, fontOwner, DEV_LABEL, ABAS_PADRAO, ehUnico, ehFixa, alturaDoConteudo, sobraDaPagina } from '../core/model.js';
 import { rotuloDaPagina } from '../core/formatos.js';
 import { medidasDoFrame } from '../core/reguas.js';
 import { sangriaMm, margemMm, sangriaPx, aplicarSangria, aplicarMargem, avisosDeImpressao, SANGRIA_GRAFICA_MM, MARGEM_SEGURA_MM } from '../core/gabarito.js';
@@ -12,7 +12,7 @@ import { FONTS, fontStack } from '../core/fonts.js';
 import { SHAPE_LIST } from '../core/render.js';
 import { sanitizeSvg } from '../core/sanitize.js';
 import { S, on, emit, selEls, mutate, mutateGeom, commit, touch, setPage, byId, select as selecionar } from './state.js';
-import { inkColor, alignSel, distribute, autoStack, resetMobile, fitPageHeight, replaceImage } from './tools.js';
+import { inkColor, alignSel, distribute, autoStack, resetMobile, fitPageHeight, fitPageHeightTodos, replaceImage } from './tools.js';
 import { measureAll, playEntrance, nodeOf, refreshOverlay } from './stage.js';
 import { secControladores } from './controladores.js';
 import { abrirCriador } from './library.js';
@@ -339,6 +339,32 @@ function secGabarito() {
   ]);
 }
 
+// A página CRESCE sozinha quando algo passa do fim (ensureHeight), e nunca encolhe. Tirado o
+// elemento, a sobra fica — e é ela que aparece como faixa em branco no destaque da home, que usa a
+// altura da página. Então a sobra é dita em número, com o conserto ao lado, em vez de esperar que
+// alguém descubra o botão.
+//
+// E a altura é por dispositivo: ajustar só o que está à vista deixa o outro inflado. Quando o
+// celular tem altura própria e também sobra, o aviso oferece ajustar os dois.
+function avisoDeSobra() {
+  if (ehFixa(S.doc)) return null;
+  const sobra = sobraDaPagina(S.doc, S.dev);
+  const outro = S.dev === 'd' ? 'm' : 'd';
+  const temOutro = !ehUnico(S.doc) && S.doc.page.h.m != null;
+  const sobraOutro = temOutro ? sobraDaPagina(S.doc, outro) : 0;
+  const nomeOutro = outro === 'm' ? 'no celular' : 'no PC';
+  if (sobra < 40 && sobraOutro < 40) {
+    return hint(`Conteúdo até ${alturaDoConteudo(S.doc, S.dev)} px — a altura está justa.`);
+  }
+  const linhas = [];
+  if (sobra >= 40) linhas.push(h('p', { class: 'hint aviso' }, `Sobram ${sobra} px depois do fim do conteúdo. No destaque da home isso aparece como faixa em branco.`));
+  if (sobraOutro >= 40) linhas.push(h('p', { class: 'hint aviso' }, `E ${sobraOutro} px ${nomeOutro}, que tem altura própria.`));
+  if (sobraOutro >= 40) {
+    linhas.push(btn({ label: 'Ajustar nos dois', ic: 'fit', title: 'Ajusta a altura do PC e a do celular ao conteúdo de cada um', onClick: () => { const d = fitPageHeightTodos(); toast(d.length > 1 ? 'Altura ajustada no PC e no celular.' : 'Altura ajustada.', 'ok'); build(); } }));
+  }
+  return linhas;
+}
+
 function pagePanel() {
   const bg = S.doc.page.bg;
   const out = [];
@@ -352,7 +378,8 @@ function pagePanel() {
       : colorField({ label: 'Cor de fundo', value: bg.c, onChange: (v) => setPage((p) => { p.bg.c = v; }) }),
     ehUnico(S.doc) ? h('p', { class: 'hint' }, `Formato: ${rotuloDaPagina(S.doc.page)}${ehFixa(S.doc) ? ' (tamanho fixo)' : ''}`) : null,
     ehFixa(S.doc) ? null : row(num({ label: 'Altura', value: pageH(S.doc, S.dev), min: 300, max: 12000, step: 10, unit: 'px', medida: 'px', onChange: (v) => setPage((p) => { p.h[S.dev] = Math.round(v); }) }),
-      btn({ label: 'Ajustar', title: 'Ajustar a altura ao conteúdo', ic: 'fit', onClick: () => { fitPageHeight(); build(); } })),
+      btn({ label: 'Ajustar ao conteúdo', title: 'Leva a altura até onde o conteúdo termina — encolhendo, se sobrar espaço', ic: 'fit', onClick: () => { fitPageHeight(); build(); } })),
+    ehFixa(S.doc) ? null : avisoDeSobra(),
     hint('Dica: fundos animados ficam na aba SVG animado, em “Fundos”.'),
   ]));
 

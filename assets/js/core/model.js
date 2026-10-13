@@ -142,6 +142,27 @@ export function aabb(fr) {
   return { x: cx - w / 2, y: cy - h / 2, w, h };
 }
 
+// Até onde o conteúdo chega de fato, no dispositivo dado — a base para encolher a página sem cortar
+// nada. É a conta que o editor usa em "Ajustar ao conteúdo", aqui para poder ser testada.
+//
+// Dois detalhes que parecem arbitrários e não são, herdados do comportamento do editor:
+//   · no PC, elemento de FUNDO (quase toda a largura e mais de 60% da altura ATUAL) não conta — ele
+//     acompanha a página, então contá-lo travaria a altura no valor que já está, e encolher nunca
+//     encolheria nada. No celular ele conta: lá o fundo é empilhado como o resto;
+//   · página sem nada visível vale 600 px, para não virar uma faixa de 60 px.
+export function alturaDoConteudo(doc, dev, { folga = 60, minimo = 600 } = {}) {
+  const H = pageH(doc, 'd');
+  const ehFundo = (el) => el.f.d.w >= pageW(doc, 'd') * 0.9 && el.f.d.h >= H * 0.6;
+  const bases = (doc.elements || [])
+    .filter((el) => !el.hide && (!ehFundo(el) || dev === 'm'))
+    .map((el) => { const b = aabb(frameOf(el, dev)); return b.y + b.h; });
+  return Math.ceil((bases.length ? Math.max(...bases) : minimo) + folga);
+}
+
+// Quanto de página sobra depois do fim do conteúdo. É o "espaço em branco" que aparece no destaque
+// da home quando algo cresceu a página e depois foi removido — a página só cresce sozinha.
+export const sobraDaPagina = (doc, dev) => Math.max(0, Math.round(pageH(doc, dev) - alturaDoConteudo(doc, dev)));
+
 export function unionBox(boxes) {
   const x0 = Math.min(...boxes.map((b) => b.x)), y0 = Math.min(...boxes.map((b) => b.y));
   const x1 = Math.max(...boxes.map((b) => b.x + b.w)), y1 = Math.max(...boxes.map((b) => b.y + b.h));
