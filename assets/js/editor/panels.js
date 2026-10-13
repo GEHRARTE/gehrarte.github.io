@@ -356,9 +356,15 @@ function avisoDeSobra() {
   if (sobra < 40 && sobraOutro < 40) {
     return hint(`Conteúdo até ${alturaDoConteudo(S.doc, S.dev)} px — a altura está justa.`);
   }
+  // Cada frase precisa se sustentar SOZINHA: na verificação em navegador apareceu só a segunda
+  // linha — "E 97 px no celular…" —, porque o PC estava justo e o "E" ficou pendurado em nada.
   const linhas = [];
   if (sobra >= 40) linhas.push(h('p', { class: 'hint aviso' }, `Sobram ${sobra} px depois do fim do conteúdo. No destaque da home isso aparece como faixa em branco.`));
-  if (sobraOutro >= 40) linhas.push(h('p', { class: 'hint aviso' }, `E ${sobraOutro} px ${nomeOutro}, que tem altura própria.`));
+  if (sobraOutro >= 40) {
+    linhas.push(h('p', { class: 'hint aviso' }, sobra >= 40
+      ? `E ${sobraOutro} px ${nomeOutro}, que tem altura própria.`
+      : `Aqui a altura está justa, mas sobram ${sobraOutro} px ${nomeOutro}, que tem altura própria — é lá que a faixa em branco apareceria.`));
+  }
   if (sobraOutro >= 40) {
     linhas.push(btn({ label: 'Ajustar nos dois', ic: 'fit', title: 'Ajusta a altura do PC e a do celular ao conteúdo de cada um', onClick: () => { const d = fitPageHeightTodos(); toast(d.length > 1 ? 'Altura ajustada no PC e no celular.' : 'Altura ajustada.', 'ok'); build(); } }));
   }
