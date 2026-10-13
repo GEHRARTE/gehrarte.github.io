@@ -4,6 +4,7 @@
 import { h } from './core/dom.js';
 import { BASE } from './core/util.js';
 import { mountPublished } from './core/embed.js';
+import { itensDeExemplo, recortar } from './core/listas.js';
 
 const getJson = async (p) => { try { const r = await fetch(BASE + p, { cache: 'no-cache' }); return r.ok ? await r.json() : null; } catch { return null; } };
 const MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
@@ -72,31 +73,89 @@ function exposicao(e, modelo) {
     h('div', { class: 'fotos' }, (e.fotos || []).map((f) => figura(f, modelo))));
 }
 
-// ---------- faixa de destaque (feita no editor) ----------
+// ---------- a página feita no editor ----------
+// Um mesmo documento (`paginas/home/page.json`) atende aos dois estados, e QUEM DECIDE é o próprio
+// documento: se ele traz blocos de lista, é a home inteira e substitui o conteúdo do casco; se não,
+// é a antiga faixa de destaque e entra só no lugar dela. Assim a home não quebra no meio do
+// caminho — e nada precisa ser publicado às pressas para a mudança valer (D-0053).
 const destaque = document.getElementById('destaque-home');
-if (destaque) mountPublished(destaque, 'home', { modo: 'largura', onBg: (bg) => { destaque.style.background = bg; } }).catch(() => {});
+const casco = document.getElementById('conteudo');
+async function montarPaginaDaHome() {
+  if (!destaque && !casco) return;
+  const alvo = h('div', { id: 'home-doc' });
+  const montado = await mountPublished(alvo, 'home', { modo: 'largura' }).catch(() => null);
+  if (!montado) return;
+  const ehPaginaInteira = !!alvo.querySelector('[data-lista]');
+  if (ehPaginaInteira && casco) {
+    casco.replaceChildren(alvo);
+    preencherBlocos(alvo);
+    return true;
+  }
+  if (destaque) {
+    destaque.append(alvo);
+    const bg = alvo.querySelector('.artboard')?.style.background;
+    if (bg) destaque.style.background = bg;
+  }
+  return false;
+}
+async function montarPaginaDaHomeSegura() {
+  try { return await montarPaginaDaHome(); } catch { return false; }   // home publicada com erro não derruba o resto
+}
 
 // ---------- montagem ----------
 const [artigosJson, exposJson, indice] = await Promise.all([getJson('content/artigos.json'), getJson('content/exposicoes.json'), getJson('indice.json')]);
 
-const boxArt = document.getElementById('lista-artigos');
-const arts = listaArtigos(artigosJson?.artigos, indice);
-if (arts.length) boxArt.append(...arts.map(artigoCard));
-else {
-  boxArt.before(aviso());
-  boxArt.append(
-    ...[
-      ['Título do artigo em destaque', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet, maecenas faucibus mollis interdum.'],
-      ['Segundo artigo, de título um pouco mais longo', 'Cras mattis consectetur purus sit amet fermentum. Donec ullamcorper nulla non metus auctor fringilla.'],
-      ['Terceiro artigo', 'Vestibulum id ligula porta felis euismod semper. Aenean lacinia bibendum nulla sed consectetur.'],
-    ].map(([titulo, resumo], i) => artigoCard({ titulo, resumo, autor: 'Nome da autora ou autor', tags: ['Tema', 'Período'], modelo: true }, i)));
+// Cada fonte de lista em um lugar só: o que o site mostra, e quantos itens há de verdade.
+// `itensDeExemplo` vem de core/listas.js — a MESMA fonte que o editor usa para desenhar o bloco,
+// para o provisório não ser escrito em dois lugares e divergir.
+const FONTES = {
+  artigos: () => {
+    const reais = listaArtigos(artigosJson?.artigos, indice);
+    return reais.length ? { reais: true, nos: reais.map((a, i) => artigoCard(a, i)) }
+      : { reais: false, nos: itensDeExemplo('artigos').map((a, i) => artigoCard(a, i)) };
+  },
+  equipe: () => (indice?.perfis?.length
+    ? { reais: true, nos: indice.perfis.map(pessoaCard) }
+    : { reais: false, nos: itensDeExemplo('equipe').map(pessoaCard) }),
+  exposicoes: () => {
+    const reais = exposJson?.exposicoes || [];
+    return reais.length ? { reais: true, nos: reais.map((e) => exposicao(e, false)) }
+      : { reais: false, nos: itensDeExemplo('exposicoes').map((e) => exposicao(e, true)) };
+  },
+};
+
+// Preenche um lugar de lista: o bloco do documento (data-lista) ou um contêiner do HTML do casco.
+function preencher(caixa, fonte, { max = 0, antesDoAviso = null } = {}) {
+  if (!caixa || !FONTES[fonte]) return;
+  const { reais, nos } = FONTES[fonte]();
+  if (!reais) (antesDoAviso || caixa).before(aviso());
+  caixa.append(...recortar(nos, max));
 }
 
-const boxPag = document.getElementById('lista-paginas');
-if (indice?.perfis?.length) boxPag.append(...indice.perfis.map(pessoaCard));
-else boxPag.append(...['Nome da integrante', 'Nome do integrante', 'Nome da pesquisadora'].map((nome) => pessoaCard({ nome, slug: 'x', modelo: true })));
 
-const boxExp = document.getElementById('lista-expos');
-const expos = exposJson?.exposicoes || [];
-if (expos.length) boxExp.append(...expos.map((e) => exposicao(e, false)));
-else boxExp.append(exposicao({ titulo: 'Título da exposição', local: 'Local', periodo: 'Mês – mês de 2026', descricao: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere consectetur est at lobortis.', fotos: [{}, {}, {}] }, true));
+// 2. Os blocos de um documento publicado (a home inteira feita no editor, D-0053). O embed já
+// desenhou o lugar; aqui entram os dados.
+export function preencherBlocos(raiz) {
+  for (const bloco of raiz.querySelectorAll('[data-lista]')) {
+    const fonte = bloco.dataset.lista;
+    const max = Number(bloco.dataset.max) || 0;
+    const colunas = Math.max(1, Number(bloco.dataset.colunas) || 1);
+    bloco.replaceChildren();
+    bloco.style.display = 'grid';
+    bloco.style.gridTemplateColumns = `repeat(${colunas}, minmax(0, 1fr))`;
+    bloco.style.gap = '18px';
+    bloco.style.alignContent = 'start';
+    bloco.style.overflow = 'auto';
+    preencher(bloco, fonte, { max });
+  }
+}
+
+// ---------- montagem, no fim, com tudo já definido ----------
+// A página do editor decide primeiro: se ela substituiu o casco, preencher os contêineres antigos
+// seria trabalho jogado fora (e aviso de "provisório" num nó descartado).
+const virouPaginaInteira = await montarPaginaDaHomeSegura();
+if (!virouPaginaInteira) {
+  preencher(document.getElementById('lista-artigos'), 'artigos');
+  preencher(document.getElementById('lista-paginas'), 'equipe');
+  preencher(document.getElementById('lista-expos'), 'exposicoes');
+}

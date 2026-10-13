@@ -10,7 +10,7 @@
     {
       "id": "home",
       "titulo": "Home (página principal)",
-      "funcao": "Página principal do blog. A faixa de destaque do topo é feita aqui, no editor; artigos, páginas da equipe e exposições logo abaixo são montados sozinhos a partir do que a equipe publica.",
+      "funcao": "Página principal do blog, feita por inteiro no editor: mastro, sumário e as quatro seções. Os blocos de artigos, páginas da equipe e exposições são montados sozinhos a partir do que a equipe publica — você posiciona o bloco, o site preenche. Enquanto esta página não for publicada, o site mostra a home anterior.",
       "caminho": "home/index.html"
     }
   ]

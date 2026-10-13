@@ -13,8 +13,8 @@ import { Store } from './core/store.js';
 import { renderArtboardRecortado, usedFonts } from './core/render.js';
 import { larguraFinal } from './core/gabarito.js';
 import { loadFonts } from './core/fonts.js';
-import { pageW, KINDS, STATE_LABEL, PROFILE_ID, docState, siteDocId, publisherName, publishDir, bgCss } from './core/model.js';
-import { BASE } from './core/util.js';
+import { pageW, KINDS, STATE_LABEL, PROFILE_ID, docState, siteDocId, publisherName, publishDir, bgCss, normalizeDoc } from './core/model.js';
+import { BASE, clone } from './core/util.js';
 import { CHAVE_TEMA, temaEfetivo, alternarTema } from './core/tema.js';
 import { loadRegistry, canEditSite, fetchPublished, fetchModel, getJson, pageDir, publicUrl, publishedUrl, siteHost } from './core/site.js';
 import { createDoc, createArquivoEmBranco, createDocFromModelo, duplicateDoc, docPath } from './core/docs.js';
@@ -172,6 +172,10 @@ async function main() {
         { label: 'Ver no site', href: verUrl },
         { label: 'Copiar endereço', fn: () => navigator.clipboard?.writeText(publishedUrl(cfg, slug, fake, p)) },
         ...(local && perm.pode ? [{ label: 'Descartar o meu rascunho local', perigo: true, fn: () => descartar(local, `o seu rascunho local de “${p.titulo}”`, 'A versão no ar não é afetada; da próxima vez você começa dela.') }] : []),
+        // Sem isto o modelo da página só apareceria para quem NUNCA abriu nem publicou nada: ao
+        // abrir, core/docs.js prefere a versão publicada e só cai no modelo se não houver nenhuma.
+        // É este caminho que leva um modelo novo (a home inteira, D-0053) a quem edita.
+        ...(perm.pode && modelo ? [{ label: 'Começar do modelo desta página', perigo: true, fn: () => comecarDoModelo(p, id, modelo) }] : []),
       ],
     } });
   }));
@@ -375,6 +379,18 @@ function abrirNovoArquivo(slug) {
 function azulejoNovoArquivo(slug) {
   return h('button', { class: 'cartao novo', type: 'button', onclick: () => abrirNovoArquivo(slug), 'data-busca': 'novo arquivo em branco criar modelo tamanho a4 a5 celular pc tablet site artigo' },
     h('span', { class: 'mais-grande', 'aria-hidden': 'true' }, '+'), h('b', {}, 'Novo arquivo em branco'), h('small', {}, 'Escolha o modelo e o tamanho'));
+}
+
+// Troca o que a pessoa tem desta página pelo modelo de `paginas/<id>/modelo.json`. Não toca no que
+// está no ar: a página publicada só muda quando alguém publicar de novo.
+async function comecarDoModelo(p, id, modelo) {
+  const aviso = `Começar “${p.titulo}” do modelo?\n\nO que você tem desta página neste navegador é substituído. A versão no ar NÃO muda até você publicar.`;
+  if (!confirm(aviso)) return;
+  const doc = normalizeDoc(clone(modelo), slug);
+  Object.assign(doc, { kind: 'pagina', id, owner: slug });
+  delete doc.publishedAt; delete doc.publishedBy;      // é rascunho, não uma publicação
+  await Store.saveDoc(slug, doc);
+  location.href = `../editor/?doc=${id}`;
 }
 
 // ---------- materiais no Drive ----------

@@ -5,7 +5,7 @@ import { makeElement, K, W } from '../core/model.js';
 import { sanitizeSvg } from '../core/sanitize.js';
 import { SHAPE_LIST, shapeSvg } from '../core/render.js';
 import { S, on, emit, commit, select } from './state.js';
-import { createShape, createAbas, addTextPreset, insertSvg, insertSvgBackground, insertImageFile, insertAsset } from './tools.js';
+import { createShape, createAbas, createLista, addTextPreset, insertSvg, insertSvgBackground, insertImageFile, insertAsset } from './tools.js';
 import { driveTab } from './drive.js';
 import { btn, toast, modal, section } from './ui.js';
 import { montarGaleria } from '../core/galeria.js';
@@ -160,6 +160,15 @@ export function initLibraryPanels(roots) {
       })),
       h('p', { class: 'hint pad' }, 'Clique para inserir. Para desenhar no tamanho que quiser, use a ferramenta Forma (R) e arraste no canvas.'),
     ]));
+    // Blocos do site: valem para PÁGINA do site (a home) e para projeto de site. O que eles
+    // mostram vem do que a equipe publica — o documento guarda só o lugar (D-0053).
+    if (S.doc?.kind === 'pagina' || S.doc?.kind === 'site') {
+      body.append(grupo('blocos', 'Blocos do site', h('div', { class: 'pad' },
+        btn({ label: 'Artigos', ic: 'stack', title: 'Lista dos artigos publicados pela equipe', onClick: () => createLista('artigos') }),
+        btn({ label: 'Páginas da equipe', ic: 'layers', title: 'Uma entrada por integrante com página publicada', onClick: () => createLista('equipe') }),
+        btn({ label: 'Exposições', ic: 'image', title: 'Exposições com registro fotográfico', onClick: () => createLista('exposicoes') }),
+        h('p', { class: 'hint' }, 'O bloco guarda o lugar: no editor aparecem itens de exemplo, e na página publicada o site preenche com o que está no ar. Dá para limitar quantos itens e em quantas colunas.'))));
+    }
     if (S.doc?.kind === 'site') {
       body.append(grupo('site', 'Projeto de site', h('div', { class: 'pad' }, btn({ label: 'Barra de abas', ic: 'layers', onClick: createAbas }), h('p', { class: 'hint' }, 'Menu funcional: lista as abas do projeto e leva de uma a outra. Para links soltos (cartões, botões), use “Ir para a aba” em Link.'))));
     }

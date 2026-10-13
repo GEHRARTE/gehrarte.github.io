@@ -60,6 +60,18 @@ export function createShape(kind, box) {
 }
 
 // Barra de abas (só em projetos de site): lista as abas do projeto e navega entre elas na página publicada.
+// Bloco de lista do site (artigos, equipe, exposições). Nasce largo porque é um bloco de conteúdo,
+// não um enfeite: o padrão do makeElement já é 1000x520. Ver core/listas.js e D-0053.
+export function createLista(fonte = 'artigos') {
+  const rotulo = { artigos: 'Bloco de artigos', equipe: 'Bloco da equipe', exposicoes: 'Bloco de exposições' }[fonte] || 'Bloco de lista';
+  const el = makeElement('lista', { name: rotulo, lista: { fonte, max: 0, colunas: fonte === 'equipe' ? 3 : 2 }, ancora: fonte });
+  const w = Math.min(1080, pageW() - 80);
+  place(el, { ...centered(w, 520), w, h: 520 });
+  el.f.m = { x: 16, y: el.f.d.y * K, w: 358, h: 760, r: 0 };
+  addEls([el]);
+  return el;
+}
+
 export function createAbas() {
   const el = makeElement('abas', { ls: { fontFamily: 'Inter', fontSize: 16, fontWeight: 600, color: inkColor() } });
   const w = Math.min(1000, pageW() - 80);

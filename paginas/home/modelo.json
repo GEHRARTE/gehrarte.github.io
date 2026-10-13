@@ -1,38 +1,249 @@
 {
   "v": 1,
-  "id": "site-home",
   "kind": "pagina",
+  "id": "site-home",
   "owner": "",
-  "title": "Home — faixa de destaque",
+  "title": "Home (página principal)",
   "page": {
     "bg": {
-      "c": "#f5f0e4",
+      "c": "#ffffff",
       "g": null
     },
     "h": {
-      "d": 240,
-      "m": 330
+      "d": 2642,
+      "m": 3506
     }
   },
   "elements": [
     {
-      "id": "e4hc9dqm",
+      "id": "etnac9b5",
       "t": "text",
-      "name": "Rótulo",
+      "name": "Volume",
       "lock": false,
       "hide": false,
       "f": {
         "d": {
-          "x": 150,
-          "y": 56,
-          "w": 900,
-          "h": 18,
+          "x": 80,
+          "y": 36,
+          "w": 1040,
+          "h": 20,
+          "r": 0,
+          "fs": 14
+        },
+        "m": {
+          "x": 16,
+          "y": 24,
+          "w": 358,
+          "h": 34,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 14,
+        "fontWeight": 600,
+        "italic": false,
+        "underline": false,
+        "upper": true,
+        "align": "left",
+        "color": "#5d5a6b",
+        "lh": 1.2,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "Vol. 1 · n.º 1 · 2026 · Grupo de Estudos Históricos da Arte · UEM",
+      "ah": false
+    },
+    {
+      "id": "entqv1av",
+      "t": "shape",
+      "name": "Lettering Gehrarte",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 74,
+          "w": 1040,
+          "h": 180,
           "r": 0
         },
         "m": {
-          "x": 24,
-          "y": 40,
-          "w": 342,
+          "x": 16,
+          "y": 72,
+          "w": 358,
+          "h": 92,
+          "r": 0
+        }
+      },
+      "s": {
+        "fill": "#efedf6",
+        "grad": null,
+        "stroke": null,
+        "sw": 0,
+        "dash": 0,
+        "radius": 12,
+        "sides": 5,
+        "inner": 0.45
+      },
+      "an": null,
+      "link": null,
+      "shape": "rect",
+      "label": "Lettering Gehrarte",
+      "ls": {
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "fontWeight": 600,
+        "color": "#6a6458"
+      }
+    },
+    {
+      "id": "eiyvpzg7",
+      "t": "text",
+      "name": "Subtítulo",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 268,
+          "w": 1040,
+          "h": 24,
+          "r": 0,
+          "fs": 17
+        },
+        "m": {
+          "x": 16,
+          "y": 174,
+          "w": 358,
+          "h": 36,
+          "r": 0,
+          "fs": 13
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 17,
+        "fontWeight": 400,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#5d5a6b",
+        "lh": 1.4,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "Gehrarte · Grupo de Estudos Históricos da Arte · UEM",
+      "ah": false,
+      "papel": "p"
+    },
+    {
+      "id": "eim65cb7",
+      "t": "shape",
+      "name": "Régua",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 308,
+          "w": 1040,
+          "h": 2,
+          "r": 0
+        },
+        "m": {
+          "x": 16,
+          "y": 222,
+          "w": 358,
+          "h": 2,
+          "r": 0
+        }
+      },
+      "s": {
+        "fill": null,
+        "grad": null,
+        "stroke": "#17161d",
+        "sw": 2,
+        "dash": 0,
+        "radius": 0,
+        "sides": 5,
+        "inner": 0.45
+      },
+      "an": null,
+      "link": null,
+      "shape": "line",
+      "label": "",
+      "ls": {
+        "fontFamily": "Inter",
+        "fontSize": 24,
+        "fontWeight": 600,
+        "color": "#ffffff"
+      }
+    },
+    {
+      "id": "e68ny1aq",
+      "t": "text",
+      "name": "Sumário",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 330,
+          "w": 1040,
+          "h": 24,
+          "r": 0,
+          "fs": 15
+        },
+        "m": {
+          "x": 16,
+          "y": 244,
+          "w": 358,
+          "h": 60,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 15,
+        "fontWeight": 600,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#e4572e",
+        "lh": 1.5,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "§ I Artigos    ·    § II Páginas da equipe    ·    § III Exposições    ·    § IV Sobre",
+      "ah": false
+    },
+    {
+      "id": "ercwrcqz",
+      "t": "text",
+      "name": "§ I numeral",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 398,
+          "w": 1040,
+          "h": 18,
+          "r": 0,
+          "fs": 13
+        },
+        "m": {
+          "x": 16,
+          "y": 334,
+          "w": 358,
           "h": 16,
           "r": 0,
           "fs": 12
@@ -46,107 +257,611 @@
         "underline": false,
         "upper": true,
         "align": "left",
-        "color": "#8a3b1f",
-        "lh": 1.2,
-        "ls": 0.22
+        "color": "#e4572e",
+        "lh": 1.4,
+        "ls": 0
       },
+      "an": null,
       "link": null,
-      "text": "DESTAQUE",
-      "ah": true
+      "text": "§ I",
+      "ah": false
     },
     {
-      "id": "ej2e9j0v",
+      "id": "eojubsd6",
       "t": "text",
-      "name": "Título",
+      "name": "Artigos (título)",
       "lock": false,
       "hide": false,
       "f": {
         "d": {
-          "x": 150,
-          "y": 84,
-          "w": 900,
-          "h": 60,
-          "r": 0
+          "x": 80,
+          "y": 422,
+          "w": 1040,
+          "h": 42,
+          "r": 0,
+          "fs": 34
         },
         "m": {
-          "x": 24,
-          "y": 64,
-          "w": 342,
-          "h": 90,
+          "x": 16,
+          "y": 356,
+          "w": 358,
+          "h": 34,
           "r": 0,
-          "fs": 28
+          "fs": 26
         }
       },
       "s": {
-        "fontFamily": "Playfair Display",
-        "fontSize": 44,
+        "fontFamily": "Space Grotesk",
+        "fontSize": 34,
         "fontWeight": 700,
         "italic": false,
         "underline": false,
         "upper": false,
         "align": "left",
-        "color": "#1b1915",
-        "lh": 1.1,
+        "color": "#17161d",
+        "lh": 1.15,
         "ls": 0
       },
-      "an": {
-        "in": {
-          "k": "fade",
-          "dur": 0.7,
-          "delay": 0.1,
-          "ease": "ease-out"
-        }
-      },
+      "an": null,
       "link": null,
-      "text": "Anuncie aqui o que merece destaque",
-      "ah": true
+      "text": "Artigos",
+      "ah": false,
+      "papel": "h2",
+      "ancora": "artigos"
     },
     {
-      "id": "esyrjwn2",
+      "id": "el8h61xo",
       "t": "text",
-      "name": "Chamada",
+      "name": "Artigos (descrição)",
       "lock": false,
       "hide": false,
       "f": {
         "d": {
-          "x": 150,
-          "y": 156,
-          "w": 900,
-          "h": 60,
-          "r": 0
+          "x": 80,
+          "y": 472,
+          "w": 1040,
+          "h": 46,
+          "r": 0,
+          "fs": 16
         },
         "m": {
-          "x": 24,
-          "y": 176,
-          "w": 342,
-          "h": 110,
+          "x": 16,
+          "y": 398,
+          "w": 358,
+          "h": 76,
           "r": 0,
-          "fs": 15
+          "fs": 12
         }
       },
       "s": {
-        "fontFamily": "Lora",
-        "fontSize": 19,
+        "fontFamily": "Inter",
+        "fontSize": 16,
         "fontWeight": 400,
-        "italic": true,
+        "italic": false,
         "underline": false,
         "upper": false,
         "align": "left",
-        "color": "#55503f",
-        "lh": 1.5,
+        "color": "#5d5a6b",
+        "lh": 1.4,
         "ls": 0
       },
-      "an": {
-        "in": {
-          "k": "fade",
-          "dur": 0.7,
-          "delay": 0.3,
-          "ease": "ease-out"
+      "an": null,
+      "link": null,
+      "text": "Textos escritos pela equipe — estudos, ensaios e notas de pesquisa em história da arte.",
+      "ah": false,
+      "papel": "p"
+    },
+    {
+      "id": "ebj3nuif",
+      "t": "lista",
+      "name": "Bloco — Artigos",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 536,
+          "w": 1040,
+          "h": 560,
+          "r": 0
+        },
+        "m": {
+          "x": 16,
+          "y": 488,
+          "w": 358,
+          "h": 900,
+          "r": 0
         }
       },
+      "s": {},
+      "an": null,
       "link": null,
-      "text": "Uma exposição, um artigo novo, um aviso da equipe. Esta faixa aparece no topo da home, acima do sumário do periódico — edite o texto ou monte outra composição.",
-      "ah": true
+      "lista": {
+        "fonte": "artigos",
+        "max": 0,
+        "colunas": 2
+      }
+    },
+    {
+      "id": "e1q36442",
+      "t": "text",
+      "name": "§ II numeral",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1152,
+          "w": 1040,
+          "h": 18,
+          "r": 0,
+          "fs": 13
+        },
+        "m": {
+          "x": 16,
+          "y": 1428,
+          "w": 358,
+          "h": 16,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "italic": false,
+        "underline": false,
+        "upper": true,
+        "align": "left",
+        "color": "#e4572e",
+        "lh": 1.4,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "§ II",
+      "ah": false
+    },
+    {
+      "id": "e9ekxxt0",
+      "t": "text",
+      "name": "Páginas da equipe (título)",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1176,
+          "w": 1040,
+          "h": 42,
+          "r": 0,
+          "fs": 34
+        },
+        "m": {
+          "x": 16,
+          "y": 1450,
+          "w": 358,
+          "h": 34,
+          "r": 0,
+          "fs": 26
+        }
+      },
+      "s": {
+        "fontFamily": "Space Grotesk",
+        "fontSize": 34,
+        "fontWeight": 700,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#17161d",
+        "lh": 1.15,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "Páginas da equipe",
+      "ah": false,
+      "papel": "h2",
+      "ancora": "paginas"
+    },
+    {
+      "id": "en7hfmv8",
+      "t": "text",
+      "name": "Páginas da equipe (descrição)",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1226,
+          "w": 1040,
+          "h": 46,
+          "r": 0,
+          "fs": 16
+        },
+        "m": {
+          "x": 16,
+          "y": 1492,
+          "w": 358,
+          "h": 76,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "fontWeight": 400,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#5d5a6b",
+        "lh": 1.4,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "Cada integrante tem uma página própria, feita no editor do Gehrarte: texto, imagem, desenho e animação.",
+      "ah": false,
+      "papel": "p"
+    },
+    {
+      "id": "er3ahfwb",
+      "t": "lista",
+      "name": "Bloco — Páginas da equipe",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1290,
+          "w": 1040,
+          "h": 300,
+          "r": 0
+        },
+        "m": {
+          "x": 16,
+          "y": 1582,
+          "w": 358,
+          "h": 560,
+          "r": 0
+        }
+      },
+      "s": {},
+      "an": null,
+      "link": null,
+      "lista": {
+        "fonte": "equipe",
+        "max": 0,
+        "colunas": 3
+      }
+    },
+    {
+      "id": "eb2d44ts",
+      "t": "text",
+      "name": "§ III numeral",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1646,
+          "w": 1040,
+          "h": 18,
+          "r": 0,
+          "fs": 13
+        },
+        "m": {
+          "x": 16,
+          "y": 2182,
+          "w": 358,
+          "h": 16,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "italic": false,
+        "underline": false,
+        "upper": true,
+        "align": "left",
+        "color": "#e4572e",
+        "lh": 1.4,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "§ III",
+      "ah": false
+    },
+    {
+      "id": "eiv5yd0u",
+      "t": "text",
+      "name": "Exposições (título)",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1670,
+          "w": 1040,
+          "h": 42,
+          "r": 0,
+          "fs": 34
+        },
+        "m": {
+          "x": 16,
+          "y": 2204,
+          "w": 358,
+          "h": 34,
+          "r": 0,
+          "fs": 26
+        }
+      },
+      "s": {
+        "fontFamily": "Space Grotesk",
+        "fontSize": 34,
+        "fontWeight": 700,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#17161d",
+        "lh": 1.15,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "Exposições",
+      "ah": false,
+      "papel": "h2",
+      "ancora": "exposicoes"
+    },
+    {
+      "id": "es40cw8v",
+      "t": "text",
+      "name": "Exposições (descrição)",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1720,
+          "w": 1040,
+          "h": 46,
+          "r": 0,
+          "fs": 16
+        },
+        "m": {
+          "x": 16,
+          "y": 2246,
+          "w": 358,
+          "h": 76,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "fontWeight": 400,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#5d5a6b",
+        "lh": 1.4,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "Registro fotográfico das exposições já realizadas.",
+      "ah": false,
+      "papel": "p"
+    },
+    {
+      "id": "evfio3h2",
+      "t": "lista",
+      "name": "Bloco — Exposições",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 1784,
+          "w": 1040,
+          "h": 520,
+          "r": 0
+        },
+        "m": {
+          "x": 16,
+          "y": 2336,
+          "w": 358,
+          "h": 760,
+          "r": 0
+        }
+      },
+      "s": {},
+      "an": null,
+      "link": null,
+      "lista": {
+        "fonte": "exposicoes",
+        "max": 0,
+        "colunas": 1
+      }
+    },
+    {
+      "id": "eusz5dhw",
+      "t": "text",
+      "name": "§ IV numeral",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 2360,
+          "w": 1040,
+          "h": 18,
+          "r": 0,
+          "fs": 13
+        },
+        "m": {
+          "x": 16,
+          "y": 3136,
+          "w": 358,
+          "h": 16,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "italic": false,
+        "underline": false,
+        "upper": true,
+        "align": "left",
+        "color": "#e4572e",
+        "lh": 1.4,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "§ IV",
+      "ah": false
+    },
+    {
+      "id": "e633fp17",
+      "t": "text",
+      "name": "Sobre (título)",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 2384,
+          "w": 1040,
+          "h": 42,
+          "r": 0,
+          "fs": 34
+        },
+        "m": {
+          "x": 16,
+          "y": 3158,
+          "w": 358,
+          "h": 34,
+          "r": 0,
+          "fs": 26
+        }
+      },
+      "s": {
+        "fontFamily": "Space Grotesk",
+        "fontSize": 34,
+        "fontWeight": 700,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#17161d",
+        "lh": 1.15,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "Sobre",
+      "ah": false,
+      "papel": "h2",
+      "ancora": "sobre"
+    },
+    {
+      "id": "euussbk3",
+      "t": "text",
+      "name": "Sobre (aviso)",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 2434,
+          "w": 1040,
+          "h": 18,
+          "r": 0,
+          "fs": 13
+        },
+        "m": {
+          "x": 16,
+          "y": 3200,
+          "w": 358,
+          "h": 32,
+          "r": 0,
+          "fs": 12
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "fontWeight": 700,
+        "italic": false,
+        "underline": false,
+        "upper": true,
+        "align": "left",
+        "color": "#e4572e",
+        "lh": 1.4,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "TEXTO PROVISÓRIO — trocar pelo texto oficial do projeto de extensão.",
+      "ah": false
+    },
+    {
+      "id": "emvkhaqv",
+      "t": "text",
+      "name": "Sobre (texto)",
+      "lock": false,
+      "hide": false,
+      "f": {
+        "d": {
+          "x": 80,
+          "y": 2462,
+          "w": 1040,
+          "h": 120,
+          "r": 0,
+          "fs": 17
+        },
+        "m": {
+          "x": 16,
+          "y": 3242,
+          "w": 358,
+          "h": 220,
+          "r": 0,
+          "fs": 13
+        }
+      },
+      "s": {
+        "fontFamily": "Inter",
+        "fontSize": 17,
+        "fontWeight": 400,
+        "italic": false,
+        "underline": false,
+        "upper": false,
+        "align": "left",
+        "color": "#17161d",
+        "lh": 1.6,
+        "ls": 0
+      },
+      "an": null,
+      "link": null,
+      "text": "O Gehrarte — Grupo de Estudos Históricos da Arte — é um projeto de extensão da UEM. Escreva aqui a apresentação oficial do grupo: o que faz, desde quando, com quem e para quem.",
+      "ah": false,
+      "papel": "p"
     }
   ],
   "assets": {}

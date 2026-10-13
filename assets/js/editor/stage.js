@@ -136,7 +136,7 @@ function rerender(id) {
 function applyGeom(id) {
   const el = byId(id), n = nodeOf(id);
   if (!el || !n) return;
-  if (el.t === 'shape' || el.t === 'text' || el.t === 'abas') return rerender(id);
+  if (el.t === 'shape' || el.t === 'text' || el.t === 'abas' || el.t === 'lista') return rerender(id);
   const fr = frameOf(el, S.dev);
   Object.assign(n.style, { left: fr.x + 'px', top: fr.y + 'px', width: fr.w + 'px', height: fr.h + 'px', transform: fr.r ? `rotate(${fr.r}deg)` : '' });
 }

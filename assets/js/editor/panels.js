@@ -2,6 +2,7 @@
 import { h } from '../core/dom.js';
 import { debounce, round } from '../core/util.js';
 import { W, K, frameOf, setFrame, pageH, fontOwner, DEV_LABEL, ABAS_PADRAO, ehUnico, ehFixa, alturaDoConteudo, sobraDaPagina } from '../core/model.js';
+import { FONTES as FONTES_LISTA, LISTA_PADRAO, normalizarLista } from '../core/listas.js';
 import { rotuloDaPagina } from '../core/formatos.js';
 import { medidasDoFrame } from '../core/reguas.js';
 import { sangriaMm, margemMm, sangriaPx, aplicarSangria, aplicarMargem, avisosDeImpressao, SANGRIA_GRAFICA_MM, MARGEM_SEGURA_MM } from '../core/gabarito.js';
@@ -220,6 +221,38 @@ function secSvg() {
 const eSite = () => S.doc?.kind === 'site';
 const cfgAbas = (e) => ({ ...ABAS_PADRAO, ...(e.abas || {}) });
 const setAbas = (patch) => set((e) => { e.abas = { ...cfgAbas(e), ...patch }; });
+
+const cfgLista = (e) => normalizarLista(e.lista);
+const setLista = (patch) => set((e) => { e.lista = normalizarLista({ ...cfgLista(e), ...patch }); });
+
+function secLista() {
+  const cfg = val((e) => cfgLista(e));
+  const fonte = FONTES_LISTA.find((f) => f.id === cfg.fonte);
+  return section('Bloco do site', [
+    hint('O bloco guarda o LUGAR da lista: aqui no editor você vê itens de exemplo, e na página publicada o site preenche com o que a equipe publicou.'),
+    select({ label: 'Mostra', value: cfg.fonte, options: FONTES_LISTA.map((f) => [f.id, f.rotulo]), onChange: (v) => { setLista({ fonte: v }); build(); } }),
+    fonte ? hint(fonte.descricao) : null,
+    row(num({ label: 'Quantos', value: cfg.max, min: 0, max: 24, onChange: (v) => { setLista({ max: v }); build(); } }),
+      num({ label: 'Colunas', value: cfg.colunas, min: 1, max: 4, onChange: (v) => { setLista({ colunas: v }); build(); } })),
+    hint(cfg.max === 0 ? 'Quantos: 0 mostra todos os itens que existirem.' : `Mostra no máximo ${cfg.max} item(ns).`),
+    textInput({ label: 'Âncora', value: val((e) => e.ancora || ''), onChange: (v) => set((e) => { e.ancora = v.trim(); }) }),
+    hint('A âncora vira o endereço do bloco na página publicada (#artigos), para um sumário poder apontar para ele. Só letras, números, - e _.'),
+  ]);
+}
+
+// Semântica do texto: numa página montada no editor todo elemento é um div posicionado, então sem
+// isto a página publicada não tem hierarquia de títulos nenhuma — nem para leitor de tela, nem para
+// busca. Com o papel, o texto sai na tag de verdade quando publicado (D-0053).
+function secSemantica() {
+  return section('Papel no texto da página', [
+    select({ label: 'Papel', value: val((e) => e.papel || 'nenhum'),
+      options: [['nenhum', 'Nenhum (só texto)'], ['h1', 'Título principal (h1)'], ['h2', 'Título de seção (h2)'], ['h3', 'Subtítulo (h3)'], ['h4', 'Subtítulo menor (h4)'], ['p', 'Parágrafo (p)']],
+      onChange: (v) => set((e) => { if (v === 'nenhum') delete e.papel; else e.papel = v; }) }),
+    hint('Só muda a página publicada: o leitor de tela e a busca passam a entender o que é título e o que é parágrafo. No editor nada muda de aparência.'),
+    textInput({ label: 'Âncora', value: val((e) => e.ancora || ''), onChange: (v) => set((e) => { e.ancora = v.trim(); }) }),
+    hint('Endereço do elemento na página publicada (#sobre). Só letras, números, - e _.'),
+  ], { aberta: false, chave: 'sec-semantica' });
+}
 
 function secAbas() {
   const todas = S.doc.abas || [];
@@ -440,6 +473,8 @@ export function build() {
     if (t0 === 'svg' && els.length === 1) root.append(secSvg());
   }
   if (t0 === 'abas' && types.size === 1) root.append(secAbas());
+  if (t0 === 'lista' && types.size === 1) root.append(secLista());
+  if (t0 === 'text' && types.size === 1) root.append(secSemantica());
   if (eSite()) root.append(secCompartilhar());
   root.append(secAppearance(), secAnim(), secControladores({ els, set, build }), secLink());
   root.scrollTop = top;

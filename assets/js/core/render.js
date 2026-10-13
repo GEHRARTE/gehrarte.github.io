@@ -9,6 +9,7 @@
 import { h } from './dom.js';
 import { W, frameOf, pageH, pageW, bgCss, ABAS_PADRAO } from './model.js';
 import { abasDaBarra, hrefDaAba } from './sites.js';
+import { itensDeExemplo, normalizarLista, ancoraDaLista, fontePorId } from './listas.js';
 import { sangriaPx, larguraFinal, alturaFinal } from './gabarito.js';
 import { corSegura, idSeguro, numeroSeguro, caminhoSeguro } from './seguranca.js';
 import { sanitizeSvg } from './sanitize.js';
@@ -108,8 +109,15 @@ function effects(el, ct) {
   if (s.blend && s.blend !== 'normal') ct.style.mixBlendMode = s.blend;
 }
 
+// Papéis que um texto pode assumir na página publicada. No editor o elemento continua sendo div:
+// a edição mexe em posição e estilo, não em semântica, e trocar a tag mudaria o que o editor mede.
+export const PAPEIS_TEXTO = new Set(['h1', 'h2', 'h3', 'h4', 'p']);
+
 function content(el, fr, ctx) {
-  const ct = h('div', { class: 'el-ct' });
+  // Com papel, o texto publicado sai na tag de verdade — é o que devolve hierarquia de títulos a
+  // uma página montada no editor, onde todo elemento é um div posicionado (D-0053).
+  const tag = !ctx.editing && el.t === 'text' && PAPEIS_TEXTO.has(el.papel) ? el.papel : 'div';
+  const ct = h(tag, { class: 'el-ct' });
   switch (el.t) {
     case 'text': {
       const s = el.s;
@@ -118,6 +126,7 @@ function content(el, fr, ctx) {
         fontFamily: fontStack(s.fontFamily), fontSize: fr.fs + 'px', fontWeight: s.fontWeight, fontStyle: s.italic ? 'italic' : 'normal',
         textDecoration: s.underline ? 'underline' : 'none', textTransform: s.upper ? 'uppercase' : 'none', textAlign: s.align,
         color: s.color, lineHeight: s.lh, letterSpacing: s.ls + 'em',
+        margin: '0',   // h1…h4 e p trazem margem do navegador, que deslocaria o texto do seu lugar
       });
       ct.textContent = el.text;
       break;
@@ -133,6 +142,35 @@ function content(el, fr, ctx) {
       break;
     }
     case 'path': ct.innerHTML = pathSvg(el, fr); break;
+    case 'lista': {
+      // Bloco de conteúdo do site. PUBLICADO: só o lugar, com os dados em data-* para quem os tem
+      // preencher (assets/js/blog.js). EDITOR: itens de exemplo, senão o bloco seria um retângulo
+      // vazio e ninguém entenderia o que vai ali. Ver core/listas.js e D-0053.
+      const cfg = normalizarLista(el.lista);
+      ct.classList.add('bloco-lista', `bloco-${cfg.fonte}`);
+      ct.dataset.lista = cfg.fonte;
+      ct.dataset.max = String(cfg.max);
+      ct.dataset.colunas = String(cfg.colunas);
+      Object.assign(ct.style, { width: '100%', height: '100%', boxSizing: 'border-box', overflow: 'hidden' });
+      if (ctx.editing) {
+        const fonte = fontePorId(cfg.fonte);
+        const grade = h('div', { class: 'bloco-grade' });
+        Object.assign(grade.style, { display: 'grid', gridTemplateColumns: `repeat(${cfg.colunas}, 1fr)`, gap: '14px', height: '100%', alignContent: 'start' });
+        for (const it of itensDeExemplo(cfg.fonte, cfg.max || cfg.colunas * 2)) {
+          const cartao = h('div', { class: 'bloco-cartao' },
+            h('b', {}, it.titulo || it.nome || 'Item'),
+            h('small', {}, it.resumo || it.descricao || it.title || 'Página em construção'));
+          Object.assign(cartao.style, { border: '1px dashed currentColor', borderRadius: '10px', padding: '10px 12px', opacity: '.62', display: 'flex', flexDirection: 'column', gap: '4px', minWidth: '0', overflow: 'hidden' });
+          Object.assign(cartao.firstChild.style, { font: '600 15px/1.25 inherit', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' });
+          Object.assign(cartao.lastChild.style, { font: '400 12px/1.35 inherit', display: 'block', overflow: 'hidden' });
+          grade.append(cartao);
+        }
+        const etiqueta = h('div', {}, `${fonte?.rotulo || cfg.fonte} — montado pelo site`);
+        Object.assign(etiqueta.style, { font: '600 11px/1 inherit', textTransform: 'uppercase', letterSpacing: '.06em', opacity: '.75', marginBottom: '8px' });
+        ct.append(etiqueta, grade);
+      }
+      break;
+    }
     case 'abas': {
       // Barra de abas do projeto de site: no editor só mostra; na página publicada cada item é um link (#/<aba>)
       const cfg = { ...ABAS_PADRAO, ...(el.abas || {}) }, l = el.ls, esc = fr.fs / (l.fontSize || 16);
@@ -186,6 +224,11 @@ export function renderElement(el, ctx) {
     if (el.hide) wrap.classList.add('is-hidden');
     if (el.lock) wrap.classList.add('is-locked');
   }
+
+  // Âncora: na página publicada o elemento ganha id, para um sumário poder apontar para ele
+  // (#artigos). Passa por idSeguro em core/listas.js — id vai para o HTML e documento importado
+  // não é confiável. No editor fica de fora, para não haver dois elementos com o mesmo id na tela.
+  if (!ctx.editing) { const a = ancoraDaLista(el); if (a) wrap.id = a; }
 
   // link para outra aba do projeto de site (#/<aba>) ou endereço comum
   const href = ctx.editing ? null : el.link?.aba ? hrefDaAba(el.link.aba) : el.link?.href ? safeHref(el.link.href) : null;

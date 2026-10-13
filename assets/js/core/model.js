@@ -5,6 +5,7 @@
 // Cada elemento tem frame de PC (f.d, sempre) e frame de celular (f.m, opcional).
 // Sem f.m, o celular usa uma versão proporcional derivada do PC (frameOf devolve derived:true).
 import { uid, clone, clamp } from './util.js';
+import { LISTA_PADRAO } from './listas.js';
 
 export const W = { d: 1200, m: 390 };
 export const K = W.m / W.d;
@@ -92,6 +93,9 @@ export function makeElement(t, props = {}, frame = {}) {
   if (t === 'svg') Object.assign(base, { code: '' });
   // 'abas' = barra de abas FUNCIONAL: lista as abas do projeto de site e leva de uma a outra (no editor só mostra; na página publicada navega)
   if (t === 'abas') Object.assign(base, { name: 'Barra de abas', ls: { fontFamily: 'Inter', fontSize: 16, fontWeight: 600, color: '#17161d' }, abas: { ...ABAS_PADRAO } });
+  // 'lista' = bloco de conteúdo do SITE (artigos, equipe, exposições): a página guarda o lugar, e
+  // quem tem os dados preenche — o site de verdade, itens de exemplo no editor. Ver core/listas.js.
+  if (t === 'lista') Object.assign(base, { name: 'Bloco de artigos', lista: { ...LISTA_PADRAO }, f: { d: { x: 100, y: 100, w: 1000, h: 520, r: 0, ...frame } } });
   // props sobrescreve o padrão (merge raso de s / ls / f)
   for (const [k, v] of Object.entries(props)) {
     if (k === 's' || k === 'ls') base[k] = { ...base[k], ...v };
