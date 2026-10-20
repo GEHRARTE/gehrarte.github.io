@@ -3,6 +3,7 @@
  "nome": "Perfil — pesquisador(a) e escritor(a)",
  "descricao": "Página de perfil voltada ao texto: abertura em cor de destaque, biografia em parágrafos, linhas de pesquisa e publicações em cartões e contato. Serifada (Lora) sobre fundo claro, para leitura confortável.",
  "categoria": "Perfil",
+ "tags": ["perfil"],
  "tema": { "fundo": "#fbf9f4", "texto": "#1e1c18", "suave": "#585349", "escuro": "#1f3a34", "sobreEscuro": "#ffffff", "acento": "#cfe3d4", "sobreAcento": "#1f3a34", "superficie": "#ece7da", "fonteTitulo": "Lora", "fonteTexto": "Inter", "raio": 12 },
  "secoes": [
   { "tipo": "hero", "fundo": "acento", "kicker": "Pesquisa e escrita", "titulo": "Seu Nome", "texto": "Estudo, escrevo e organizo ideias sobre o tema que me interessa. Esta página reúne minha trajetória, minhas linhas de pesquisa e o que já publiquei." },

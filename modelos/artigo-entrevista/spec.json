@@ -1,0 +1,69 @@
+{
+ "id": "artigo-entrevista",
+ "nome": "Artigo — entrevista",
+ "descricao": "Entrevista em perguntas e respostas: abertura com a pessoa entrevistada, apresentação, blocos de pergunta e resposta e uma chamada final para o contato. Pense em cada bloco como um parágrafo de P e outro de R.",
+ "categoria": "Artigo",
+ "tags": [
+  "artigos"
+ ],
+ "tema": {
+  "fundo": "#f6f1e6",
+  "texto": "#1c1a17",
+  "suave": "#6a6458",
+  "escuro": "#2b2118",
+  "sobreEscuro": "#fbf8f2",
+  "acento": "#8a4b2a",
+  "sobreAcento": "#ffffff",
+  "superficie": "#ece4d2",
+  "fonteTitulo": "Playfair Display",
+  "fonteTexto": "Lora",
+  "raio": 10
+ },
+ "secoes": [
+  {
+   "tipo": "hero",
+   "fundo": "claro",
+   "kicker": "Entrevista",
+   "titulo": "Nome da pessoa entrevistada",
+   "texto": "Uma frase que apresenta quem ela é e por que a conversa vale a leitura.",
+   "imagem": true,
+   "imagemRotulo": "Foto da pessoa"
+  },
+  {
+   "tipo": "texto",
+   "titulo": "Apresentação",
+   "paragrafos": [
+    "Conte em poucas linhas quem é a pessoa, o que faz e como a conversa aconteceu (data, lugar, formato)."
+   ]
+  },
+  {
+   "tipo": "texto",
+   "titulo": "A conversa",
+   "paragrafos": [
+    "P: Primeira pergunta.",
+    "R: Resposta da pessoa, nas palavras dela. Corte só o que for repetição.",
+    "P: Segunda pergunta.",
+    "R: Resposta.",
+    "P: Terceira pergunta.",
+    "R: Resposta."
+   ]
+  },
+  {
+   "tipo": "chamada",
+   "titulo": "Quer conversar também?",
+   "texto": "Se você tem uma história ou um trabalho que gostaria de ver aqui, escreva.",
+   "botao": {
+    "rotulo": "Entrar em contato",
+    "href": "mailto:"
+   }
+  },
+  {
+   "tipo": "rodape",
+   "texto": "Escrito no Gehrarte · UEM\nSe usar esta ideia, cite a fonte.",
+   "links": [
+    "Início",
+    "Artigos"
+   ]
+  }
+ ]
+}

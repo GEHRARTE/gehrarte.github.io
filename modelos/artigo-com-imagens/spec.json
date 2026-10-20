@@ -1,0 +1,68 @@
+{
+ "id": "artigo-com-imagens",
+ "nome": "Artigo — com capa e galeria",
+ "descricao": "Artigo ilustrado: abertura com quadro de capa, texto, uma galeria de imagens para as obras ou fotos do assunto e uma faixa de destaque para a citação principal. Cada retângulo cinza é um lugar de imagem.",
+ "categoria": "Artigo",
+ "tags": [
+  "artigos"
+ ],
+ "tema": {
+  "fundo": "#f6f1e6",
+  "texto": "#1c1a17",
+  "suave": "#6a6458",
+  "escuro": "#2b2118",
+  "sobreEscuro": "#fbf8f2",
+  "acento": "#8a4b2a",
+  "sobreAcento": "#ffffff",
+  "superficie": "#ece4d2",
+  "fonteTitulo": "Playfair Display",
+  "fonteTexto": "Lora",
+  "raio": 10
+ },
+ "secoes": [
+  {
+   "tipo": "hero",
+   "fundo": "claro",
+   "kicker": "Artigo",
+   "titulo": "Título do artigo",
+   "texto": "por [seu nome] · [data]. Resumo curto, que aparece ao lado da capa.",
+   "imagem": true,
+   "imagemRotulo": "Capa do artigo"
+  },
+  {
+   "tipo": "texto",
+   "titulo": "O assunto",
+   "paragrafos": [
+    "Apresente o tema e o que as imagens abaixo mostram.",
+    "Escreva aqui um parágrafo. Clique duas vezes para editar; arraste as bordas para mudar a largura e use o painel da direita para fonte, tamanho e cor."
+   ]
+  },
+  {
+   "tipo": "galeria",
+   "titulo": "Imagens",
+   "quantidade": 6,
+   "colunas": 3
+  },
+  {
+   "tipo": "faixa",
+   "fundo": "acento",
+   "texto": "Uma frase do texto, ou uma citação, que merece destaque."
+  },
+  {
+   "tipo": "texto",
+   "titulo": "Leitura das imagens",
+   "paragrafos": [
+    "Comente o que se vê: técnica, época, contexto. Uma legenda por imagem ajuda quem lê no celular.",
+    "Feche ligando as imagens à pergunta do artigo."
+   ]
+  },
+  {
+   "tipo": "rodape",
+   "texto": "Escrito no Gehrarte · UEM\nSe usar esta ideia, cite a fonte.",
+   "links": [
+    "Início",
+    "Artigos"
+   ]
+  }
+ ]
+}

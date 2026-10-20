@@ -2,12 +2,14 @@
 // aplicar a um documento, GERAR a partir de uma especificação e guardar "meus modelos".
 //
 // Um modelo é um JSON aberto e versionado (ED-11):
-//   { format:'artatk-modelo', v:1, id, nome, descricao, categoria, origem, doc:{ page, elements } }
+//   { format:'artatk-modelo', v:1, id, nome, descricao, categoria, tags?, origem, doc:{ page, elements } }
+// `tags` (opcional) diz em que abas da galeria o modelo aparece: 'site', 'perfil', 'artigos'. A tag 'arquivo' é de TODOS os modelos
+// e por isso nem é guardada (ver tagsDoModelo).
 // Não leva imagens enviadas (ficariam sem arquivo): vira um quadro "Imagem" para a pessoa trocar.
 // A especificação (spec) é uma descrição declarativa de seções (topo, hero, cards…) que o gerador converte nos
 // elementos do canvas, com layout de PC (1200) e de celular (390). É por ela que se produz um modelo novo a
 // partir de um briefing — por exemplo, o do setor de design do MUVVI — sem desenhar elemento por elemento.
-import { newDoc, makeElement, W, garantirSite, ABAS_PADRAO } from './model.js';
+import { newDoc, makeElement, W, garantirSite, ABAS_PADRAO, TAG_IDS } from './model.js';
 import { guardarAbaAtual, carregarAbaAtiva, docDeAba } from './sites.js';
 import { uid, clone } from './util.js';
 
@@ -25,6 +27,7 @@ export function validarModelo(m) {
   if (m.v !== MODELO_V) erros.push(`Versão do modelo não suportada (${m.v}).`);
   if (!ID_OK.test(String(m.id || ''))) erros.push('O id do modelo deve ter só letras minúsculas, números e hífen.');
   if (!String(m.nome || '').trim()) erros.push('O modelo precisa de um nome.');
+  if (m.tags !== undefined && (!Array.isArray(m.tags) || m.tags.some((t) => !TAG_IDS.includes(t)))) erros.push(`"tags" deve ser uma lista com valores de: ${TAG_IDS.join(', ')}.`);
   const d = m.doc;
   const elementos = (lista, onde) => {
     if (!Array.isArray(lista)) { erros.push(`${onde}: falta a lista de elementos.`); return 0; }
@@ -90,6 +93,7 @@ export function modeloDeDoc(doc, meta = {}) {
     nome: String(meta.nome || doc.title || 'Modelo').trim(),
     descricao: String(meta.descricao || '').trim(),
     categoria: String(meta.categoria || 'Meus modelos').trim(),
+    ...(meta.tags?.length ? { tags: limparTags(meta.tags) } : {}),
     origem: meta.origem || 'pagina',
     doc: d,
   };
@@ -98,6 +102,18 @@ export function modeloDeDoc(doc, meta = {}) {
 
 export const slugModelo = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50) || 'modelo';
 export const ehModeloDeSite = (m) => m?.doc?.kind === 'site';
+
+// Em quais abas da galeria o modelo aparece. 'arquivo' vale para todos, então não entra aqui: a aba Arquivo mostra tudo.
+// Sem `tags` gravadas (modelos antigos, "meus modelos"), deduz: projeto de site → 'site'; categoria "Perfil" → 'perfil'.
+export const limparTags = (t) => [...new Set((Array.isArray(t) ? t : []).filter((x) => TAG_IDS.includes(x) && x !== 'arquivo'))];
+export function tagsDoModelo(m) {
+  if (Array.isArray(m?.tags)) return limparTags(m.tags);
+  if (ehModeloDeSite(m)) return ['site'];
+  return /^perfil$/i.test(m?.categoria || '') ? ['perfil'] : [];
+}
+// Que `kind` tem o projeto criado a partir do modelo: modelo da tag Artigos nasce como artigo (publicável em Artigos); o resto, como arquivo.
+export const kindDoProjetoDoModelo = (m) => (tagsDoModelo(m).includes('artigos') ? 'artigo' : 'arquivo');
+export const modeloNaTag = (m, tag) => !tag || tag === 'arquivo' || tagsDoModelo(m).includes(tag);
 
 // Conteúdo do modelo, com ids novos (para aplicar a um documento sem colidir com nada).
 // Página: { page, elements }. Projeto de site: { site:true, abas, comum, abaAtiva }.
@@ -397,7 +413,8 @@ export function gerarDeSpec(spec) {
   const modelo = {
     format: FORMATO, v: MODELO_V,
     id: spec.id && ID_OK.test(spec.id) ? spec.id : slugModelo(nome),
-    nome, descricao: String(spec.descricao || '').trim(), categoria: String(spec.categoria || 'Meus modelos').trim(), origem: 'spec',
+    nome, descricao: String(spec.descricao || '').trim(), categoria: String(spec.categoria || 'Meus modelos').trim(),
+    ...(Array.isArray(spec.tags) ? { tags: limparTags(spec.tags) } : {}), origem: 'spec',
     doc: site ? r.doc : { page: r.page, elements: r.elements },
   };
   const v = validarModelo(modelo);

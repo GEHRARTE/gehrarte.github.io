@@ -5,6 +5,9 @@
  "nome": "Perfil — designer",
  "descricao": "Página de perfil limpa para portfólio de design: abertura clara com imagem, faixa de especialidades, projetos em dois cartões grandes, processo de trabalho e chamada final. Fundo branco, Space Grotesk e acento violeta.",
  "categoria": "Perfil",
+ "tags": [
+  "perfil"
+ ],
  "origem": "spec",
  "doc": {
   "page": {

@@ -4,7 +4,7 @@ import { loadConfig } from '../core/auth.js';
 import { carregarHost, identidadeValida } from '../core/host.js';
 import { Store } from '../core/store.js';
 import { loadAllFonts } from '../core/fonts.js';
-import { newDoc, normalizeDoc, DEV_LABEL, KINDS, PROFILE_ID, STATE_LABEL, docState, publishDir, viewerQuery, isSiteId, sitePageId, publisherName, ehUnico, NAO_PUBLICAVEIS } from '../core/model.js';
+import { newDoc, normalizeDoc, DEV_LABEL, KINDS, tagDe, rotuloDaTag, PROFILE_ID, STATE_LABEL, docState, publishDir, viewerQuery, isSiteId, sitePageId, publisherName, ehUnico, NAO_PUBLICAVEIS } from '../core/model.js';
 import { docPath, prepareSiteDoc } from '../core/docs.js';
 import { canEditSite, registryEntry } from '../core/site.js';
 import { BASE } from '../core/util.js';
@@ -181,7 +181,7 @@ function wireTop() {
   const paintPath = () => {
     const d = S.doc, state = docState(d, S.updatedAt, S.changed);
     const k = $('#pb-kind'), st = $('#pb-state');
-    k.textContent = KINDS[d.kind]; k.className = `chip kind-${d.kind}`;
+    k.textContent = rotuloDaTag(d.kind); k.className = `chip tag-${tagDe(d.kind)}`;
     st.textContent = STATE_LABEL[state]; st.className = `chip st-${state}`;
     $('#pb-path').textContent = docPath(S.slug, d);
     $('#pb-name').textContent = d.title?.trim() || 'sem título';

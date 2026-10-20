@@ -1,0 +1,770 @@
+{
+ "format": "artatk-modelo",
+ "v": 1,
+ "id": "artigo-simples",
+ "nome": "Artigo — texto corrido",
+ "descricao": "A estrutura clássica de um artigo: título, autoria e resumo no alto; introdução, desenvolvimento e conclusão em parágrafos; referências no fim. Fundo creme, Playfair Display nos títulos e Lora no texto.",
+ "categoria": "Artigo",
+ "tags": [
+  "artigos"
+ ],
+ "origem": "spec",
+ "doc": {
+  "page": {
+   "bg": {
+    "c": "#f6f1e6",
+    "g": null
+   },
+   "h": {
+    "d": 2128,
+    "m": 1720
+   }
+  },
+  "elements": [
+   {
+    "id": "g1",
+    "t": "text",
+    "name": "Etiqueta",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 88,
+      "w": 1000,
+      "h": 18,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 44,
+      "w": 342,
+      "h": 16,
+      "fs": 13
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 15,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": true,
+     "align": "left",
+     "color": "#8a4b2a",
+     "lh": 1.2,
+     "ls": 0.18
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Artigo",
+    "ah": true
+   },
+   {
+    "id": "g2",
+    "t": "text",
+    "name": "Título",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 124,
+      "w": 1000,
+      "h": 70,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 72,
+      "w": 342,
+      "h": 39,
+      "fs": 34
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 64,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.08,
+     "ls": -0.015
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.12,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Título do artigo",
+    "ah": true
+   },
+   {
+    "id": "g3",
+    "t": "text",
+    "name": "Texto",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 218,
+      "w": 1000,
+      "h": 66,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 127,
+      "w": 342,
+      "h": 80,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 21,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#6a6458",
+     "lh": 1.55,
+     "ls": 0
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.24,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "por [seu nome] · [data]. Resumo em duas ou três linhas: o que este artigo discute e por que importa.",
+    "ah": true
+   },
+   {
+    "id": "g4",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 496,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 323,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Introdução",
+    "ah": true
+   },
+   {
+    "id": "g5",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 567,
+      "w": 760,
+      "h": 68,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 372,
+      "w": 342,
+      "h": 87,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Apresente o tema e a pergunta que o texto responde. Diga por que isso interessa a quem lê.",
+    "ah": true
+   },
+   {
+    "id": "g6",
+    "t": "text",
+    "name": "Parágrafo 2",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 653,
+      "w": 760,
+      "h": 102,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 473,
+      "w": 342,
+      "h": 116,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Escreva aqui um parágrafo. Clique duas vezes para editar; arraste as bordas para mudar a largura e use o painel da direita para fonte, tamanho e cor.",
+    "ah": true
+   },
+   {
+    "id": "g7",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 931,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 677,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Desenvolvimento",
+    "ah": true
+   },
+   {
+    "id": "g8",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1002,
+      "w": 760,
+      "h": 68,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 726,
+      "w": 342,
+      "h": 116,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Primeiro argumento ou primeira parte do assunto. Um parágrafo por ideia deixa a leitura leve, principalmente no celular.",
+    "ah": true
+   },
+   {
+    "id": "g9",
+    "t": "text",
+    "name": "Parágrafo 2",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1088,
+      "w": 760,
+      "h": 68,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 856,
+      "w": 342,
+      "h": 87,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Segundo argumento. Se precisar de exemplo, dados ou uma citação, ponha aqui e diga de onde vieram.",
+    "ah": true
+   },
+   {
+    "id": "g10",
+    "t": "text",
+    "name": "Parágrafo 3",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1174,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 957,
+      "w": 342,
+      "h": 58,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Terceiro argumento, ou a objeção que você quer responder.",
+    "ah": true
+   },
+   {
+    "id": "g11",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1384,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1103,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Conclusão",
+    "ah": true
+   },
+   {
+    "id": "g12",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1455,
+      "w": 760,
+      "h": 68,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1152,
+      "w": 342,
+      "h": 87,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Retome a pergunta do começo e diga, em poucas linhas, o que ficou respondido e o que ainda está em aberto.",
+    "ah": true
+   },
+   {
+    "id": "g13",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1699,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1327,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Referências",
+    "ah": true
+   },
+   {
+    "id": "g14",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1770,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1376,
+      "w": 342,
+      "h": 58,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Sobrenome, Nome. Título da obra. Cidade: Editora, ano.",
+    "ah": true
+   },
+   {
+    "id": "g15",
+    "t": "text",
+    "name": "Parágrafo 2",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1822,
+      "w": 760,
+      "h": 68,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1448,
+      "w": 342,
+      "h": 58,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Sobrenome, Nome. “Título do texto”. Veículo, ano. Endereço, quando houver.",
+    "ah": true
+   },
+   {
+    "id": "g16",
+    "t": "shape",
+    "name": "Rodapé",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 0,
+      "y": 1978,
+      "w": 1200,
+      "h": 150,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 0,
+      "y": 1550,
+      "w": 390,
+      "h": 170
+     }
+    },
+    "s": {
+     "fill": "#2b2118",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 0,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "",
+    "ls": {
+     "fontFamily": "Inter",
+     "fontSize": 24,
+     "fontWeight": 600,
+     "color": "#ffffff"
+    }
+   },
+   {
+    "id": "g17",
+    "t": "text",
+    "name": "Rodapé — texto",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 2018,
+      "w": 1000,
+      "h": 45,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1586,
+      "w": 342,
+      "h": 42,
+      "fs": 14
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 15,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.5,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Escrito no Gehrarte · UEM\nSe usar esta ideia, cite a fonte.",
+    "ah": true
+   },
+   {
+    "id": "g18",
+    "t": "text",
+    "name": "Rodapé — links",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 2068,
+      "w": 1000,
+      "h": 20,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1646,
+      "w": 342,
+      "h": 20,
+      "fs": 13
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 14,
+     "fontWeight": 500,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.4,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Início   ·   Artigos",
+    "ah": true
+   }
+  ]
+ }
+}

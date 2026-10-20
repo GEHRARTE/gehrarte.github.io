@@ -5,6 +5,9 @@
  "nome": "Perfil — artista",
  "descricao": "Página de perfil para quem mostra trabalhos: abertura escura com seu nome, sobre você, três séries em cartões, galeria e convite para conversar. Fundo creme, títulos em Playfair Display e acento laranja.",
  "categoria": "Perfil",
+ "tags": [
+  "perfil"
+ ],
  "origem": "spec",
  "doc": {
   "page": {

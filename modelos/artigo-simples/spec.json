@@ -1,0 +1,71 @@
+{
+ "id": "artigo-simples",
+ "nome": "Artigo — texto corrido",
+ "descricao": "A estrutura clássica de um artigo: título, autoria e resumo no alto; introdução, desenvolvimento e conclusão em parágrafos; referências no fim. Fundo creme, Playfair Display nos títulos e Lora no texto.",
+ "categoria": "Artigo",
+ "tags": [
+  "artigos"
+ ],
+ "tema": {
+  "fundo": "#f6f1e6",
+  "texto": "#1c1a17",
+  "suave": "#6a6458",
+  "escuro": "#2b2118",
+  "sobreEscuro": "#fbf8f2",
+  "acento": "#8a4b2a",
+  "sobreAcento": "#ffffff",
+  "superficie": "#ece4d2",
+  "fonteTitulo": "Playfair Display",
+  "fonteTexto": "Lora",
+  "raio": 10
+ },
+ "secoes": [
+  {
+   "tipo": "hero",
+   "fundo": "claro",
+   "kicker": "Artigo",
+   "titulo": "Título do artigo",
+   "texto": "por [seu nome] · [data]. Resumo em duas ou três linhas: o que este artigo discute e por que importa."
+  },
+  {
+   "tipo": "texto",
+   "titulo": "Introdução",
+   "paragrafos": [
+    "Apresente o tema e a pergunta que o texto responde. Diga por que isso interessa a quem lê.",
+    "Escreva aqui um parágrafo. Clique duas vezes para editar; arraste as bordas para mudar a largura e use o painel da direita para fonte, tamanho e cor."
+   ]
+  },
+  {
+   "tipo": "texto",
+   "titulo": "Desenvolvimento",
+   "paragrafos": [
+    "Primeiro argumento ou primeira parte do assunto. Um parágrafo por ideia deixa a leitura leve, principalmente no celular.",
+    "Segundo argumento. Se precisar de exemplo, dados ou uma citação, ponha aqui e diga de onde vieram.",
+    "Terceiro argumento, ou a objeção que você quer responder."
+   ]
+  },
+  {
+   "tipo": "texto",
+   "titulo": "Conclusão",
+   "paragrafos": [
+    "Retome a pergunta do começo e diga, em poucas linhas, o que ficou respondido e o que ainda está em aberto."
+   ]
+  },
+  {
+   "tipo": "texto",
+   "titulo": "Referências",
+   "paragrafos": [
+    "Sobrenome, Nome. Título da obra. Cidade: Editora, ano.",
+    "Sobrenome, Nome. “Título do texto”. Veículo, ano. Endereço, quando houver."
+   ]
+  },
+  {
+   "tipo": "rodape",
+   "texto": "Escrito no Gehrarte · UEM\nSe usar esta ideia, cite a fonte.",
+   "links": [
+    "Início",
+    "Artigos"
+   ]
+  }
+ ]
+}

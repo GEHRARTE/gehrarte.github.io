@@ -4,7 +4,7 @@ import { Store } from './store.js';
 import { makeElement, newDoc, normalizeDoc, PROFILE_ID, SITE_PREFIX, isSiteId, siteDocId, publishDir, slugify } from './model.js';
 import { clone } from './util.js';
 import { fetchPublished, fetchModel } from './site.js';
-import { docDeModelo } from './modelos.js';
+import { docDeModelo, kindDoProjetoDoModelo } from './modelos.js';
 import { paginaDoFormato, FORMATO_PADRAO } from './formatos.js';
 
 // Caminho que o usuário vê: o publicado, ou "inventário/<id>" quando só local.
@@ -63,7 +63,7 @@ export async function createArquivoEmBranco(owner, titulo, formato = FORMATO_PAD
 export async function createDocFromModelo(owner, modelo, title) {
   const docs = await Store.listDocs(owner);
   const nome = (title || modelo.nome).trim();
-  const doc = docDeModelo(modelo, owner, { id: freeId(slugify(nome), docs), title: nome, kind: 'arquivo' });
+  const doc = docDeModelo(modelo, owner, { id: freeId(slugify(nome), docs), title: nome, kind: kindDoProjetoDoModelo(modelo) });
   await Store.saveDoc(owner, doc);
   return doc.id;
 }

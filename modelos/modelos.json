@@ -2,10 +2,43 @@
  "v": 1,
  "modelos": [
   {
+   "id": "artigo-com-imagens",
+   "nome": "Artigo — com capa e galeria",
+   "descricao": "Artigo ilustrado: abertura com quadro de capa, texto, uma galeria de imagens para as obras ou fotos do assunto e uma faixa de destaque para a citação principal. Cada retângulo cinza é um lugar de imagem.",
+   "categoria": "Artigo",
+   "tags": [
+    "artigos"
+   ],
+   "tipo": "pagina"
+  },
+  {
+   "id": "artigo-entrevista",
+   "nome": "Artigo — entrevista",
+   "descricao": "Entrevista em perguntas e respostas: abertura com a pessoa entrevistada, apresentação, blocos de pergunta e resposta e uma chamada final para o contato. Pense em cada bloco como um parágrafo de P e outro de R.",
+   "categoria": "Artigo",
+   "tags": [
+    "artigos"
+   ],
+   "tipo": "pagina"
+  },
+  {
+   "id": "artigo-simples",
+   "nome": "Artigo — texto corrido",
+   "descricao": "A estrutura clássica de um artigo: título, autoria e resumo no alto; introdução, desenvolvimento e conclusão em parágrafos; referências no fim. Fundo creme, Playfair Display nos títulos e Lora no texto.",
+   "categoria": "Artigo",
+   "tags": [
+    "artigos"
+   ],
+   "tipo": "pagina"
+  },
+  {
    "id": "muvvi-site",
    "nome": "MUVVI — site do museu",
    "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu.",
    "categoria": "MUVVI",
+   "tags": [
+    "site"
+   ],
    "tipo": "site"
   },
   {
@@ -13,6 +46,9 @@
    "nome": "MUVVI — site do museu (Papel de arquivo)",
    "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Papel de arquivo: Neutra, para leitura longa de documento e de acervo: sobra o verde institucional e a cor sai da frente do conteúdo.",
    "categoria": "MUVVI",
+   "tags": [
+    "site"
+   ],
    "tipo": "site"
   },
   {
@@ -20,6 +56,9 @@
    "nome": "MUVVI — site do museu (Barranco)",
    "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Barranco: Terra quente: o vermelho do ícone puxado para o ocre do barranco, com verde de mata no acento.",
    "categoria": "MUVVI",
+   "tags": [
+    "site"
+   ],
    "tipo": "site"
   },
   {
@@ -27,6 +66,9 @@
    "nome": "MUVVI — site do museu (Mata ciliar)",
    "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Mata ciliar: Os verdes do ícone no comando e o vermelho reservado para o acento. Clima de mata, não de barro.",
    "categoria": "MUVVI",
+   "tags": [
+    "site"
+   ],
    "tipo": "site"
   },
   {
@@ -34,6 +76,9 @@
    "nome": "MUVVI — site do museu (Rio fundo (escura))",
    "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Rio fundo (escura): Versão noturna, feita para o mapa e para telas que ficam muito tempo abertas.",
    "categoria": "MUVVI",
+   "tags": [
+    "site"
+   ],
    "tipo": "site"
   },
   {
@@ -41,6 +86,9 @@
    "nome": "MUVVI — site do museu (Xilogravura do Ivaí)",
    "descricao": "Modelo de base do site do Museu Virtual do Vale do Ivaí, para a equipe de arte continuar: logomarca no topo à esquerda, as cinco salas do museu aparecendo em sequência conforme se desce a tela inicial, Mapa Interativo, artistas, material da equipe e contato. Textos de Leilane Patricia de Lima (versão experimental para o XIV SAB Sul). Cada retângulo cinza é um lugar de imagem para soltar o arquivo do Drive. Há uma variante para cada paleta do museu. Esta variante usa a paleta Xilogravura do Ivaí: Tirada do ícone de patrimônio imaterial: vermelho das letras sobre papel de gravura, com o verde-água do rio no acento.",
    "categoria": "MUVVI",
+   "tags": [
+    "site"
+   ],
    "tipo": "site"
   },
   {
@@ -48,6 +96,9 @@
    "nome": "Perfil — artista",
    "descricao": "Página de perfil para quem mostra trabalhos: abertura escura com seu nome, sobre você, três séries em cartões, galeria e convite para conversar. Fundo creme, títulos em Playfair Display e acento laranja.",
    "categoria": "Perfil",
+   "tags": [
+    "perfil"
+   ],
    "tipo": "pagina"
   },
   {
@@ -55,6 +106,9 @@
    "nome": "Perfil — cartão de apresentação",
    "descricao": "A versão enxuta: uma abertura escura com seu nome e foto, três coisas que você faz e um botão de contato. Boa para começar rápido e ir acrescentando seções depois. Tons de roxo do Gehrarte.",
    "categoria": "Perfil",
+   "tags": [
+    "perfil"
+   ],
    "tipo": "pagina"
   },
   {
@@ -62,6 +116,9 @@
    "nome": "Perfil — designer",
    "descricao": "Página de perfil limpa para portfólio de design: abertura clara com imagem, faixa de especialidades, projetos em dois cartões grandes, processo de trabalho e chamada final. Fundo branco, Space Grotesk e acento violeta.",
    "categoria": "Perfil",
+   "tags": [
+    "perfil"
+   ],
    "tipo": "pagina"
   },
   {
@@ -69,6 +126,9 @@
    "nome": "Perfil — pesquisador(a) e escritor(a)",
    "descricao": "Página de perfil voltada ao texto: abertura em cor de destaque, biografia em parágrafos, linhas de pesquisa e publicações em cartões e contato. Serifada (Lora) sobre fundo claro, para leitura confortável.",
    "categoria": "Perfil",
+   "tags": [
+    "perfil"
+   ],
    "tipo": "pagina"
   }
  ]

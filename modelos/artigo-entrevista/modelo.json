@@ -1,0 +1,892 @@
+{
+ "format": "artatk-modelo",
+ "v": 1,
+ "id": "artigo-entrevista",
+ "nome": "Artigo — entrevista",
+ "descricao": "Entrevista em perguntas e respostas: abertura com a pessoa entrevistada, apresentação, blocos de pergunta e resposta e uma chamada final para o contato. Pense em cada bloco como um parágrafo de P e outro de R.",
+ "categoria": "Artigo",
+ "tags": [
+  "artigos"
+ ],
+ "origem": "spec",
+ "doc": {
+  "page": {
+   "bg": {
+    "c": "#f6f1e6",
+    "g": null
+   },
+   "h": {
+    "d": 1879,
+    "m": 1604
+   }
+  },
+  "elements": [
+   {
+    "id": "g1",
+    "t": "text",
+    "name": "Etiqueta",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 88,
+      "w": 560,
+      "h": 18,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 44,
+      "w": 342,
+      "h": 16,
+      "fs": 13
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 15,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": true,
+     "align": "left",
+     "color": "#8a4b2a",
+     "lh": 1.2,
+     "ls": 0.18
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Entrevista",
+    "ah": true
+   },
+   {
+    "id": "g2",
+    "t": "text",
+    "name": "Título",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 124,
+      "w": 560,
+      "h": 139,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 72,
+      "w": 342,
+      "h": 77,
+      "fs": 34
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 64,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.08,
+     "ls": -0.015
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.12,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Nome da pessoa entrevistada",
+    "ah": true
+   },
+   {
+    "id": "g3",
+    "t": "text",
+    "name": "Texto",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 287,
+      "w": 560,
+      "h": 66,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 165,
+      "w": 342,
+      "h": 53,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 21,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#6a6458",
+     "lh": 1.55,
+     "ls": 0
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.24,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Uma frase que apresenta quem ela é e por que a conversa vale a leitura.",
+    "ah": true
+   },
+   {
+    "id": "g4",
+    "t": "shape",
+    "name": "Foto da pessoa",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 680,
+      "y": 48,
+      "w": 420,
+      "h": 384,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 24,
+      "y": 246,
+      "w": 342,
+      "h": 220
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.36,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "shape": "rect",
+    "label": "Foto da pessoa",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g5",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 568,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 582,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Apresentação",
+    "ah": true
+   },
+   {
+    "id": "g6",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 639,
+      "w": 760,
+      "h": 68,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 631,
+      "w": 342,
+      "h": 87,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Conte em poucas linhas quem é a pessoa, o que faz e como a conversa aconteceu (data, lugar, formato).",
+    "ah": true
+   },
+   {
+    "id": "g7",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 883,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 806,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "A conversa",
+    "ah": true
+   },
+   {
+    "id": "g8",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 954,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 855,
+      "w": 342,
+      "h": 29,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "P: Primeira pergunta.",
+    "ah": true
+   },
+   {
+    "id": "g9",
+    "t": "text",
+    "name": "Parágrafo 2",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1006,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 898,
+      "w": 342,
+      "h": 58,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "R: Resposta da pessoa, nas palavras dela. Corte só o que for repetição.",
+    "ah": true
+   },
+   {
+    "id": "g10",
+    "t": "text",
+    "name": "Parágrafo 3",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1058,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 970,
+      "w": 342,
+      "h": 29,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "P: Segunda pergunta.",
+    "ah": true
+   },
+   {
+    "id": "g11",
+    "t": "text",
+    "name": "Parágrafo 4",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1110,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1013,
+      "w": 342,
+      "h": 29,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "R: Resposta.",
+    "ah": true
+   },
+   {
+    "id": "g12",
+    "t": "text",
+    "name": "Parágrafo 5",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1162,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1056,
+      "w": 342,
+      "h": 29,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "P: Terceira pergunta.",
+    "ah": true
+   },
+   {
+    "id": "g13",
+    "t": "text",
+    "name": "Parágrafo 6",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1214,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1099,
+      "w": 342,
+      "h": 29,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "R: Resposta.",
+    "ah": true
+   },
+   {
+    "id": "g14",
+    "t": "shape",
+    "name": "Fundo da chamada",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 0,
+      "y": 1336,
+      "w": 1200,
+      "h": 393,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 0,
+      "y": 1172,
+      "w": 390,
+      "h": 262
+     }
+    },
+    "s": {
+     "fill": "#2b2118",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 0,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "",
+    "ls": {
+     "fontFamily": "Inter",
+     "fontSize": 24,
+     "fontWeight": 600,
+     "color": "#ffffff"
+    }
+   },
+   {
+    "id": "g15",
+    "t": "text",
+    "name": "Título",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 200,
+      "y": 1424,
+      "w": 800,
+      "h": 51,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1216,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 44,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Quer conversar também?",
+    "ah": true
+   },
+   {
+    "id": "g16",
+    "t": "text",
+    "name": "Texto",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 250,
+      "y": 1493,
+      "w": 700,
+      "h": 62,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1263,
+      "w": 342,
+      "h": 53,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.55,
+     "ls": 0
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.12,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Se você tem uma história ou um trabalho que gostaria de ver aqui, escreva.",
+    "ah": true
+   },
+   {
+    "id": "g17",
+    "t": "shape",
+    "name": "Botão Entrar em contato",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 480,
+      "y": 1585,
+      "w": 240,
+      "h": 56,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 85,
+      "y": 1340,
+      "w": 220,
+      "h": 50,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fill": "#8a4b2a",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 9999,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.24,
+      "ease": "ease-out"
+     }
+    },
+    "link": {
+     "href": "mailto:",
+     "blank": false
+    },
+    "shape": "rect",
+    "label": "Entrar em contato",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 600,
+     "color": "#ffffff"
+    }
+   },
+   {
+    "id": "g18",
+    "t": "shape",
+    "name": "Rodapé",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 0,
+      "y": 1729,
+      "w": 1200,
+      "h": 150,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 0,
+      "y": 1434,
+      "w": 390,
+      "h": 170
+     }
+    },
+    "s": {
+     "fill": "#2b2118",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 0,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "",
+    "ls": {
+     "fontFamily": "Inter",
+     "fontSize": 24,
+     "fontWeight": 600,
+     "color": "#ffffff"
+    }
+   },
+   {
+    "id": "g19",
+    "t": "text",
+    "name": "Rodapé — texto",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1769,
+      "w": 1000,
+      "h": 45,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1470,
+      "w": 342,
+      "h": 42,
+      "fs": 14
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 15,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.5,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Escrito no Gehrarte · UEM\nSe usar esta ideia, cite a fonte.",
+    "ah": true
+   },
+   {
+    "id": "g20",
+    "t": "text",
+    "name": "Rodapé — links",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1819,
+      "w": 1000,
+      "h": 20,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1530,
+      "w": 342,
+      "h": 20,
+      "fs": 13
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 14,
+     "fontWeight": 500,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.4,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Início   ·   Artigos",
+    "ah": true
+   }
+  ]
+ }
+}

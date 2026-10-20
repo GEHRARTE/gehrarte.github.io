@@ -13,7 +13,7 @@ import { Store } from './core/store.js';
 import { renderArtboardRecortado, usedFonts } from './core/render.js';
 import { larguraFinal } from './core/gabarito.js';
 import { loadFonts } from './core/fonts.js';
-import { pageW, KINDS, STATE_LABEL, PROFILE_ID, docState, siteDocId, publisherName, publishDir, bgCss, normalizeDoc } from './core/model.js';
+import { pageW, TAGS, TAG_IDS, tagDe, rotuloDaTag, STATE_LABEL, PROFILE_ID, docState, siteDocId, publisherName, publishDir, bgCss, normalizeDoc } from './core/model.js';
 import { BASE, clone } from './core/util.js';
 import { CHAVE_TEMA, temaEfetivo, alternarTema } from './core/tema.js';
 import { loadRegistry, canEditSite, fetchPublished, fetchModel, getJson, pageDir, publicUrl, publishedUrl, siteHost } from './core/site.js';
@@ -100,11 +100,11 @@ function cartao(c) {
     ? `${c.quem ? c.quem + ' · ' : ''}${fmtWhen(c.quando)}`
     : c.estado === 'original' ? 'Código do site — ninguém publicou pelo editor' : '—';
 
-  const el = h('article', { class: `cartao tipo-${c.tipo}${c.destaque ? ' destaque' : ''}${c.compacto ? ' compacto' : ''}`, 'data-busca': semAcento([c.titulo, c.funcao, c.arquivo, c.quem, STATE_LABEL[c.estado], KINDS[c.tipo]].join(' ')) },
+  const el = h('article', { class: `cartao tipo-${c.tipo}${c.destaque ? ' destaque' : ''}${c.compacto ? ' compacto' : ''}`, 'data-busca': semAcento([c.titulo, c.funcao, c.arquivo, c.quem, STATE_LABEL[c.estado], rotuloDaTag(c.tipo)].join(' ')), 'data-tag': tagDe(c.tipo) },
     capa,
     h('div', { class: 'corpo' },
       h('div', { class: 'tit' }, h('h3', {}, abrir ? h('a', { href: abrir }, c.titulo) : c.titulo), mais),
-      h('div', { class: 'chips' }, h('span', { class: `chip tipo-${c.tipo}` }, KINDS[c.tipo]), h('span', { class: `chip st-${c.estado}` }, STATE_LABEL[c.estado]),
+      h('div', { class: 'chips' }, h('span', { class: `chip tag-${tagDe(c.tipo)}` }, rotuloDaTag(c.tipo)), h('span', { class: `chip st-${c.estado}` }, STATE_LABEL[c.estado]),
         c.somenteLeitura ? h('span', { class: 'chip so-ler', title: c.motivo || '' }, 'Só leitura') : null),
       h('dl', {},
         c.funcao ? linha('O que é', c.funcao) : null,
@@ -280,6 +280,7 @@ async function main() {
   // vindo do editor (Opções › Novo arquivo): já abre o diálogo
   if (new URLSearchParams(location.search).has('novo')) { history.replaceState(null, '', location.pathname); abrirNovoArquivo(slug); }
   $('#carregando').hidden = true;
+  montarTags();
   filtra();
 }
 
@@ -305,8 +306,8 @@ function descartar(rec, quem, nota) {
 // Modelos da galeria trazem o próprio tamanho; só "Em branco" usa o tamanho escolhido.
 const EXTRAS_NOVO = [
   { id: '__branco', nome: 'Em branco', descricao: 'Uma tela em branco, no tamanho que você escolher ao lado.', categoria: 'Começar', glifo: '▢' },
-  { id: '__site', nome: 'Projeto de site em branco', descricao: 'Várias abas navegáveis, com topo e rodapé compartilhados.', categoria: 'Começar', glifo: '▤' },
-  { id: '__artigo', nome: 'Artigo para o blog', descricao: 'Texto com título, autoria e resumo, para publicar na seção Artigos.', categoria: 'Começar', glifo: '¶' },
+  { id: '__site', nome: 'Projeto de site em branco', descricao: 'Várias abas navegáveis, com topo e rodapé compartilhados.', categoria: 'Começar', glifo: '▤', tags: ['site'] },
+  { id: '__artigo', nome: 'Artigo para o blog', descricao: 'Texto com título, autoria e resumo, para publicar na seção Artigos.', categoria: 'Começar', glifo: '¶', tags: ['artigos'] },
 ];
 
 function abrirNovoArquivo(slug) {
@@ -439,16 +440,29 @@ function cartaoDrive(slug) {
 }
 
 // ---------- busca ----------
+// A tag escolhida (null = todas) e a busca valem juntas. Cartão sem tag (o do Drive) some com um filtro ligado;
+// o "Novo arquivo" fica sempre, porque criar não depende do que se está olhando.
+let tagAtiva = null;
 function filtra() {
   const t = semAcento($('#busca').value.trim());
   let total = 0;
   for (const sec of document.querySelectorAll('.dsec')) {
     let visiveis = 0;
-    sec.querySelectorAll('.cartao').forEach((c) => { const ok = !t || (c.dataset.busca || '').includes(t); c.hidden = !ok; if (ok) visiveis++; });
-    sec.classList.toggle('sem-resultado', !!t && !visiveis);
+    sec.querySelectorAll('.cartao').forEach((c) => {
+      const daTag = !tagAtiva || c.dataset.tag === tagAtiva || c.classList.contains('novo');
+      const ok = daTag && (!t || (c.dataset.busca || '').includes(t));
+      c.hidden = !ok; if (ok) visiveis++;
+    });
+    sec.classList.toggle('sem-resultado', !!(t || tagAtiva) && !visiveis);
     total += visiveis;
   }
-  $('#vazio').hidden = !t || total > 0;
+  $('#vazio').hidden = !(t || tagAtiva) || total > 0;
+}
+function montarTags() {
+  const nav = $('#tags');
+  const pinta = () => nav.replaceChildren(...[[null, 'Todos'], ...TAG_IDS.map((id) => [id, TAGS[id]])].map(([id, rot]) =>
+    h('button', { type: 'button', class: 'dtag', 'aria-pressed': String(tagAtiva === id), onclick: () => { tagAtiva = id; pinta(); filtra(); } }, rot)));
+  pinta(); nav.hidden = false;
 }
 $('#busca').addEventListener('input', filtra);
 

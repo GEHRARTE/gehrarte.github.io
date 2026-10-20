@@ -3,10 +3,11 @@
 import { h } from './dom.js';
 import { renderArtboardRecortado, usedFonts } from './render.js';
 import { larguraFinal } from './gabarito.js';
+import { TAGS, TAG_IDS } from './model.js';
 import { loadFonts } from './fonts.js';
 import { pageW, bgCss } from './model.js';
 import { downloadBlob } from './util.js';
-import { validarModelo, paginaDoModelo, ehModeloDeSite } from './modelos.js';
+import { validarModelo, paginaDoModelo, ehModeloDeSite, modeloNaTag } from './modelos.js';
 
 const semAcento = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -42,12 +43,12 @@ export async function lerArquivoDeModelo(file) {
 export function montarGaleria(raiz, opts) {
   const { catalogo, meus, onUsar, onGerar, compacta = false, rotuloUsar = 'Usar este modelo', extras = [], selecionavel = false, selecionado = null, onSelecionar } = opts;
   // extras: cartões "virtuais" (ex.: Em branco) com um símbolo no lugar da miniatura; selecionavel: clicar escolhe o cartão em vez de "Usar"
-  let todos = [], busca = '', cat = 'Todos', erroImport = '', sel = selecionado;
+  let todos = [], busca = '', cat = 'arquivo', erroImport = '', sel = selecionado;
   const doMeus = new Set();
   raiz.replaceChildren();
   raiz.classList.add('gal'); raiz.classList.toggle('compacta', compacta);
   const barra = h('div', { class: 'gal-barra' });
-  const cats = h('div', { class: 'gal-cats', role: 'group', 'aria-label': 'Categorias' });
+  const cats = h('div', { class: 'gal-cats', role: 'group', 'aria-label': 'Tipos de modelo' });
   const grade = h('div', { class: 'gal-grade' });
   const aviso = h('div', { class: 'gal-msg erro', role: 'alert', hidden: true });
 
@@ -79,12 +80,15 @@ export function montarGaleria(raiz, opts) {
     return el;
   }
 
+  // As abas são as TAGS de tipo do projeto (model.js › TAGS). "Arquivo" mostra todos os modelos; as outras filtram.
+  // "Meus modelos" só aparece para quem tem algum, e também vale para todas as abas (a tag 'arquivo' abrange tudo).
   function pinta() {
-    const nomes = ['Todos', ...new Set(todos.map((m) => (doMeus.has(m.id) ? 'Meus modelos' : m.categoria)))];
-    if (!nomes.includes(cat)) cat = 'Todos';
-    cats.replaceChildren(...nomes.map((n) => h('button', { type: 'button', class: 'gal-cat', 'aria-pressed': String(n === cat), onclick: () => { cat = n; pinta(); } }, n)));
-    const lista = todos.filter((m) => (cat === 'Todos' || (doMeus.has(m.id) ? 'Meus modelos' : m.categoria) === cat) && (!busca || semAcento([m.nome, m.descricao, m.categoria].join(' ')).includes(busca)));
-    grade.replaceChildren(...(lista.length ? lista.map(card) : [h('p', { class: 'gal-vazio' }, 'Nenhum modelo encontrado.')]));
+    const abas = [...TAG_IDS.map((id) => [id, TAGS[id]]), ...(doMeus.size ? [['__meus', 'Meus modelos']] : [])];
+    if (!abas.some(([id]) => id === cat)) cat = 'arquivo';
+    cats.replaceChildren(...abas.map(([id, rot]) => h('button', { type: 'button', class: 'gal-cat', 'aria-pressed': String(id === cat), onclick: () => { cat = id; pinta(); } }, rot)));
+    const naAba = (m) => (cat === '__meus' ? doMeus.has(m.id) : modeloNaTag(m, cat));
+    const lista = todos.filter((m) => naAba(m) && (!busca || semAcento([m.nome, m.descricao, m.categoria].join(' ')).includes(busca)));
+    grade.replaceChildren(...(lista.length ? lista.map(card) : [h('p', { class: 'gal-vazio' }, cat === 'artigos' ? 'Ainda não há modelos de artigo.' : 'Nenhum modelo encontrado.')]));
   }
 
   async function recarregar() {

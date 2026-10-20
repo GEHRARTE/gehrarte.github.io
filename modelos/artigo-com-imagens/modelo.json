@@ -1,0 +1,968 @@
+{
+ "format": "artatk-modelo",
+ "v": 1,
+ "id": "artigo-com-imagens",
+ "nome": "Artigo — com capa e galeria",
+ "descricao": "Artigo ilustrado: abertura com quadro de capa, texto, uma galeria de imagens para as obras ou fotos do assunto e uma faixa de destaque para a citação principal. Cada retângulo cinza é um lugar de imagem.",
+ "categoria": "Artigo",
+ "tags": [
+  "artigos"
+ ],
+ "origem": "spec",
+ "doc": {
+  "page": {
+   "bg": {
+    "c": "#f6f1e6",
+    "g": null
+   },
+   "h": {
+    "d": 2211,
+    "m": 1916
+   }
+  },
+  "elements": [
+   {
+    "id": "g1",
+    "t": "text",
+    "name": "Etiqueta",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 88,
+      "w": 560,
+      "h": 18,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 44,
+      "w": 342,
+      "h": 16,
+      "fs": 13
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 15,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": true,
+     "align": "left",
+     "color": "#8a4b2a",
+     "lh": 1.2,
+     "ls": 0.18
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Artigo",
+    "ah": true
+   },
+   {
+    "id": "g2",
+    "t": "text",
+    "name": "Título",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 124,
+      "w": 560,
+      "h": 70,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 72,
+      "w": 342,
+      "h": 39,
+      "fs": 34
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 64,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.08,
+     "ls": -0.015
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.12,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "Título do artigo",
+    "ah": true
+   },
+   {
+    "id": "g3",
+    "t": "text",
+    "name": "Texto",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 218,
+      "w": 560,
+      "h": 66,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 127,
+      "w": 342,
+      "h": 53,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 21,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#6a6458",
+     "lh": 1.55,
+     "ls": 0
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.24,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "text": "por [seu nome] · [data]. Resumo curto, que aparece ao lado da capa.",
+    "ah": true
+   },
+   {
+    "id": "g4",
+    "t": "shape",
+    "name": "Capa do artigo",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 680,
+      "y": 48,
+      "w": 420,
+      "h": 384,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 24,
+      "y": 208,
+      "w": 342,
+      "h": 220
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": {
+     "in": {
+      "k": "fade-up",
+      "dur": 0.7,
+      "delay": 0.36,
+      "ease": "ease-out"
+     }
+    },
+    "link": null,
+    "shape": "rect",
+    "label": "Capa do artigo",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g5",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 568,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 544,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "O assunto",
+    "ah": true
+   },
+   {
+    "id": "g6",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 639,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 593,
+      "w": 342,
+      "h": 58,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Apresente o tema e o que as imagens abaixo mostram.",
+    "ah": true
+   },
+   {
+    "id": "g7",
+    "t": "text",
+    "name": "Parágrafo 2",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 691,
+      "w": 760,
+      "h": 102,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 665,
+      "w": 342,
+      "h": 116,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Escreva aqui um parágrafo. Clique duas vezes para editar; arraste as bordas para mudar a largura e use o painel da direita para fonte, tamanho e cor.",
+    "ah": true
+   },
+   {
+    "id": "g8",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 969,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 869,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Imagens",
+    "ah": true
+   },
+   {
+    "id": "g9",
+    "t": "shape",
+    "name": "Imagem 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1050,
+      "w": 320,
+      "h": 240,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 24,
+      "y": 922,
+      "w": 165,
+      "h": 132
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "Imagem",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g10",
+    "t": "shape",
+    "name": "Imagem 2",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 440,
+      "y": 1050,
+      "w": 320,
+      "h": 240,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 201,
+      "y": 922,
+      "w": 165,
+      "h": 132
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "Imagem",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g11",
+    "t": "shape",
+    "name": "Imagem 3",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 780,
+      "y": 1050,
+      "w": 320,
+      "h": 240,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 24,
+      "y": 1066,
+      "w": 165,
+      "h": 132
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "Imagem",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g12",
+    "t": "shape",
+    "name": "Imagem 4",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1310,
+      "w": 320,
+      "h": 240,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 201,
+      "y": 1066,
+      "w": 165,
+      "h": 132
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "Imagem",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g13",
+    "t": "shape",
+    "name": "Imagem 5",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 440,
+      "y": 1310,
+      "w": 320,
+      "h": 240,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 24,
+      "y": 1210,
+      "w": 165,
+      "h": 132
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "Imagem",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g14",
+    "t": "shape",
+    "name": "Imagem 6",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 780,
+      "y": 1310,
+      "w": 320,
+      "h": 240,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "fs": 14,
+      "x": 201,
+      "y": 1210,
+      "w": 165,
+      "h": 132
+     }
+    },
+    "s": {
+     "fill": "#d9d4c7",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 10,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "Imagem",
+    "ls": {
+     "fontFamily": "Lora",
+     "fontSize": 18,
+     "fontWeight": 500,
+     "color": "#6a6458"
+    }
+   },
+   {
+    "id": "g15",
+    "t": "shape",
+    "name": "Faixa",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 0,
+      "y": 1638,
+      "w": 1200,
+      "h": 56,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 0,
+      "y": 1386,
+      "w": 390,
+      "h": 64
+     }
+    },
+    "s": {
+     "fill": "#8a4b2a",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 0,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "",
+    "ls": {
+     "fontFamily": "Inter",
+     "fontSize": 24,
+     "fontWeight": 600,
+     "color": "#ffffff"
+    }
+   },
+   {
+    "id": "g16",
+    "t": "text",
+    "name": "Texto da faixa",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1656,
+      "w": 1000,
+      "h": 18,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1398,
+      "w": 342,
+      "h": 40,
+      "fs": 14
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 15,
+     "fontWeight": 500,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#ffffff",
+     "lh": 1.2,
+     "ls": 0.02
+    },
+    "an": null,
+    "link": null,
+    "text": "Uma frase do texto, ou uma citação, que merece destaque.",
+    "ah": true
+   },
+   {
+    "id": "g17",
+    "t": "text",
+    "name": "Título da seção",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1782,
+      "w": 1000,
+      "h": 49,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1494,
+      "w": 342,
+      "h": 33,
+      "fs": 28
+     }
+    },
+    "s": {
+     "fontFamily": "Playfair Display",
+     "fontSize": 42,
+     "fontWeight": 700,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.15,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Leitura das imagens",
+    "ah": true
+   },
+   {
+    "id": "g18",
+    "t": "text",
+    "name": "Parágrafo 1",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1853,
+      "w": 760,
+      "h": 68,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1543,
+      "w": 342,
+      "h": 87,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Comente o que se vê: técnica, época, contexto. Uma legenda por imagem ajuda quem lê no celular.",
+    "ah": true
+   },
+   {
+    "id": "g19",
+    "t": "text",
+    "name": "Parágrafo 2",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 1939,
+      "w": 760,
+      "h": 34,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1644,
+      "w": 342,
+      "h": 58,
+      "fs": 17
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 20,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "left",
+     "color": "#1c1a17",
+     "lh": 1.7,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Feche ligando as imagens à pergunta do artigo.",
+    "ah": true
+   },
+   {
+    "id": "g20",
+    "t": "shape",
+    "name": "Rodapé",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 0,
+      "y": 2061,
+      "w": 1200,
+      "h": 150,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 0,
+      "y": 1746,
+      "w": 390,
+      "h": 170
+     }
+    },
+    "s": {
+     "fill": "#2b2118",
+     "grad": null,
+     "stroke": null,
+     "sw": 0,
+     "dash": 0,
+     "radius": 0,
+     "sides": 5,
+     "inner": 0.45
+    },
+    "an": null,
+    "link": null,
+    "shape": "rect",
+    "label": "",
+    "ls": {
+     "fontFamily": "Inter",
+     "fontSize": 24,
+     "fontWeight": 600,
+     "color": "#ffffff"
+    }
+   },
+   {
+    "id": "g21",
+    "t": "text",
+    "name": "Rodapé — texto",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 2101,
+      "w": 1000,
+      "h": 45,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1782,
+      "w": 342,
+      "h": 42,
+      "fs": 14
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 15,
+     "fontWeight": 400,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.5,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Escrito no Gehrarte · UEM\nSe usar esta ideia, cite a fonte.",
+    "ah": true
+   },
+   {
+    "id": "g22",
+    "t": "text",
+    "name": "Rodapé — links",
+    "lock": false,
+    "hide": false,
+    "f": {
+     "d": {
+      "x": 100,
+      "y": 2151,
+      "w": 1000,
+      "h": 20,
+      "r": 0
+     },
+     "m": {
+      "r": 0,
+      "x": 24,
+      "y": 1842,
+      "w": 342,
+      "h": 20,
+      "fs": 13
+     }
+    },
+    "s": {
+     "fontFamily": "Lora",
+     "fontSize": 14,
+     "fontWeight": 500,
+     "italic": false,
+     "underline": false,
+     "upper": false,
+     "align": "center",
+     "color": "#fbf8f2",
+     "lh": 1.4,
+     "ls": 0
+    },
+    "an": null,
+    "link": null,
+    "text": "Início   ·   Artigos",
+    "ah": true
+   }
+  ]
+ }
+}

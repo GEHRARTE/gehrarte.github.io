@@ -3,6 +3,7 @@
  "nome": "Perfil — designer",
  "descricao": "Página de perfil limpa para portfólio de design: abertura clara com imagem, faixa de especialidades, projetos em dois cartões grandes, processo de trabalho e chamada final. Fundo branco, Space Grotesk e acento violeta.",
  "categoria": "Perfil",
+ "tags": ["perfil"],
  "tema": { "fundo": "#ffffff", "texto": "#17161d", "suave": "#5a5766", "escuro": "#1d1a2b", "sobreEscuro": "#ffffff", "acento": "#7b5cff", "sobreAcento": "#ffffff", "superficie": "#f1eefc", "fonteTitulo": "Space Grotesk", "fonteTexto": "Inter", "raio": 20 },
  "secoes": [
   { "tipo": "hero", "fundo": "claro", "kicker": "Design", "titulo": "Olá, eu sou Seu Nome", "texto": "Desenho identidades, interfaces e peças gráficas. Aqui estão alguns dos meus projetos e a forma como eu trabalho.", "botao": { "rotulo": "Falar comigo", "href": "mailto:" }, "imagem": true, "imagemRotulo": "Seu retrato" },

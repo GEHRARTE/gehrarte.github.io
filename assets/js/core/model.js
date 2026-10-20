@@ -19,6 +19,14 @@ export const DEV_LABEL = { d: 'PC', m: 'Celular' };
 // 'arquivo' = arquivo em branco criado pela pessoa (qualquer tamanho: página, tela, papel); fica no navegador e sai por exportar/ações do host.
 // 'artigo' = texto para o blog (publicável). Os dois têm o mesmo tratamento de id.
 export const KINDS = { perfil: 'Página de perfil', artigo: 'Artigo', arquivo: 'Arquivo', pagina: 'Página do site', site: 'Projeto de site' };
+// TAGS — o que a pessoa VÊ. Cada projeto tem uma só tag de tipo; todos têm as mesmas ferramentas (decisão D-0045): a tag diz
+// onde o projeto vive e como sai, não o que dá para fazer nele. Por baixo continuam os 5 `kind` (formato dos dados, caminhos de
+// publicação, permissões): mexer neles quebraria arquivos já salvos. 'site' (projeto de site com abas) é, para quem usa, um arquivo.
+export const TAGS = { arquivo: 'Arquivo', site: 'Site publicado', perfil: 'Página de perfil', artigos: 'Artigos' };
+export const TAG_IDS = Object.keys(TAGS);
+const TAG_DO_KIND = { arquivo: 'arquivo', site: 'arquivo', pagina: 'site', perfil: 'perfil', artigo: 'artigos' };
+export const tagDe = (kind) => TAG_DO_KIND[kind] || 'arquivo';
+export const rotuloDaTag = (kind) => TAGS[tagDe(kind)];
 // Tipos que o Publicador do Gehrarte NÃO publica (saem por exportar ou pelas ações do host).
 export const NAO_PUBLICAVEIS = ['site', 'arquivo'];
 export const PROFILE_ID = 'perfil';
