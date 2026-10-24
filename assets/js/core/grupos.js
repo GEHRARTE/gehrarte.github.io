@@ -253,5 +253,49 @@ export function grupoDaSelecao(doc, sel) {
   return null;
 }
 
+// ---------- clicar no palco ----------
+// Clicar num elemento que está dentro de um grupo pega o GRUPO (o mais externo); duplo clique ENTRA nele e passa a pegar o nível de baixo,
+// um por vez; clicar fora do grupo sai dele. `entrouEm` é o id do grupo em que a pessoa entrou (estado de tela, não do documento).
+
+// Os grupos de um elemento, do mais interno ao mais externo.
+export function cadeiaDeGrupos(doc, el) {
+  const out = [];
+  for (let gid = el?.g, n = 0; gid && n < PROFUNDIDADE_MAX; n++) {
+    const g = grupoPorId(doc, gid);
+    if (!g) break;
+    out.push(g);
+    gid = g.g;
+  }
+  return out;
+}
+
+// Quais elementos um clique em `id` seleciona.
+export function alvoDoClique(doc, id, entrouEm = null) {
+  const el = (doc?.elements || []).find((e) => e.id === id);
+  if (!el) return [];
+  const cadeia = cadeiaDeGrupos(doc, el);
+  if (!cadeia.length) return [id];
+  const k = entrouEm ? cadeia.findIndex((g) => g.id === entrouEm) : -1;
+  if (k === 0) return [id];                                      // entrou no grupo imediato: pega o elemento
+  return idsDoGrupo(doc, (k > 0 ? cadeia[k - 1] : cadeia[cadeia.length - 1]).id);
+}
+
+// Duplo clique: o novo `entrouEm`. Cada duplo clique desce um nível; num elemento solto (ou já no último nível) não muda nada.
+export function entrarNoGrupo(doc, id, entrouEm = null) {
+  const el = (doc?.elements || []).find((e) => e.id === id);
+  const cadeia = cadeiaDeGrupos(doc, el);
+  if (!cadeia.length) return entrouEm;
+  const k = entrouEm ? cadeia.findIndex((g) => g.id === entrouEm) : -1;
+  if (k === 0) return entrouEm;
+  return (k > 0 ? cadeia[k - 1] : cadeia[cadeia.length - 1]).id;
+}
+
+// A seleção ainda está "dentro" do grupo em que se entrou? Senão a pessoa saiu dele.
+export function aindaDentro(doc, sel, entrouEm) {
+  if (!entrouEm || !sel?.length) return false;
+  const ids = new Set(idsDoGrupo(doc, entrouEm));
+  return sel.every((id) => ids.has(id));
+}
+
 // Uma cópia (duplicar/colar) não herda o grupo: nasce na raiz, senão entraria no grupo de fora de ordem.
 export const semGrupo = (el) => { delete el.g; return el; };

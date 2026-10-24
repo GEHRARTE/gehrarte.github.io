@@ -4,7 +4,9 @@ import { renderArtboard, renderElement } from '../core/render.js';
 import { W, frameOf, setFrame, pageH, pageW, aabb, unionBox, bgCss } from '../core/model.js';
 import { clamp, round } from '../core/util.js';
 import { S, on, emit, byId, selEls, select, mutateGeom, mutate, commit, touch, assetUrl, setTool, removeEls, duplicate, reorder } from './state.js';
-import { ocultoEfetivo, travadoEfetivo } from '../core/grupos.js';
+import { ocultoEfetivo, travadoEfetivo, alvoDoClique, entrarNoGrupo, aindaDentro } from '../core/grupos.js';
+
+let entrouEm = null;   // grupo em que a pessoa entrou com duplo clique (estado de tela): ver core/grupos.js › alvoDoClique
 import { createShape, createText, createPath, insertImageFile, ensureHeight, defaultShapeSize, inkColor } from './tools.js';
 import { abrirEditorImagem } from './imagem.js';
 import { toast } from './ui.js';
@@ -339,7 +341,7 @@ function startMove(e, hitId) {
     refreshOverlay();
   }, () => {
     clearFx(); selLayer.classList.remove('dragging');
-    if (moved) { ensureHeight(); commit(); emit('page'); } else if (ids.length > 1 && !e.shiftKey) select([hitId]);
+    if (moved) { ensureHeight(); commit(); emit('page'); } else if (ids.length > 1 && !e.shiftKey) select(alvoDoClique(S.doc, hitId, entrouEm));
     refreshOverlay();
   });
 }
@@ -556,6 +558,7 @@ export function initStage(refs) {
   on('struct', renderAll);
   on('device', () => { renderAll(); fit(); });
   on('page', () => { if (!ab) return; ab.style.background = bgCss(S.doc.page.bg); layout(); refreshOverlay(); });
+  on('select', () => { if (entrouEm && !aindaDentro(S.doc, S.sel, entrouEm)) entrouEm = null; });   // saiu do grupo: volta a pegar o grupo inteiro
   on('select', refreshOverlay);
   on('struct-lite', refreshOverlay);
   on('el', ({ ids }) => { ids.forEach(rerender); refreshOverlay(); });
@@ -587,8 +590,9 @@ export function initStage(refs) {
     if (node && ab.contains(node)) {
       e.preventDefault();
       const id = node.dataset.id;
-      if (e.shiftKey) { select([id], 'toggle'); return; }
-      if (!S.sel.includes(id)) select([id]);
+      const alvo = alvoDoClique(S.doc, id, entrouEm);                     // dentro de um grupo, o clique pega o grupo
+      if (e.shiftKey) { select(alvo, alvo.every((x) => S.sel.includes(x)) ? 'toggle' : 'add'); return; }
+      if (!S.sel.includes(id)) select(alvo);
       startMove(e, id);
     } else {
       e.preventDefault();
@@ -603,6 +607,9 @@ export function initStage(refs) {
     if (!node) return;
     const el = byId(node.dataset.id);
     if (!el) return;
+    // duplo clique num elemento de grupo ENTRA no grupo (pega o nível de baixo); o seguinte, já no elemento, edita
+    const dentro = entrarNoGrupo(S.doc, el.id, entrouEm);
+    if (dentro !== entrouEm) { entrouEm = dentro; select(alvoDoClique(S.doc, el.id, entrouEm)); return; }
     if (el.t === 'text') editText(el.id);
     else if (el.t === 'svg') emit('editsvg', el.id);
     else if (el.t === 'shape') emit('focuslabel', el.id);
