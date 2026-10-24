@@ -4,6 +4,7 @@ import { renderArtboard, renderElement } from '../core/render.js';
 import { W, frameOf, setFrame, pageH, pageW, aabb, unionBox, bgCss } from '../core/model.js';
 import { clamp, round } from '../core/util.js';
 import { S, on, emit, byId, selEls, select, mutateGeom, mutate, commit, touch, assetUrl, setTool, removeEls, duplicate, reorder } from './state.js';
+import { ocultoEfetivo, travadoEfetivo } from '../core/grupos.js';
 import { createShape, createText, createPath, insertImageFile, ensureHeight, defaultShapeSize, inkColor } from './tools.js';
 import { abrirEditorImagem } from './imagem.js';
 import { toast } from './ui.js';
@@ -21,7 +22,7 @@ let previaGuia = null;   // guia sendo arrastada a partir da régua (editor/regu
 
 const ctx = () => ({ dev: S.dev, assetUrl, editing: true, doc: S.doc });
 export const nodeOf = (id) => ab?.querySelector(`:scope > [data-id="${id}"]`);
-const guard = (el) => el && !el.hide;
+const guard = (el) => el && !ocultoEfetivo(S.doc, el);
 
 // ---------- coordenadas ----------
 function toDocRaw(cx, cy) {
@@ -195,9 +196,9 @@ export function refreshOverlay() {
 
   if (els.length === 1) {
     const el = els[0], b = boxOf(el);
-    const box = h('div', { class: 'sel-box' + (el.lock ? ' locked' : '') });
+    const box = h('div', { class: 'sel-box' + (travadoEfetivo(S.doc, el) ? ' locked' : '') });
     Object.assign(box.style, { left: sx(b.x) + 'px', top: sx(b.y) + 'px', width: b.w * z + 'px', height: b.h * z + 'px', transform: b.r ? `rotate(${b.r}deg)` : '' });
-    if (!el.lock && S.editing !== el.id) {
+    if (!travadoEfetivo(S.doc, el) && S.editing !== el.id) {
       const textLike = el.t === 'text';
       for (const [k, [px, py]] of Object.entries(HANDLES)) {
         if (textLike && (k === 'n' || k === 's')) continue;
@@ -319,7 +320,7 @@ function startPan(e) {
 }
 
 function startMove(e, hitId) {
-  const els = selEls().filter((x) => !x.lock);
+  const els = selEls().filter((x) => !travadoEfetivo(S.doc, x));
   if (!els.length) return;
   for (const el of els) if (S.dev === 'm' && !el.f.m) setFrame(el, 'm', {});
   const ids = els.map((x) => x.id);
@@ -345,7 +346,7 @@ function startMove(e, hitId) {
 
 function startRotate(e) {
   const el = selEls()[0];
-  if (!el || el.lock) return;
+  if (!el || travadoEfetivo(S.doc, el)) return;
   if (S.dev === 'm' && !el.f.m) setFrame(el, 'm', {});
   const f = frameOf(el, S.dev), c = { x: f.x + f.w / 2, y: f.y + f.h / 2 };
   drag(e, (ev) => {
@@ -362,7 +363,7 @@ function startRotate(e) {
 
 function startResize(handle, e) {
   const el = selEls()[0];
-  if (!el || el.lock) return;
+  if (!el || travadoEfetivo(S.doc, el)) return;
   if (S.dev === 'm' && !el.f.m) setFrame(el, 'm', {});
   const f0 = boxOf(el);
   const rad = ((f0.r || 0) * Math.PI) / 180, cos = Math.cos(rad), sin = Math.sin(rad);
@@ -389,7 +390,7 @@ function startResize(handle, e) {
 }
 
 function startGroupScale(handle, e) {
-  const els = selEls().filter((x) => !x.lock);
+  const els = selEls().filter((x) => !travadoEfetivo(S.doc, x));
   for (const el of els) if (S.dev === 'm' && !el.f.m) setFrame(el, 'm', {});
   const start = new Map(els.map((el) => [el.id, { ...boxOf(el) }]));
   const u = unionBox([...start.values()].map(aabb));
@@ -429,7 +430,7 @@ function startMarquee(e) {
     const z = S.zoom;
     const q = { x: (box.x - PAD) / z, y: (box.y - PAD) / z, w: box.w / z, h: box.h / z };
     const hits = S.doc.elements.filter((el) => {
-      if (el.hide || el.lock) return false;
+      if (ocultoEfetivo(S.doc, el) || travadoEfetivo(S.doc, el)) return false;
       const b = aabb(boxOf(el));
       return b.x < q.x + q.w && b.x + b.w > q.x && b.y < q.y + q.h && b.y + b.h > q.y;
     }).map((el) => el.id);
@@ -497,7 +498,7 @@ function startDraw(e) {
 // ---------- edição de texto no lugar ----------
 export function editText(id, selectAll = false) {
   const el = byId(id), node = nodeOf(id);
-  if (!el || !node || el.t !== 'text' || el.lock) return;
+  if (!el || !node || el.t !== 'text' || travadoEfetivo(S.doc, el)) return;
   const ct = node.querySelector('.el-ct');
   S.editing = id;
   node.classList.add('is-editing');
@@ -525,7 +526,7 @@ export function editText(id, selectAll = false) {
 
 // ---------- inicialização ----------
 export function nudge(dx, dy) {
-  const els = selEls().filter((e) => !e.lock);
+  const els = selEls().filter((e) => !travadoEfetivo(S.doc, e));
   if (!els.length) return;
   for (const el of els) if (S.dev === 'm' && !el.f.m) setFrame(el, 'm', {});
   mutateGeom(els.map((e) => e.id), (el) => { const f = frameOf(el, S.dev); setFrame(el, S.dev, { x: round(f.x + dx, 1), y: round(f.y + dy, 1) }); });

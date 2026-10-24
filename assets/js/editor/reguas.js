@@ -13,6 +13,7 @@ import { vistaDoAlvo, listaDeAlvos, alvoValido, temAlvos, rotuloDoAlvo } from '.
 import { popMenu } from './dock.js';
 import { familiaDaMedida, PASSOS, PASSO_PADRAO, passoValido, passoEmPx, rotuloDoPasso } from '../core/grade.js';
 import { S, on, emit, selEls, commit, setDevice } from './state.js';
+import { ocultoEfetivo, travadoEfetivo } from '../core/grupos.js';
 import { modal, btn, toast } from './ui.js';
 
 const CHAVE = 'artatk.regua';
@@ -114,7 +115,7 @@ function regua(canvas, horizontal) {
   c.fillStyle = COR.pagina;
   if (horizontal) c.fillRect(p0, 0, p1 - p0, TAM); else c.fillRect(0, p0, TAM, p1 - p0);
 
-  const sel = selEls().filter((e) => !e.hide);                                   // o que está selecionado
+  const sel = selEls().filter((e) => !ocultoEfetivo(S.doc, e));                                   // o que está selecionado
   if (sel.length) {
     const b = aabb(sel.length === 1 ? frameOf(sel[0], S.dev) : unirFrames(sel));
     const a = posNaTela(horizontal ? b.x : b.y, origem, z), f = posNaTela(horizontal ? b.x + b.w : b.y + b.h, origem, z);

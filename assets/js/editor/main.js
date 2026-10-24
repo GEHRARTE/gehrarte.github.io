@@ -8,12 +8,14 @@ import { newDoc, normalizeDoc, DEV_LABEL, KINDS, tagDe, rotuloDaTag, PROFILE_ID,
 import { docPath, prepareSiteDoc } from '../core/docs.js';
 import { canEditSite, registryEntry } from '../core/site.js';
 import { BASE } from '../core/util.js';
-import { S, on, emit, touch, loadDoc, setDevice, setTool, undo, redo, canUndo, canRedo, select, selEls, removeEls, duplicate, copy, paste, reorder, saveNow, commit } from './state.js';
+import { S, on, emit, touch, loadDoc, setDevice, setTool, undo, redo, canUndo, canRedo, select, selEls, removeEls, duplicate, copy, paste, reorder, saveNow, commit, agruparSel, desagruparSel } from './state.js';
+import { ocultoEfetivo, travadoEfetivo } from '../core/grupos.js';
 import { initStage, fit, setZoom, nudge, editText, applyAnimState } from './stage.js';
 import { initPanel } from './panels.js';
 import { initLibraryPanels, abrirCriador } from './library.js';
 import { renderLayers } from './layers.js';
 import { initDock } from './dock.js';
+import { initFerramentas } from './barra.js';
 import { initFolhaPanel } from './folha.js';
 import { instalar as vigiarAreaVisivel } from '../core/janelas.js';
 import { trava, retomar, aplicarNoAr } from './publicacao.js';
@@ -72,7 +74,7 @@ function askConflict({ remote }) {
   });
 }
 
-let dock = null;
+let dock = null, ferramentas = null;
 
 async function main() {
   const host = await carregarHost({ carregarConfig: loadConfig });
@@ -136,18 +138,20 @@ async function main() {
   loadDoc(doc, updatedAt);
   initAbas($('#abas-bar'));   // só aparece em projetos de site
   initReguas({ wrap: $('#vpwrap'), canto: $('#reg-canto'), ch: $('#reg-h'), cv: $('#reg-v'), vp: $('#viewport'), holder: $('#holder'), overlay: $('#overlay') });
+  // barra de ferramentas: objeto flutuante sobre o palco, montado pela pessoa (D-0055) — não é painel do dock
+  ferramentas = initFerramentas({ app: $('#app'), slug: S.slug, aoMudar: (cfg, t) => dock?.guardarFerramentas(cfg, t) });
   // painéis reorganizáveis (docks, soltos, outra janela; no celular, gavetas): ver dock.js
   dock = initDock({
     app: $('#app'), slug: S.slug, rotateEl: $('#rotate'),
     preferencias: S.host?.preferencias || null,     // a conta da pessoa (hoje: Google Drive no Gehrarte); sem isto a disposição fica só neste navegador
     panels: {
-      rail: { el: $('#rail'), title: 'Ferramentas' },
       els: { el: libRoots.els, title: 'Elementos' }, folha: { el: $('#p-folha'), title: 'Folha de design' },
       svg: { el: libRoots.svg, title: 'SVG animado' }, media: { el: libRoots.media, title: 'Mídia' },
       ...(libRoots.drive ? { drive: { el: libRoots.drive, title: 'Drive' } } : {}),
       tpl: { el: libRoots.tpl, title: 'Modelos' },
       props: { el: $('#props'), title: 'Propriedades' }, layers: { el: $('#layerspane'), title: 'Camadas' },
     },
+    ferramentas,                                   // a barra viaja junto com a disposição, na mesma preferência da conta
     onDocument: bindKeys,
     onMode: () => fit(),
     // as ferramentas da biblioteca montam o conteúdo quando abrem (à vista e não recolhidas); Camadas se refaz ao aparecer
@@ -234,18 +238,6 @@ function wireTop() {
   on('saved', (t) => { st.textContent = 'Salvo neste computador'; st.title = 'Rascunho guardado neste navegador, às ' + new Date(t).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + '. Use “Salvar arquivo” para ter uma cópia.'; st.className = 'ok'; });
   on('saveerror', () => { st.textContent = 'Erro ao salvar!'; st.className = 'err'; });
 
-  // ferramentas
-  const file = h('input', { type: 'file', accept: 'image/*', multiple: true, hidden: true, onchange: async () => { for (const f of file.files) await insertImageFile(f); file.value = ''; } });
-  $('#rail').append(file);   // dentro do painel: o seletor de arquivos abre na janela onde o painel estiver
-  const toolBtns = $$('#rail [data-tool]');
-  toolBtns.forEach((b) => b.addEventListener('click', () => {
-    const t = b.dataset.tool;
-    if (t === 'image') return file.click();
-    setTool(S.tool === t && t !== 'select' ? 'select' : t);
-  }));
-  const syncTool = () => toolBtns.forEach((b) => b.classList.toggle('on', b.dataset.tool === S.tool));
-  on('tool', syncTool); syncTool();
-
   // Opções (logo depois da logo): o único menu do editor — arquivo, réguas e grade, exportações e os dados da pessoa
   $('#btn-opcoes').onclick = (e) => abrirOpcoes(e.currentTarget);
 }
@@ -271,9 +263,10 @@ function bindKeys(doc) {
       if (k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); }
       else if (k === 'y') { e.preventDefault(); redo(); }
       else if (k === 'd') { e.preventDefault(); duplicate(); }
+      else if (k === 'g') { e.preventDefault(); if (e.shiftKey) desagruparSel(); else agruparSel(); }   // agrupar / desagrupar (D-0056)
       else if (k === 'c') { copy(); }
-      else if (k === 'x') { copy(); removeEls(S.sel.filter((id) => !selEls().find((x) => x.id === id)?.lock)); }
-      else if (k === 'a') { e.preventDefault(); select(S.doc.elements.filter((x) => !x.lock && !x.hide).map((x) => x.id)); }
+      else if (k === 'x') { copy(); removeEls(S.sel.filter((id) => !travadoEfetivo(S.doc, selEls().find((x) => x.id === id)))); }
+      else if (k === 'a') { e.preventDefault(); select(S.doc.elements.filter((x) => !travadoEfetivo(S.doc, x) && !ocultoEfetivo(S.doc, x)).map((x) => x.id)); }
       else if (k === 's') { e.preventDefault(); saveNow().then(() => toast('Rascunho salvo.', 'ok')); }
       else if (k === '0') { e.preventDefault(); fit(); }
       else if (k === '=' || k === '+') { e.preventDefault(); setZoom(S.zoom * 1.2); }
@@ -283,7 +276,7 @@ function bindKeys(doc) {
     if (e.altKey && k === 'r') { e.preventDefault(); alternarReguas(); return; }
     if (e.altKey && k === 'g') { e.preventDefault(); alternarGrade(); return; }
     if (k === 'escape') { if (S.tool !== 'select') setTool('select'); else select([]); return; }
-    if (k === 'delete' || k === 'backspace') { const ids = selEls().filter((x) => !x.lock).map((x) => x.id); if (ids.length) { e.preventDefault(); removeEls(ids); } return; }
+    if (k === 'delete' || k === 'backspace') { const ids = selEls().filter((x) => !travadoEfetivo(S.doc, x)).map((x) => x.id); if (ids.length) { e.preventDefault(); removeEls(ids); } return; }
     if (k.startsWith('arrow')) {
       if (!S.sel.length) return;
       e.preventDefault();
@@ -294,12 +287,8 @@ function bindKeys(doc) {
     if (k === 'enter') { const el = selEls()[0]; if (el?.t === 'text' && S.sel.length === 1) { e.preventDefault(); editText(el.id); } return; }
     if (k === ']') return reorder(S.sel, e.shiftKey ? 'front' : 'up');
     if (k === '[') return reorder(S.sel, e.shiftKey ? 'back' : 'down');
-    if (k === 'v') setTool('select');
-    else if (k === 't') setTool('text');
-    else if (k === 'r') setTool('shape');
-    else if (k === 'p') setTool('pencil');
-    else if (k === 'h') setTool('hand');
-    else if (k === 'w') setTool('wand');
+    // a letra só liga a ferramenta se ela estiver NA BARRA desta pessoa: a barra é a seleção rápida dela (D-0055)
+    ferramentas?.atalho(k);
   });
   doc.addEventListener('keyup', (e) => { if (e.key === ' ') { S.space = false; vp.classList.remove('panning'); } });
 

@@ -4,6 +4,7 @@ import { sanitizeSvg, svgNaturalSize } from '../core/sanitize.js';
 import { sha256Hex, clamp, round } from '../core/util.js';
 import { Store } from '../core/store.js';
 import { S, addEls, byId, selEls, mutate, mutateGeom, commit, emit, setPage, select, touch } from './state.js';
+import { ocultoEfetivo, travadoEfetivo } from '../core/grupos.js';
 import { toast } from './ui.js';
 import { caixaDeCorte } from '../core/gabarito.js';
 
@@ -259,7 +260,7 @@ const isBackdrop = (el, H) => el.f.d.w >= pageWDoc(S.doc, 'd') * 0.9 && el.f.d.h
 // Empilha os elementos do PC numa coluna única, na ordem de leitura. O resultado é só um ponto de partida.
 export function autoStack(measureAll) {
   const H = pageH(S.doc, 'd');
-  const els = S.doc.elements.filter((e) => !e.hide);
+  const els = S.doc.elements.filter((e) => !ocultoEfetivo(S.doc, e));
   const back = els.filter((e) => isBackdrop(e, H));
   const flow = els.filter((e) => !isBackdrop(e, H)).sort((a, b) => a.f.d.y - b.f.d.y || a.f.d.x - b.f.d.x);
   const MAXW = W.m - 40;
@@ -323,7 +324,7 @@ export function fitPageHeightTodos() {
 
 // Expande a altura da página se algo foi arrastado para além do fim.
 export function ensureHeight() {
-  const bottoms = S.doc.elements.filter((e) => !e.hide).map((e) => { const b = aabb(frameOf(e, S.dev)); return b.y + b.h; });
+  const bottoms = S.doc.elements.filter((e) => !ocultoEfetivo(S.doc, e)).map((e) => { const b = aabb(frameOf(e, S.dev)); return b.y + b.h; });
   const need = Math.ceil(Math.max(0, ...bottoms) + 40);
   if (!ehFixa(S.doc) && need > pageH(S.doc, S.dev)) setPage((p) => { p.h[S.dev] = need; });
 }

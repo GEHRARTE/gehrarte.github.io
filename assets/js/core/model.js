@@ -6,6 +6,7 @@
 // Sem f.m, o celular usa uma versão proporcional derivada do PC (frameOf devolve derived:true).
 import { uid, clone, clamp } from './util.js';
 import { LISTA_PADRAO } from './listas.js';
+import { ocultoEfetivo } from './grupos.js';
 
 export const W = { d: 1200, m: 390 };
 export const K = W.m / W.d;
@@ -166,7 +167,7 @@ export function alturaDoConteudo(doc, dev, { folga = 60, minimo = 600 } = {}) {
   const H = pageH(doc, 'd');
   const ehFundo = (el) => el.f.d.w >= pageW(doc, 'd') * 0.9 && el.f.d.h >= H * 0.6;
   const bases = (doc.elements || [])
-    .filter((el) => !el.hide && (!ehFundo(el) || dev === 'm'))
+    .filter((el) => !ocultoEfetivo(doc, el) && (!ehFundo(el) || dev === 'm'))
     .map((el) => { const b = aabb(frameOf(el, dev)); return b.y + b.h; });
   return Math.ceil((bases.length ? Math.max(...bases) : minimo) + folga);
 }
@@ -184,6 +185,7 @@ export function unionBox(boxes) {
 export function cloneElement(el, offset = 24) {
   const c = clone(el);
   c.id = uid();
+  delete c.g;                                   // a cópia nasce fora do grupo (D-0056)
   c.f.d.x += offset; c.f.d.y += offset;
   if (c.f.m) { c.f.m.x += offset; c.f.m.y += offset; }
   if (c.name) c.name += ' cópia';

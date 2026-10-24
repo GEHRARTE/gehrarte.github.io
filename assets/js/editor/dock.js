@@ -41,7 +41,7 @@ export function popMenu(anchor, items, at) {
   return close;
 }
 
-export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, onMode, onVisible, preferencias = null }) {
+export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, onMode, onVisible, preferencias = null, ferramentas = null }) {
   const dockEl = { left: app.querySelector('#dock-left'), right: app.querySelector('#dock-right') };
   const floatsEl = app.querySelector('#floats'), drawerEl = app.querySelector('#drawer');
   const ids = Object.keys(panels);
@@ -67,7 +67,7 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
     const t = Date.now();
     if (!gravarLocal(t)) return;
     if (!pediuPersistencia) { pediuPersistencia = true; try { navigator.storage?.persisted?.().then((ok) => ok || navigator.storage.persist?.()).catch(() => {}); } catch { /* sem a API */ } }
-    sync?.agendar(D.serialize(L), t);
+    sync?.agendar(D.serialize(L), t, ferramentas?.atual());
   }
   // Troca a disposição inteira (outra aba, a conta ou um arquivo importado). Os painéis que esta janela separou continuam separados.
   // Devolve false se não mudou nada (ou se há um arraste em andamento).
@@ -89,10 +89,22 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
   const syncLigada = () => { try { return localStorage.getItem(SYNC) === '1'; } catch { return false; } };
   const ctx = { slug };
   let avisouSync = false;
+  // O arquivo da conta leva a disposição dos painéis E a barra de ferramentas: são duas chaves irmãs do mesmo envelope (v2), gravadas e
+  // adotadas juntas. Carimbo de barra e de painéis é o mesmo — o mais novo dos dois vence, como já era só com o layout.
+  let tFerramentas = 0;
+  const carimbo = () => { const raw = read(); return Math.max(Number(raw?.t) > 0 ? Number(raw.t) : 0, tFerramentas); };
+  function guardarFerramentas(cfg, t) {                   // chamada pela barra (barra.js) a cada mudança que a pessoa faz nela
+    tFerramentas = t;
+    sync?.agendar(D.serialize(L), t, cfg);
+  }
   const sync = preferencias ? criarSincronia({
     backend: preferencias, ctx, ligada: syncLigada,
-    lerLocal: () => { const raw = read(); if (!raw) return null; const { t, ...layout } = raw; return { t: Number(t) > 0 ? Number(t) : 1, layout }; },   // sem carimbo = gravado por versão antiga: vale, mas perde para qualquer um com carimbo
-    aoAdotar: (layout, t) => { if (aplicar(layout)) toast('Disposição dos painéis atualizada pela sua conta.', 'ok'); gravarLocal(t); },
+    lerLocal: () => { const raw = read(); const t = carimbo(); if (!raw && !t) return null; const { t: _t, ...layout } = raw || D.serialize(L); return { t: t || 1, layout, ferramentas: ferramentas?.atual() }; },   // sem carimbo = gravado por versão antiga: vale, mas perde para qualquer um com carimbo
+    aoAdotar: (layout, t, ferr) => {
+      const mudouL = aplicar(layout), mudouF = ferr ? !!ferramentas?.adotar(ferr) : false;
+      if (mudouL || mudouF) toast(mudouF && !mudouL ? 'Barra de ferramentas atualizada pela sua conta.' : 'Disposição dos painéis atualizada pela sua conta.', 'ok');
+      tFerramentas = t; gravarLocal(t);
+    },
     aoFalhar: (e) => { if (!avisouSync) { avisouSync = true; toast(`Não consegui sincronizar a disposição com a sua conta: ${e?.message || e}`, 'err'); } },
   }) : null;
   let ultimoPuxar = 0;
@@ -123,7 +135,7 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
   }
   // Exportar/importar funciona sem conta nenhuma: é o mesmo arquivo que vai para a conta.
   function exportarDisposicao() {
-    downloadBlob('artatk-disposicao.json', new Blob([JSON.stringify(montar(D.serialize(L), Date.now()), null, 1)], { type: 'application/json' }));
+    downloadBlob('artatk-disposicao.json', new Blob([JSON.stringify(montar(D.serialize(L), Date.now(), ferramentas?.atual()), null, 1)], { type: 'application/json' }));
     toast('Disposição salva na pasta de Downloads.', 'ok');
   }
   function importarDisposicao() {
@@ -132,7 +144,8 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
       const r = lerPreferencias(await inp.files[0]?.text().catch(() => ''));
       inp.remove();
       if (!r) { toast('Esse arquivo não é uma disposição do ArtAtk.', 'err'); return; }
-      if (aplicar(r.layout)) { persist(); toast('Disposição importada.', 'ok'); } else toast('A disposição já era essa.');
+      const mudouF = r.ferramentas ? !!ferramentas?.adotar(r.ferramentas) : false;
+      if (aplicar(r.layout) || mudouF) { persist(); toast('Disposição importada.', 'ok'); } else toast('A disposição já era essa.');
     });
     document.body.append(inp); inp.click();
   }
@@ -226,7 +239,7 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
           f.style.cssText = `flex:${L.panels[id].collapsed ? '0 0 auto' : `${L.panels[id].flex} 1 0`}`;
           c.append(f);
           const nx = shown[i + 1];
-          if (nx && !L.panels[id].collapsed && !L.panels[nx].collapsed) c.append(h('div', { class: 'psplit', onpointerdown: (e) => startStackResize(e, id, nx) }));
+          if (nx && !L.panels[id].collapsed && !L.panels[nx].collapsed) c.append(alcaEntre(id, nx));
         });
         c.append(h('i', { class: 'dcol-h', title: 'Arraste para mudar a largura', onpointerdown: (e) => startColResize(e, side, col, c) }));
         el.append(c);
@@ -241,18 +254,14 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
     for (const id of ids) if (D.locate(L, id)?.zone === 'hidden') frames[id].remove();
   }
 
-  // No celular a barra de ferramentas fica sempre à vista e o resto abre em gaveta sobre o canvas.
+  // No celular a barra de ferramentas continua flutuando sobre o palco (barra.js) e os painéis abrem em gaveta.
   const drawerGroup = () => (drawerOpen ? D.DRAWER_GROUPS[drawerOpen].filter((id) => ids.includes(id)) : []);
   function renderCompact() {
     for (const side of D.SIDES) { dockEl[side].replaceChildren(); dockEl[side].classList.add('empty'); }
     floatsEl.replaceChildren();
-    const rail = h('div', { class: 'dcol', style: { width: '52px' } });
-    frames.rail.style.cssText = 'flex:1 1 0';
-    rail.append(frames.rail);
-    dockEl.left.replaceChildren(rail); dockEl.left.classList.remove('empty');
     drawerEl.replaceChildren();
     const group = drawerGroup();
-    for (const id of ids) if (id !== 'rail' && !group.includes(id)) frames[id].remove();
+    for (const id of ids) if (!group.includes(id)) frames[id].remove();
     drawerEl.hidden = !group.length;
     if (group.length) {
       if (!group.includes(drawerPick)) drawerPick = group[0];
@@ -302,9 +311,12 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
     if (compact) return;
     popMenu(anchor, [
       ...ids.map((id) => ({ label: panels[id].title || D.panelTitle(id), checked: D.isVisible(L, id), hint: where(id), onClick: () => (D.isVisible(L, id) ? hide(id) : show(id)) })),
+      ...(ferramentas ? [{ label: 'Barra de ferramentas', checked: ferramentas.visivel(), hint: 'flutua sobre o palco', onClick: () => ferramentas.mostrar(!ferramentas.visivel()) },
+        { label: 'Bandeja de ferramentas', checked: false, hint: 'escolher o que fica na barra', onClick: () => ferramentas.bandeja(true) }] : []),
       '-',
       { label: 'Ocultar / mostrar todos', hint: 'Ctrl \\', icon: 'eye', onClick: toggleAll },
       { label: 'Restaurar disposição original', icon: 'reset', onClick: reset },
+      ...(ferramentas ? [{ label: 'Restaurar a barra de ferramentas', icon: 'reset', onClick: () => ferramentas.padrao() }] : []),
       '-',
       ...(preferencias ? [
         { label: 'Guardar a disposição na conta', checked: syncLigada(), hint: preferencias.rotulo, onClick: ligarNaConta },
@@ -370,6 +382,29 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
     track(e, (ev) => { D.setColWidth(L, side, L.docks[side].indexOf(col), clamp(w0 + dir * (ev.clientX - x0), D.MIN_COL, max)); colEl.style.width = col.w + 'px'; });
   }
 
+  // A alça entre dois painéis empilhados. Além do arraste: duplo clique volta ao padrão e, com ela focada, as setas dividem sem arrastar
+  // (quem não arrasta também precisa conseguir dividir). `role="separator"` + `tabindex` põem a alça no caminho do Tab.
+  function alcaEntre(a, b) {
+    const alca = h('div', {
+      class: 'psplit', role: 'separator', tabindex: '0', 'aria-orientation': 'horizontal', 'data-split': `${a}|${b}`,
+      'aria-label': `Dividir ${panels[a]?.title || D.panelTitle(a)} e ${panels[b]?.title || D.panelTitle(b)}`,
+      title: 'Arraste para dividir · duplo clique volta ao padrão · setas ↑↓ com a alça focada',
+      onpointerdown: (e) => startStackResize(e, a, b),
+      ondblclick: () => { D.setFlex(L, [[a, D.flexPadrao(a)], [b, D.flexPadrao(b)]]); change(); },
+      onkeydown: (ev) => {
+        if (ev.key !== 'ArrowUp' && ev.key !== 'ArrowDown') return;
+        ev.preventDefault();
+        const passo = (ev.shiftKey ? 0.4 : 0.12) * (ev.key === 'ArrowDown' ? 1 : -1);
+        const soma = L.panels[a].flex + L.panels[b].flex;
+        const fa = clamp(L.panels[a].flex + passo, 0.12, soma - 0.12);
+        D.setFlex(L, [[a, fa], [b, soma - fa]]);
+        change();
+        // o render refaz a alça: devolve o foco à que ficou no lugar dela
+        app.querySelector(`.psplit[data-split="${a}|${b}"]`)?.focus();
+      },
+    });
+    return alca;
+  }
   function startStackResize(e, a, b) {
     const fa = frames[a], fb = frames[b], ha = fa.offsetHeight, hb = fb.offsetHeight, y0 = e.clientY;
     const sum = L.panels[a].flex + L.panels[b].flex, MIN = 64;
@@ -587,7 +622,7 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
   document.addEventListener('pointerdown', () => setActiveDoc(document), true);
 
   return {
-    show, reveal, hide, toggleAll, reset, redock, detach, panelsMenu, openDrawer, closeDrawer,
+    show, reveal, hide, toggleAll, reset, redock, detach, panelsMenu, openDrawer, closeDrawer, guardarFerramentas,
     // publicação em andamento: painéis em outra janela também ficam inertes
     setLocked(on) { locked = on; for (const { d } of wins.values()) d.body.toggleAttribute('inert', on); },
     isCompact: () => compact,

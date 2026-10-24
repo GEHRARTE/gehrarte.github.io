@@ -3,6 +3,7 @@ import { clone, debounce, uid } from '../core/util.js';
 import { podar } from '../core/historico.js';
 import { Store } from '../core/store.js';
 import { cloneElement, ehUnico } from '../core/model.js';
+import { agrupar, desagrupar, moverCamada, reordenar, removerElementos, gruposCompletos, grupoPorId } from '../core/grupos.js';
 
 const handlers = {};
 export const on = (ev, fn) => { (handlers[ev] ||= []).push(fn); };
@@ -114,7 +115,7 @@ export function addEls(els, { select: sel = true } = {}) {
   commit();
 }
 export function removeEls(ids) {
-  S.doc.elements = S.doc.elements.filter((e) => !ids.includes(e.id));
+  removerElementos(S.doc, ids);                      // e dissolve os grupos que ficarem vazios
   S.sel = S.sel.filter((id) => !ids.includes(id));
   emit('struct'); emit('select');
   commit();
@@ -123,27 +124,39 @@ export function duplicate(ids = S.sel) {
   const copies = S.doc.elements.filter((e) => ids.includes(e.id)).map((e) => cloneElement(e));
   if (copies.length) addEls(copies);
 }
+// Ordem de empilhamento. Dentro de um grupo o elemento anda entre os irmãos; o grupo inteiro selecionado anda como uma peça (core/grupos.js).
 export function reorder(ids, mode) {
-  const a = S.doc.elements;
-  const picked = a.filter((e) => ids.includes(e.id)), rest = a.filter((e) => !ids.includes(e.id));
-  if (mode === 'front') S.doc.elements = [...rest, ...picked];
-  else if (mode === 'back') S.doc.elements = [...picked, ...rest];
-  else {
-    const dir = mode === 'up' ? 1 : -1;
-    const idx = a.map((e, i) => (ids.includes(e.id) ? i : -1)).filter((i) => i >= 0);
-    for (const i of dir > 0 ? idx.reverse() : idx) {
-      const j = i + dir;
-      if (j < 0 || j >= a.length || ids.includes(a[j].id)) continue;
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-  }
+  reordenar(S.doc, ids, mode);
   emit('struct'); commit();
 }
-export function moveLayer(id, toIndex) {
-  const a = S.doc.elements, i = a.findIndex((e) => e.id === id);
-  if (i < 0) return;
-  const [el] = a.splice(i, 1);
-  a.splice(Math.max(0, Math.min(a.length, toIndex)), 0, el);
+
+// ---------- grupos (D-0056) ----------
+// Agrupa a seleção; o grupo fica selecionado (a seleção continua sendo os mesmos elementos).
+export function agruparSel(ids = S.sel) {
+  const gid = agrupar(S.doc, ids);
+  if (!gid) return null;
+  emit('struct'); emit('select'); commit();
+  return gid;
+}
+// Desfaz os grupos que a seleção cobre por inteiro; os elementos soltos ficam selecionados.
+export function desagruparSel(gids = gruposCompletos(S.doc, S.sel)) {
+  const soltos = desagrupar(S.doc, gids);
+  if (!soltos.length) return false;
+  S.sel = soltos.filter((id) => byId(id));
+  emit('struct'); emit('select'); commit();
+  return true;
+}
+// Solta uma camada (elemento ou grupo) dentro de um grupo ou ao lado de um irmão: ver moverCamada em core/grupos.js.
+export function moverCamadaPara(id, destino) {
+  if (!moverCamada(S.doc, id, destino)) return false;
+  emit('struct'); commit();
+  return true;
+}
+// Muda o registro de um grupo (nome, oculto, travado). Oculto e travado valem para todos os filhos, sem tocar neles.
+export function mutarGrupo(gid, fn) {
+  const g = grupoPorId(S.doc, gid);
+  if (!g) return;
+  fn(g);
   emit('struct'); commit();
 }
 
@@ -152,7 +165,7 @@ export function copy() {
 }
 export function paste() {
   if (!S.clipboard.length) return false;
-  const els = clone(S.clipboard).map((e) => { e.id = uid(); e.f.d.x += 24; e.f.d.y += 24; if (e.f.m) { e.f.m.x += 24; e.f.m.y += 24; } return e; });
+  const els = clone(S.clipboard).map((e) => { e.id = uid(); delete e.g; e.f.d.x += 24; e.f.d.y += 24; if (e.f.m) { e.f.m.x += 24; e.f.m.y += 24; } return e; });
   S.clipboard = clone(els); // próximos colar vão deslocando
   addEls(els);
   return true;

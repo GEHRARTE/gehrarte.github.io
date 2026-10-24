@@ -58,6 +58,23 @@ const P = {
   expand: '<path d="M9 4H4v5M15 4h5v5M15 20h5v-5M9 20H4v-5"/>',
   shrink: '<path d="M4 9h5V4M20 9h-5V4M20 15h-5v5M4 15h5v5"/>',
   help: '<circle cx="12" cy="12" r="9"/><path d="M9.3 9.2A2.8 2.8 0 0 1 12 7.3c1.6 0 2.7 1 2.7 2.4 0 1.2-.7 1.8-1.6 2.4-.8.5-1.1.9-1.1 1.8M12 17h.01" stroke-width="2"/>',
+  nos: '<path d="M7 17L17 7M5 5h4v4H5zM15 15h4v4h-4z"/>',
+  lupa: '<path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zM21 21l-5.2-5.2M8 10.5h5M10.5 8v5"/>',
+  estrela: '<path d="M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8L3.5 9.7l5.9-.9z"/>',
+  linha: '<path d="M4 20L20 4"/>',
+  seta: '<path d="M4 20L20 4M13 4h7v7"/>',
+  caneta: '<path d="M4 20l3-1 11-11a2.1 2.1 0 0 0-3-3L4 16zM13 6l5 5M4 20l.9-3.4"/>',
+  borracha: '<path d="M7 20h12M4.5 16.5l7-7a2 2 0 0 1 3 0l3 3a2 2 0 0 1 0 3L13 20H8z"/>',
+  mascara: '<path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18zM12 3v18"/>',
+  regua: '<path d="M3 9h18v6H3zM7 9v3M11 9v4M15 9v3M19 9v4"/>',
+  medir: '<path d="M4 18h16M4 15v6M20 15v6M7 11l5-6 5 6"/>',
+  bool: '<path d="M4 4h11v11H4zM9 9h11v11H9z"/>',
+  simplificar: '<path d="M4 18c5 0 7-12 16-12M4 18h.01M20 6h.01"/>',
+  contorno: '<path d="M5 5h14v14H5zM8 8h8v8H8z"/>',
+  grade: '<path d="M4 4h16v16H4zM4 10h16M4 15h16M10 4v16M15 4v16"/>',
+  comentario: '<path d="M4 5h16v11H9l-5 4z"/>',
+  textocurva: '<path d="M3 16c4-8 14-8 18 0M8 12V9M12 10V7M16 12V9"/>',
+  grupo: '<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM8 12h8"/>',
 };
 
 export const icon = (name, size = 16) =>

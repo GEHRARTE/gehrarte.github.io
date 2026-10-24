@@ -4,6 +4,7 @@
 // o layout); só trabalhar quando a rolagem mudou; só escrever quando o valor mudou.
 import { progressoDaFaixa, valoresDoControlador, combinar, estiloDeValores, valoresReduzidos, normalizarControladores } from './anim-motor.js';
 import { criarMedidor, visibilidadeEfetiva, relatorioCsv, montarEnvio, estimarLeitura, contarPalavras, ESTADOS } from './leitura.js';
+import { ocultoEfetivo } from './grupos.js';
 
 const noEl = (raiz, id) => raiz.querySelector(`.el[data-id="${String(id).replace(/["\\]/g, '\\$&')}"]`);     // ids são slugs; o escape é só por segurança
 
@@ -13,7 +14,7 @@ export function iniciarRolagem(raiz, doc, { dev = 'd', janela = window } = {}) {
   const alvos = [];
   for (const el of doc.elements || []) {
     const lista = normalizarControladores(el.ctl).filter((c) => c.k === 'rolagem' && (!c.dispositivos || c.dispositivos.includes(dev)));
-    if (!lista.length || el.hide) continue;
+    if (!lista.length || ocultoEfetivo(doc, el)) continue;
     const frame = noEl(raiz, el.id), ct = frame?.querySelector('.el-ct');
     if (frame && ct) alvos.push({ frame, ct, lista, ultimo: '', atual: null, suave: Math.max(0, ...lista.map((c) => c.suave || 0)) });
   }
@@ -78,7 +79,7 @@ export function iniciarLeitura(raiz, doc, { modo = 'teste', dev = 'd', destino =
   const documento = janela.document;
   const medidor = criarMedidor(), blocos = [];
   for (const el of doc.elements || []) {
-    if (el.hide) continue;
+    if (ocultoEfetivo(doc, el)) continue;
     const frame = noEl(raiz, el.id); if (!frame) continue;
     const tempo = normalizarControladores(el.ctl).find((c) => c.k === 'tempo');
     const texto = el.t === 'text' ? (el.text || frame.textContent || '') : (el.t === 'shape' && el.label ? el.label : '');

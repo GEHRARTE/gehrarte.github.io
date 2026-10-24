@@ -7,6 +7,7 @@
 //   .el-lp  animação contínua (loop)
 //   .el-ct  conteúdo (opacidade, sombra, desfoque, mistura)
 import { h } from './dom.js';
+import { ocultoEfetivo, travadoEfetivo } from './grupos.js';
 import { W, frameOf, pageH, pageW, bgCss, ABAS_PADRAO } from './model.js';
 import { abasDaBarra, hrefDaAba } from './sites.js';
 import { itensDeExemplo, normalizarLista, ancoraDaLista, fontePorId } from './listas.js';
@@ -221,8 +222,8 @@ export function renderElement(el, ctx) {
   st.height = el.t === 'text' && el.ah ? 'auto' : fr.h + 'px';
   if (fr.r) st.transform = `rotate(${fr.r}deg)`;
   if (ctx.editing) {
-    if (el.hide) wrap.classList.add('is-hidden');
-    if (el.lock) wrap.classList.add('is-locked');
+    if (ocultoEfetivo(ctx.doc, el)) wrap.classList.add('is-hidden');
+    if (travadoEfetivo(ctx.doc, el)) wrap.classList.add('is-locked');
   }
 
   // Âncora: na página publicada o elemento ganha id, para um sumário poder apontar para ele
@@ -262,7 +263,7 @@ export function renderArtboard(doc, ctx) {
   ab.style.height = pageH(doc, ctx.dev) + 'px';
   ab.style.background = bgCss(doc.page.bg);
   const c = ctx.doc ? ctx : { ...ctx, doc };   // a barra de abas precisa saber as abas do documento
-  for (const el of doc.elements) if (ctx.editing || !el.hide) ab.append(renderElement(el, c));
+  for (const el of doc.elements) if (ctx.editing || !ocultoEfetivo(doc, el)) ab.append(renderElement(el, c));
   return ab;
 }
 

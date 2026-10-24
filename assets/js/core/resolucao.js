@@ -3,6 +3,7 @@
 // papel e para imagens de pixels (SVG não tem resolução). Faixas e limites: artatk-reguas-e-medidas.md §7.2.
 import { ehFixa } from './model.js';
 import { PX_POR_POL, dePx } from './medidas.js';
+import { ocultoEfetivo } from './grupos.js';
 
 export const FAIXAS = [
   { id: 'otima', min: 300, rotulo: 'Ótima', texto: 'Nítida no papel.' },
@@ -38,5 +39,5 @@ export function infoDaImagem(doc, el) {
 // Imagens do arquivo de papel com resolução baixa (ids), para a conferência da página e do PDF.
 export function imagensDeBaixaResolucao(doc) {
   if (!ehFixa(doc)) return [];
-  return (doc.elements || []).filter((e) => !e.hide && infoDaImagem(doc, e)?.faixa.id === 'baixa').map((e) => e.id);
+  return (doc.elements || []).filter((e) => !ocultoEfetivo(doc, e) && infoDaImagem(doc, e)?.faixa.id === 'baixa').map((e) => e.id);
 }

@@ -5,6 +5,7 @@
 //   · As réguas medem a partir do canto da página FINAL (o 0 fica no corte), então a sangria aparece como medida negativa.
 import { pageW, pageH, ehFixa } from './model.js';
 import { paraPx } from './medidas.js';
+import { ocultoEfetivo } from './grupos.js';
 
 export const SANGRIA_GRAFICA_MM = 3;
 export const MARGEM_SEGURA_MM = 5;
@@ -78,7 +79,7 @@ export function avisosDeImpressao(doc) {
   if (!ehFixa(doc) || !temGabarito(doc)) return r;
   const w = pageW(doc, 'd'), h = pageH(doc, 'd'), c = caixaDeCorte(doc), s = caixaSegura(doc), b = sangriaPx(doc), m = margemMm(doc) > 0;
   for (const e of doc.elements || []) {
-    if (e.hide) continue;
+    if (ocultoEfetivo(doc, e)) continue;
     const f = e.f.d, x1 = f.x + f.w, y1 = f.y + f.h;
     if (x1 <= 0 || y1 <= 0 || f.x >= w || f.y >= h) { r.foraDaPagina.push(e.id); continue; }
     const temTexto = e.t === 'text' || (e.t === 'shape' && e.label);

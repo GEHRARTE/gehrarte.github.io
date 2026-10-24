@@ -12,7 +12,8 @@ import { marcarComum } from '../core/sites.js';
 import { FONTS, fontStack } from '../core/fonts.js';
 import { SHAPE_LIST } from '../core/render.js';
 import { sanitizeSvg } from '../core/sanitize.js';
-import { S, on, emit, selEls, mutate, mutateGeom, commit, touch, setPage, byId, select as selecionar } from './state.js';
+import { grupoDaSelecao } from '../core/grupos.js';
+import { S, on, emit, selEls, mutate, mutateGeom, commit, touch, setPage, byId, select as selecionar, agruparSel, desagruparSel, mutarGrupo } from './state.js';
 import { inkColor, alignSel, distribute, autoStack, resetMobile, fitPageHeight, fitPageHeightTodos, replaceImage } from './tools.js';
 import { measureAll, playEntrance, nodeOf, refreshOverlay } from './stage.js';
 import { secControladores } from './controladores.js';
@@ -456,12 +457,17 @@ export function build() {
 
   const types = new Set(els.map((e) => e.t));
   const t0 = els[0].t;
+  const grp = grupoDaSelecao(S.doc, S.sel);       // a seleção é exatamente o conteúdo de um grupo: as propriedades são do grupo
   const head = h('div', { class: 'ph' },
-    h('span', { class: 'ph-ic', html: icon(TYPE_ICON[t0] || 'square', 16) }),
-    els.length === 1
+    h('span', { class: 'ph-ic', html: icon(grp ? 'grupo' : TYPE_ICON[t0] || 'square', 16) }),
+    grp
+      ? h('input', { class: 'ph-name', value: grp.nome || '', placeholder: 'Grupo', onchange: (ev) => { mutarGrupo(grp.id, (g) => { g.nome = ev.target.value.trim() || 'Grupo'; }); } })
+      : els.length === 1
       ? h('input', { class: 'ph-name', value: els[0].name || '', placeholder: TYPE_LABEL[t0], onchange: (ev) => { set((e) => { e.name = ev.target.value; }); emit('struct-lite'); emit('layers'); } })
       : h('b', {}, `${els.length} itens selecionados`));
   root.append(head);
+  if (grp) root.append(section('Grupo', [hint(`${els.length} ${els.length === 1 ? 'elemento' : 'elementos'} dentro. Ocultar ou travar o grupo vale para todos.`), row(btn({ label: 'Desagrupar (Ctrl Shift G)', ic: 'grupo', onClick: () => desagruparSel() }))]));
+  else if (els.length > 1) root.append(section('Agrupar', [row(btn({ label: 'Agrupar a seleção (Ctrl G)', ic: 'grupo', onClick: () => agruparSel() }))]));
 
   if (els.length === 1) root.append(secGeom(els[0]));
   root.append(secAlign());

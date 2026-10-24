@@ -7,13 +7,16 @@
 // O relógio de cada aparelho é quem carimba: relógios muito diferentes podem fazer o "mais novo" errar (raro; exportar/importar resolve).
 
 export const FORMATO = 'artatk-preferencias';
-export const PREF_V = 1;
+// v2 = o envelope ganhou a chave `ferramentas` (a barra montada pela pessoa, D-0055) ao lado de `layout`. Um ArtAtk antigo lendo um
+// arquivo v2 continua achando o `layout` (`ler()` aceita v >= 1) e só ignora o que não conhece; um arquivo v1 lido aqui vem sem barra.
+export const PREF_V = 2;
 export const NOME_ARQUIVO = 'artatk-preferencias.json';
 export const ESPERA_ENVIO_MS = 2500;                 // junta várias mudanças seguidas num só envio
 
-export const montar = (layout, t) => ({ format: FORMATO, v: PREF_V, t, layout });
+export const montar = (layout, t, ferramentas = null) => ({ format: FORMATO, v: PREF_V, t, layout, ...(ferramentas ? { ferramentas } : {}) });
 
-// Texto do arquivo → { t, layout } ou null (vazio, corrompido, de outro formato ou de uma versão que não entendemos).
+// Texto do arquivo → { t, layout, ferramentas } ou null (vazio, corrompido, de outro formato ou de uma versão que não entendemos).
+// `ferramentas` é opcional (não existe em arquivo v1) e vai cru: quem normaliza é editor/ferramentas-catalogo.js.
 export function ler(texto) {
   if (typeof texto !== 'string' || !texto.trim()) return null;
   let o;
@@ -21,7 +24,8 @@ export function ler(texto) {
   if (!o || typeof o !== 'object' || o.format !== FORMATO || !(o.v >= 1)) return null;
   if (!Number.isFinite(o.t) || o.t <= 0) return null;
   if (!o.layout || typeof o.layout !== 'object' || Array.isArray(o.layout) || !o.layout.docks) return null;
-  return { t: o.t, layout: o.layout };
+  const ferramentas = o.ferramentas && typeof o.ferramentas === 'object' && !Array.isArray(o.ferramentas) ? o.ferramentas : null;
+  return { t: o.t, layout: o.layout, ferramentas };
 }
 
 // O que fazer com o carimbo daqui (`localT`, undefined = nunca personalizou) e o da conta (`remotoT`, undefined = não há cópia).
@@ -33,7 +37,7 @@ export function decidir(localT, remotoT) {
 }
 
 // backend = host.preferencias: { disponivel(ctx), ler(ctx), gravar(ctx, texto) } (todos podem ser async); ctx = { slug }.
-// lerLocal() → { t, layout } | null · aoAdotar(layout, t) aplica o que veio da conta · ligada() → a pessoa quer sincronizar?
+// lerLocal() → { t, layout, ferramentas? } | null · aoAdotar(layout, t, ferramentas) aplica o que veio da conta · ligada() → a pessoa quer sincronizar?
 export function criarSincronia({ backend, ctx = {}, lerLocal, aoAdotar, ligada = () => true, aoFalhar = () => {}, esperaMs = ESPERA_ENVIO_MS, setT = setTimeout, clearT = clearTimeout }) {
   let timer = null, fila = Promise.resolve();
   const emFila = (fn) => (fila = fila.then(fn, fn));        // uma operação por vez: nunca duas gravações se atropelando
@@ -46,19 +50,19 @@ export function criarSincronia({ backend, ctx = {}, lerLocal, aoAdotar, ligada =
       if (!(await pronto())) return { estado: 'indisponivel' };
       const remoto = ler(await backend.ler(ctx)), local = lerLocal();
       const d = decidir(local?.t, remoto?.t);
-      if (d === 'adotar') { aoAdotar(remoto.layout, remoto.t); return { estado: 'adotado', t: remoto.t }; }
-      if (d === 'enviar') { await backend.gravar(ctx, JSON.stringify(montar(local.layout, local.t))); return { estado: 'enviado', t: local.t }; }
+      if (d === 'adotar') { aoAdotar(remoto.layout, remoto.t, remoto.ferramentas); return { estado: 'adotado', t: remoto.t }; }
+      if (d === 'enviar') { await backend.gravar(ctx, JSON.stringify(montar(local.layout, local.t, local.ferramentas))); return { estado: 'enviado', t: local.t }; }
       return { estado: 'igual' };
     } catch (e) { return falhou(e); }
   });
 
   // Mudança feita aqui: envia depois de um instante (a última vence; mudanças seguidas viram um envio só).
-  function agendar(layout, t) {
+  function agendar(layout, t, ferramentas = null) {
     clearT(timer); timer = null;
     if (!backend || !ligada()) return;
     timer = setT(() => {
       timer = null;
-      emFila(async () => { try { if (await pronto()) await backend.gravar(ctx, JSON.stringify(montar(layout, t))); } catch (e) { falhou(e); } });
+      emFila(async () => { try { if (await pronto()) await backend.gravar(ctx, JSON.stringify(montar(layout, t, ferramentas))); } catch (e) { falhou(e); } });
     }, esperaMs);
   }
   return { puxar, agendar, cancelar: () => { clearT(timer); timer = null; }, pendente: () => timer !== null, aguardar: () => fila };

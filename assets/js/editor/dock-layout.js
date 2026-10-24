@@ -10,12 +10,11 @@
 export const SIDES = ['left', 'right'];
 export const MIN_COL = 48, MAX_COL = 560, MIN_CENTER = 360, MIN_FLOAT_W = 150, MIN_FLOAT_H = 90;
 
-// Padrão: ferramentas e a pilha da biblioteca (Elementos aberto; SVG animado, Mídia, Drive e Modelos recolhidos, um clique abre)
-// à esquerda; Propriedades com as Camadas logo abaixo, à direita. Cada ferramenta é um painel: dá para recolher, empilhar onde quiser,
+// Padrão: a pilha da biblioteca (Elementos aberto; SVG animado, Mídia, Drive e Modelos recolhidos, um clique abre) à esquerda;
+// Propriedades com as Camadas logo abaixo, à direita. A barra de FERRAMENTAS não é painel: flutua sobre o palco (D-0055, editor/barra.js). Cada ferramenta é um painel: dá para recolher, empilhar onde quiser,
 // soltar sobre o canvas ou levar para outra janela. `col` agrupa os painéis que nascem na mesma coluna.
 const BOX = { w: 290, h: 420 };
 const DEFAULTS = {
-  rail:   { title: 'Ferramentas',  side: 'left',  col: 'rail',  w: 52,  box: { w: 150, h: 290 } },
   els:    { title: 'Elementos',    side: 'left',  col: 'lib',   w: 272, box: { w: 290, h: 520 } },
   folha:  { title: 'Folha de design', side: 'left', col: 'lib', w: 272, collapsed: true, box: { w: 300, h: 560 } },
   svg:    { title: 'SVG animado',  side: 'left',  col: 'lib',   w: 272, collapsed: true, box: BOX },
@@ -183,6 +182,7 @@ export function setColWidth(L, side, col, w) {
   const c = L.docks[side][col];
   if (c) c.w = Math.round(num(w, c.w, MIN_COL, MAX_COL));
 }
+export const flexPadrao = (id) => DEFAULTS[id]?.flex ?? 1;    // o peso de fábrica (duplo clique na alça volta a ele)
 export function setFlex(L, pairs) { for (const [id, f] of pairs) if (L.panels[id]) L.panels[id].flex = Math.max(0.12, +f || 1); }
 
 // Esconde/mostra todos de uma vez (Ctrl+\). Lembra quem estava visível para voltar igual.
