@@ -585,6 +585,7 @@ export function initStage(refs) {
     const hd = e.target.closest('[data-h]');
     if (hd) { e.preventDefault(); const k = hd.dataset.h; return k === 'rot' ? startRotate(e) : S.sel.length > 1 ? startGroupScale(k, e) : startResize(k, e); }
     if (S.tool === 'wand') { e.preventDefault(); return usarVarinha(e); }
+    if (S.tool === 'zoom') { e.preventDefault(); return setZoom(S.zoom * (e.altKey ? 1 / 1.5 : 1.5), e.clientX, e.clientY); }   // clique aproxima; Alt + clique afasta, sempre no ponto clicado
     if (S.tool !== 'select') { e.preventDefault(); return startDraw(e); }
     const node = e.target.closest('.el');
     if (node && ab.contains(node)) {

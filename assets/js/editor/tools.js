@@ -7,6 +7,7 @@ import { S, addEls, byId, selEls, mutate, mutateGeom, commit, emit, setPage, sel
 import { ocultoEfetivo, travadoEfetivo } from '../core/grupos.js';
 import { toast } from './ui.js';
 import { caixaDeCorte } from '../core/gabarito.js';
+import { aplicarCor } from '../core/conta-gotas.js';
 
 // ---------- posicionamento ----------
 // Coloca o elemento com o frame dado no dispositivo atual; o outro dispositivo é derivado.
@@ -327,4 +328,21 @@ export function ensureHeight() {
   const bottoms = S.doc.elements.filter((e) => !ocultoEfetivo(S.doc, e)).map((e) => { const b = aabb(frameOf(e, S.dev)); return b.y + b.h; });
   const need = Math.ceil(Math.max(0, ...bottoms) + 40);
   if (!ehFixa(S.doc) && need > pageH(S.doc, S.dev)) setPage((p) => { p.h[S.dev] = need; });
+}
+
+// Conta-gotas: o navegador deixa a pessoa apontar para QUALQUER ponto da tela (até fora da janela); a cor entra nos elementos selecionados.
+// Sem seleção, a cor é copiada. Precisa de um clique ou tecla da pessoa para abrir (regra do navegador) e só existe no Chrome, Edge e Opera.
+export async function contaGotas() {
+  if (!('EyeDropper' in window)) { toast('O conta-gotas só existe no Chrome, no Edge e no Opera. Neste navegador, use o campo de cor.', 'err'); return; }
+  let hex;
+  try { hex = (await new window.EyeDropper().open()).sRGBHex; } catch { return; }          // Esc: a pessoa desistiu
+  const alvos = selEls().filter((e) => !travadoEfetivo(S.doc, e));
+  if (!alvos.length) {
+    try { await navigator.clipboard.writeText(hex); toast(`Cor ${hex} copiada. Selecione um elemento antes para aplicar direto.`, 'ok'); } catch { toast(`Cor ${hex}. Selecione um elemento antes para aplicar direto.`); }
+    return;
+  }
+  let n = 0;
+  mutate(alvos.map((e) => e.id), (e) => { if (aplicarCor(e, hex)) n++; }, 'struct');
+  if (n) { commit(); toast(`Cor ${hex} aplicada em ${n} ${n === 1 ? 'elemento' : 'elementos'}.`, 'ok'); }
+  else toast('Imagens e SVGs não têm uma cor única para trocar.');
 }

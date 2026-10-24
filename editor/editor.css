@@ -304,7 +304,7 @@ body.pnl-window .pnl{position:absolute;inset:0;width:auto;height:auto;border:0;b
 #center #vpwrap{flex:1;min-height:0}
 #viewport{position:relative;overflow:auto;background:#0e0d13;background-image:radial-gradient(#23222c 1px,transparent 1px);background-size:22px 22px}
 #viewport{touch-action:none}
-#viewport[data-tool="hand"]{cursor:grab}
+#viewport[data-tool="hand"]{cursor:grab} #viewport[data-tool="zoom"]{cursor:zoom-in}
 #viewport[data-tool="text"]{cursor:text} #viewport[data-tool="shape"],#viewport[data-tool="pencil"]{cursor:crosshair}
 #viewport.panning{cursor:grab} #viewport.panning-now{cursor:grabbing}
 #stage{position:relative;margin:0 auto}

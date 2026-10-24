@@ -11,7 +11,7 @@ import { h, $ } from '../core/dom.js';
 import { S, on, emit, setTool, selEls } from './state.js';
 import { icon } from './icons.js';
 import { toast } from './ui.js';
-import { insertImageFile } from './tools.js';
+import { insertImageFile, contaGotas } from './tools.js';
 import { abrirEditorImagem } from './imagem.js';
 import { alternarReguas, alternarGrade } from './reguas.js';
 import {
@@ -93,6 +93,7 @@ function usar(id) {
   }
   if (f.via.acao === 'reguas') return alternarReguas();
   if (f.via.acao === 'grade') return alternarGrade();
+  if (f.via.acao === 'contagotas') return contaGotas();
 }
 
 // A ferramenta ligada hoje, para acender o botão certo (a de forma depende também do formato).

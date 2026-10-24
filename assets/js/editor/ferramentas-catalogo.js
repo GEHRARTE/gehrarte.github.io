@@ -12,7 +12,7 @@ export const CATALOGO = [
   { id: 'select',   nome: 'Selecionar',        atalho: 'V', cat: 'Selecionar', icone: 'cursor',     estado: 'pronta',    via: { tool: 'select' },  dica: 'Escolher e mover elementos' },
   { id: 'nos',      nome: 'Editar nós',        atalho: 'A', cat: 'Selecionar', icone: 'nos',        estado: 'planejada', via: null,                 dica: 'Mexer nos pontos de um caminho (VT-02)' },
   { id: 'hand',     nome: 'Mover a vista',     atalho: 'H', cat: 'Selecionar', icone: 'hand',       estado: 'pronta',    via: { tool: 'hand' },    dica: 'Arrastar o canvas' },
-  { id: 'zoom',     nome: 'Zoom',              atalho: 'Z', cat: 'Selecionar', icone: 'lupa',       estado: 'ideia',     via: null,                 dica: 'Aproximar e afastar' },
+  { id: 'zoom',     nome: 'Zoom',              atalho: 'Z', cat: 'Selecionar', icone: 'lupa',       estado: 'pronta',    via: { tool: 'zoom' },    dica: 'Clique aproxima, Alt + clique afasta' },
   // --- desenho
   { id: 'shape',    nome: 'Retângulo',         atalho: 'R', cat: 'Desenho',    icone: 'square',     estado: 'pronta',    via: { tool: 'shape', kind: 'rect' },    dica: 'Arraste no canvas' },
   { id: 'elipse',   nome: 'Elipse',            atalho: 'E', cat: 'Desenho',    icone: 'circle',     estado: 'pronta',    via: { tool: 'shape', kind: 'ellipse' }, dica: 'Arraste no canvas' },
@@ -29,7 +29,7 @@ export const CATALOGO = [
   { id: 'image',    nome: 'Imagem',            atalho: '',  cat: 'Imagem',     icone: 'image',      estado: 'pronta',    via: { acao: 'imagem' },  dica: 'Inserir imagem' },
   { id: 'wand',     nome: 'Varinha mágica',    atalho: 'W', cat: 'Imagem',     icone: 'wand',       estado: 'pronta',    via: { tool: 'wand' },    dica: 'Clique numa imagem para tirar o fundo (EI-09)' },
   { id: 'recorte',  nome: 'Recortar',          atalho: 'C', cat: 'Imagem',     icone: 'crop',       estado: 'pronta',    via: { acao: 'recorte' }, dica: 'Aparar a imagem selecionada' },
-  { id: 'contagotas', nome: 'Conta-gotas',     atalho: 'I', cat: 'Imagem',     icone: 'eyedrop',    estado: 'planejada', via: null,                 dica: 'Pegar a cor de um ponto' },
+  { id: 'contagotas', nome: 'Conta-gotas',     atalho: 'I', cat: 'Imagem',     icone: 'eyedrop',    estado: 'pronta',    via: { acao: 'contagotas' }, dica: 'Pegar a cor de qualquer ponto da tela e aplicar no elemento selecionado' },
   { id: 'mascara',  nome: 'Máscara',           atalho: '',  cat: 'Imagem',     icone: 'mascara',    estado: 'ideia',     via: null,                 dica: 'Esconder parte com uma forma' },
   // --- vetor
   { id: 'bool',     nome: 'Booleanas',         atalho: '',  cat: 'Vetor',      icone: 'bool',       estado: 'planejada', via: null,                 dica: 'União, subtração, interseção (VT-20)' },
