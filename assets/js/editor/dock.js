@@ -312,7 +312,7 @@ export function initDock({ app, slug, panels, topY = 52, rotateEl, onDocument, o
     popMenu(anchor, [
       ...ids.map((id) => ({ label: panels[id].title || D.panelTitle(id), checked: D.isVisible(L, id), hint: where(id), onClick: () => (D.isVisible(L, id) ? hide(id) : show(id)) })),
       ...(ferramentas ? [{ label: 'Barra de ferramentas', checked: ferramentas.visivel(), hint: 'flutua sobre o palco', onClick: () => ferramentas.mostrar(!ferramentas.visivel()) },
-        { label: 'Bandeja de ferramentas', checked: false, hint: 'escolher o que fica na barra', onClick: () => ferramentas.bandeja(true) }] : []),
+        { label: 'Baú de ferramentas', checked: ferramentas.bauAberto(), hint: 'elementos, modelos, mídia e a barra', onClick: () => ferramentas.bandeja(!ferramentas.bauAberto()) }] : []),
       '-',
       { label: 'Ocultar / mostrar todos', hint: 'Ctrl \\', icon: 'eye', onClick: toggleAll },
       { label: 'Restaurar disposição original', icon: 'reset', onClick: reset },

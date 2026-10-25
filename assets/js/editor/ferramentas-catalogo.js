@@ -66,7 +66,7 @@ export const PADRAO = () => ({
     ancora: 'esquerda',                           // 'livre' | 'esquerda' | 'direita' | 'topo' | 'base'
     visivel: true,
   },
-  bandeja: { pos: { x: MARGEM + 58, y: MARGEM }, aberta: false },
+  bandeja: { pos: { x: MARGEM + 58, y: MARGEM }, aberta: false, aba: 'ferramentas' },   // `aba`: 'ferramentas' ou o id de um painel guardado no baú (D-0058)
 });
 
 const num = (v, d, lo, hi) => (Number.isFinite(+v) && v !== null && v !== '' ? Math.min(hi, Math.max(lo, +v)) : d);
@@ -97,7 +97,7 @@ export function normalizar(bruto) {
       ancora: ANCORAS.includes(b.ancora) ? b.ancora : 'livre',
       visivel: b.visivel !== false,
     },
-    bandeja: { pos: { x: num(bj.pos?.x, p.bandeja.pos.x, -2000, 4000), y: num(bj.pos?.y, p.bandeja.pos.y, -2000, 4000) }, aberta: !!bj.aberta },
+    bandeja: { pos: { x: num(bj.pos?.x, p.bandeja.pos.x, -2000, 4000), y: num(bj.pos?.y, p.bandeja.pos.y, -2000, 4000) }, aberta: !!bj.aberta, aba: typeof bj.aba === 'string' && /^[a-z]{1,12}$/.test(bj.aba) ? bj.aba : 'ferramentas' },
   };
 }
 

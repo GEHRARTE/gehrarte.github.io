@@ -139,24 +139,26 @@ async function main() {
   loadDoc(doc, updatedAt);
   initAbas($('#abas-bar'));   // só aparece em projetos de site
   initReguas({ wrap: $('#vpwrap'), canto: $('#reg-canto'), ch: $('#reg-h'), cv: $('#reg-v'), vp: $('#viewport'), holder: $('#holder'), overlay: $('#overlay') });
-  // barra de ferramentas: objeto flutuante sobre o palco, montado pela pessoa (D-0055) — não é painel do dock
-  ferramentas = initFerramentas({ app: $('#app'), slug: S.slug, aoMudar: (cfg, t) => dock?.guardarFerramentas(cfg, t) });
+  // barra de ferramentas: objeto flutuante sobre o palco, montado pela pessoa (D-0055) — não é painel do dock.
+  // A biblioteca (elementos, modelos, mídia, folha de design, SVG animado, Drive) mora no BAÚ da barra e não ocupa mais uma coluna: na tela
+  // ficam só a barra, o palco e a coluna da direita (D-0058).
+  const aba = (id, titulo, el) => (el ? { id, titulo, el, aoAbrir: () => lib.setOpen(id, true), aoFechar: () => lib.setOpen(id, false) } : null);
+  ferramentas = initFerramentas({
+    app: $('#app'), slug: S.slug, aoMudar: (cfg, t) => dock?.guardarFerramentas(cfg, t),
+    lista: [aba('els', 'Elementos', libRoots.els), aba('tpl', 'Modelos', libRoots.tpl), aba('media', 'Mídia', libRoots.media), aba('folha', 'Folha de design', $('#p-folha')), aba('svg', 'SVG animado', libRoots.svg), aba('drive', 'Drive', libRoots.drive)].filter(Boolean),
+  });
   // painéis reorganizáveis (docks, soltos, outra janela; no celular, gavetas): ver dock.js
   dock = initDock({
     app: $('#app'), slug: S.slug, rotateEl: $('#rotate'),
     preferencias: S.host?.preferencias || null,     // a conta da pessoa (hoje: Google Drive no Gehrarte); sem isto a disposição fica só neste navegador
     panels: {
-      els: { el: libRoots.els, title: 'Elementos' }, folha: { el: $('#p-folha'), title: 'Folha de design' },
-      svg: { el: libRoots.svg, title: 'SVG animado' }, media: { el: libRoots.media, title: 'Mídia' },
-      ...(libRoots.drive ? { drive: { el: libRoots.drive, title: 'Drive' } } : {}),
-      tpl: { el: libRoots.tpl, title: 'Modelos' },
       props: { el: $('#props'), title: 'Propriedades' }, layers: { el: $('#layerspane'), title: 'Camadas' },
     },
     ferramentas,                                   // a barra viaja junto com a disposição, na mesma preferência da conta
     onDocument: bindKeys,
     onMode: () => fit(),
-    // as ferramentas da biblioteca montam o conteúdo quando abrem (à vista e não recolhidas); Camadas se refaz ao aparecer
-    onVisible: (id, vis, open) => { lib.setOpen(id, open); if (id === 'layers' && vis) emit('layers'); },
+    // Camadas se refaz ao aparecer (a biblioteca monta o conteúdo quando a aba do baú abre: ver `aba` acima)
+    onVisible: (id, vis) => { if (id === 'layers' && vis) emit('layers'); },
   });
   S.dock = dock;
   fit();
@@ -164,7 +166,7 @@ async function main() {
   await retomarPublicacao(doc);
   emit('zoom');   // o fit() inicial rodou antes do rótulo de zoom estar ligado
   on('fit', fit);
-  if (fresh) { dock.reveal('tpl', { exclusive: true }); toast('Bem-vindo! Escolha um modelo ou comece do zero.'); }
+  if (fresh) { ferramentas.abrirBau('tpl'); toast('Bem-vindo! Escolha um modelo ou comece do zero.'); }
   // Animador: ferramenta da barra do topo (e endereço próprio, editor/?animador=1, usado pela vitrine de ferramentas)
   $('#tn-animador')?.addEventListener('click', () => abrirCriador({}));
   if (new URLSearchParams(location.search).has('animador')) setTimeout(() => abrirCriador({}), 150);
@@ -199,6 +201,8 @@ function wireTop() {
     const b = $(`#drawerseg [data-drawer="${id}"]`);
     b.innerHTML = icon(ic, 18); b.title = b.ariaLabel = label;
   }
+  // no celular o botão da biblioteca abre o baú (a gaveta da biblioteca não existe mais)
+  $('#drawerseg [data-drawer="lib"]').addEventListener('click', (e) => { e.stopImmediatePropagation(); ferramentas.bandeja(!ferramentas.bauAberto()); }, true);
   title.addEventListener('input', () => { S.doc.title = title.value; paintPath(); touch(); });
   on('struct', () => { if (document.activeElement !== title) title.value = S.doc.title; });
 
@@ -278,7 +282,7 @@ function bindKeys(doc) {
     }
     if (e.altKey && k === 'r') { e.preventDefault(); alternarReguas(); return; }
     if (e.altKey && k === 'g') { e.preventDefault(); alternarGrade(); return; }
-    if (k === 'escape') { if (S.tool !== 'select') setTool('select'); else select([]); return; }
+    if (k === 'escape') { if (ferramentas?.bauAberto()) ferramentas.bandeja(false); else if (S.tool !== 'select') setTool('select'); else select([]); return; }
     if (k === 'delete' || k === 'backspace') { const ids = selEls().filter((x) => !travadoEfetivo(S.doc, x)).map((x) => x.id); if (ids.length) { e.preventDefault(); removeEls(ids); } return; }
     if (k.startsWith('arrow')) {
       if (!S.sel.length) return;

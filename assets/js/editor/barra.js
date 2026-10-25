@@ -20,7 +20,7 @@ import {
   ferramentaDoAtalho, chaveFerramentas, TAMANHOS, ANCORAS, MARGEM,
 } from './ferramentas-catalogo.js';
 
-let CFG = PADRAO(), palco = null, barra = null, bandeja = null, gravarFora = null, filtro = '';
+let CFG = PADRAO(), palco = null, barra = null, bandeja = null, gravarFora = null, filtro = '', paineis = [], abaMontada = null;
 let arrasto = null, vaga = null, foraDaBarra = false, leque = null, fecharLeque = () => {};
 const seletorImagem = () => $('#rail-file');
 
@@ -36,10 +36,13 @@ function gravar({ semSubir = false } = {}) {
 }
 
 // ---------- ligar ----------
-export function initFerramentas({ app, slug, aoMudar = null }) {
+// `lista`: os painéis que moram no baú, além do catálogo — [{ id, titulo, el, aoAbrir(), aoFechar() }]. O baú é o único lugar deles (D-0058).
+export function initFerramentas({ app, slug, aoMudar = null, lista = [] }) {
   palco = app.querySelector('#center');
+  paineis = lista;
   gravarFora = aoMudar;
   CFG = normalizar(lerLocal(slug));
+  CFG.bandeja.aberta = false;                       // o baú sempre começa fechado (tela limpa); só lembra a aba e a posição
   barra = h('div', { class: 'barra', id: 'barra', role: 'toolbar', 'aria-label': 'Ferramentas' });
   palco.append(barra);
   ligarArrasteNaBarra();
@@ -67,12 +70,15 @@ export function initFerramentas({ app, slug, aoMudar = null }) {
     mostrar: (v = true) => { CFG.barra.visivel = v; pintarBarra(); gravar(); },
     visivel: () => CFG.barra.visivel,
     bandeja: (v) => alternarBandeja(v),
+    abrirBau: (aba) => { CFG.bandeja.aba = aba; CFG.bandeja.aberta = true; CFG.barra.visivel = true; abaMontada = null; pintarBandeja(); pintarBarra(); gravar(); },
+    bauAberto: () => !!CFG.bandeja.aberta,
     padrao: () => { CFG = PADRAO(); pintarBarra(); pintarBandeja(); gravar(); toast('Barra de ferramentas de volta ao padrão.', 'ok'); },
   };
 }
 
 function aplicar(bruto) {
   const nova = normalizar(bruto);
+  nova.bandeja.aberta = CFG.bandeja.aberta;         // abrir ou fechar o baú é desta tela: não vem da conta nem de outra aba
   if (iguais(nova, CFG)) return false;
   CFG = nova;
   pintarBarra(); pintarBandeja();
@@ -126,11 +132,11 @@ export function pintarBarra() {
   // o botão da bandeja mora na própria barra: é de lá que se monta a seleção rápida
   barra.append(h('button', {
     class: 'frm btn-bandeja' + (CFG.bandeja.aberta ? ' on' : ''), type: 'button',
-    title: 'Bandeja de ferramentas — arraste de lá para cá', 'aria-label': 'Bandeja de ferramentas',
+    title: 'Baú de ferramentas — elementos, modelos, mídia e as ferramentas da barra', 'aria-label': 'Baú de ferramentas',
     'aria-pressed': String(!!CFG.bandeja.aberta),
     style: { width: B.tam + 'px', height: B.tam + 'px' },
     onclick: () => alternarBandeja(),
-  }, h('span', { html: icon('plus', Math.round(B.tam * 0.5)) }), h('span', { class: 'rot' }, 'Bandeja')));
+  }, h('span', { html: icon('plus', Math.round(B.tam * 0.5)) }), h('span', { class: 'rot' }, 'Baú')));
 
   // o seletor de arquivos vive dentro da barra: assim abre na janela onde a barra estiver
   barra.append(h('input', {
@@ -269,7 +275,7 @@ function menuDaBarra(x, y) {
     ...[['Pequena', 32], ['Média', 38], ['Grande', 46]].map(([rot, t]) =>
       itemMenu({ rotulo: rot, ic: 'square', on: B.tam === t, faz: () => muda(() => { B.tam = t; }) })),
     h('div', { class: 'div' }),
-    itemMenu({ rotulo: 'Abrir a bandeja', ic: 'plus', faz: () => alternarBandeja(true) }),
+    itemMenu({ rotulo: 'Abrir o baú', ic: 'plus', faz: () => alternarBandeja(true) }),
     itemMenu({ rotulo: 'Esconder a barra', ic: 'eyeoff', faz: () => { muda(() => { B.visivel = false; }); toast('Barra escondida. Painéis › Barra de ferramentas para trazer de volta.'); } }),
     itemMenu({ rotulo: 'Voltar ao padrão', ic: 'reset', faz: () => { CFG = PADRAO(); pintarBarra(); pintarBandeja(); gravar(); toast('Barra de ferramentas de volta ao padrão.', 'ok'); } }),
   ]);
@@ -350,29 +356,58 @@ function alternarBandeja(forcar) {
   pintarBandeja(); pintarBarra(); gravar();
 }
 
+const abaValida = () => (CFG.bandeja.aba !== 'ferramentas' && paineis.some((p) => p.id === CFG.bandeja.aba) ? CFG.bandeja.aba : 'ferramentas');
+
+// Solta o painel da aba que estava à mostra (a biblioteca só monta o conteúdo enquanto a aba está aberta).
+function soltarAba() {
+  const p = paineis.find((x) => x.id === abaMontada);
+  if (p) { p.aoFechar?.(); p.el.remove(); }
+  abaMontada = null;
+}
+
+// Desenha o baú. Com ele já na tela e na mesma aba, só atualiza o catálogo (marcas "na barra"); troca de aba refaz tudo.
 function pintarBandeja() {
   if (!palco) return;
-  if (!CFG.bandeja.aberta) { bandeja?.remove(); bandeja = null; return; }
-  if (!bandeja) { bandeja = h('div', { id: 'bandeja', role: 'dialog', 'aria-label': 'Bandeja de ferramentas' }); palco.append(bandeja); }
-  const busca = bandeja.querySelector('.bj-busca input')?.value ?? filtro;
+  if (!CFG.bandeja.aberta) { soltarAba(); bandeja?.remove(); bandeja = null; return; }
+  const aba = abaValida();
+  if (bandeja && abaMontada === aba && bandeja.dataset.aba === aba) { if (aba === 'ferramentas') pintarItens(bandeja.querySelector('.bj-body'), filtro); return; }
+  if (!bandeja) { bandeja = h('div', { id: 'bandeja', role: 'dialog', 'aria-label': 'Baú de ferramentas' }); palco.append(bandeja); }
+  soltarAba();
+  bandeja.dataset.aba = aba;
   bandeja.replaceChildren();
 
   const cab = h('header', { class: 'bj-h' },
     h('span', { class: 'ic', html: icon('grip', 14), style: { color: '#5d5a6d' } }),
-    h('b', {}, 'Bandeja de ferramentas'),
-    h('button', { class: 'bj-b', type: 'button', title: 'Fechar', 'aria-label': 'Fechar a bandeja', html: icon('x', 15), onclick: () => alternarBandeja(false) }));
+    h('b', {}, 'Baú de ferramentas'),
+    h('button', { class: 'bj-b', type: 'button', title: 'Fechar (Esc)', 'aria-label': 'Fechar o baú', html: icon('x', 15), onclick: () => alternarBandeja(false) }));
   cab.addEventListener('pointerdown', (ev) => { if (!ev.target.closest('button')) arrastarBandeja(ev); });
 
-  const inp = h('input', { type: 'search', placeholder: 'Procurar ferramenta…', value: busca, 'aria-label': 'Procurar ferramenta' });
-  inp.addEventListener('input', () => { filtro = inp.value; pintarItens(bandeja.querySelector('.bj-body'), filtro); });
-  inp.addEventListener('keydown', (ev) => { ev.stopPropagation(); if (ev.key === 'Escape') { inp.value = ''; filtro = ''; pintarItens(bandeja.querySelector('.bj-body'), ''); } });
+  const abas = h('nav', { class: 'bj-abas', role: 'tablist', 'aria-label': 'Seções do baú' },
+    [{ id: 'ferramentas', titulo: 'Ferramentas' }, ...paineis].map((a) => h('button', {
+      type: 'button', role: 'tab', class: a.id === aba ? 'on' : '', 'aria-selected': String(a.id === aba),
+      onclick: () => { if (a.id === CFG.bandeja.aba) return; CFG.bandeja.aba = a.id; pintarBandeja(); gravar(); },
+    }, a.titulo)));
+  bandeja.append(cab, abas);
 
-  const corpo = h('div', { class: 'bj-body' });
-  pintarItens(corpo, busca);
-  bandeja.append(cab, h('div', { class: 'bj-busca' }, inp), corpo,
-    h('p', { class: 'bj-dica' }, 'Arraste para a barra. Soltando em cima de um botão, as duas dividem o mesmo lugar (leque). O + também adiciona.'));
+  if (aba === 'ferramentas') {
+    const inp = h('input', { type: 'search', placeholder: 'Procurar ferramenta…', value: filtro, 'aria-label': 'Procurar ferramenta' });
+    inp.addEventListener('input', () => { filtro = inp.value; pintarItens(bandeja.querySelector('.bj-body'), filtro); });
+    inp.addEventListener('keydown', (ev) => { ev.stopPropagation(); if (ev.key === 'Escape') { inp.value = ''; filtro = ''; pintarItens(bandeja.querySelector('.bj-body'), ''); } });
+    const corpo = h('div', { class: 'bj-body' });
+    pintarItens(corpo, filtro);
+    bandeja.append(h('div', { class: 'bj-busca' }, inp), corpo,
+      h('p', { class: 'bj-dica' }, 'Arraste para a barra. Soltando em cima de um botão, as duas dividem o mesmo lugar (leque). O + também adiciona.'));
+    abaMontada = 'ferramentas';
+    if (filtro) inp.focus();
+  } else {
+    const p = paineis.find((x) => x.id === aba);
+    const corpo = h('div', { class: 'bj-painel' });
+    corpo.append(p.el);
+    bandeja.append(corpo);
+    abaMontada = aba;
+    p.aoAbrir?.();
+  }
   posicionarBandeja();
-  if (busca) inp.focus();
 }
 
 function pintarItens(corpo, busca) {

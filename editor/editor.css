@@ -152,7 +152,7 @@ body.resizing{user-select:none}
 .leque button:hover{background:var(--p2)} .leque button.on{background:var(--p3)}
 .leque .k{margin-left:auto;color:var(--dim);font:700 10px var(--f)} .leque .ic{color:var(--dim)}
 .leque .div{height:1px;background:var(--line);margin:3px 6px}
-#bandeja{position:absolute;z-index:65;width:340px;max-width:calc(100% - 8px);max-height:min(70%,520px);display:flex;flex-direction:column;background:var(--p1);border:1px solid var(--line);border-radius:12px;box-shadow:0 20px 56px rgba(0,0,0,.6);overflow:hidden}
+#bandeja{position:absolute;z-index:65;width:360px;max-width:calc(100% - 8px);max-height:min(78%,620px);display:flex;flex-direction:column;background:var(--p1);border:1px solid var(--line);border-radius:12px;box-shadow:0 20px 56px rgba(0,0,0,.6);overflow:hidden}
 .bj-h{height:38px;flex:none;display:flex;align-items:center;gap:8px;padding:0 6px 0 10px;background:var(--p2);border-bottom:1px solid var(--line);cursor:grab;touch-action:none}
 .bj-h:active{cursor:grabbing} .bj-h b{font:700 12px var(--f);flex:1}
 .bj-b{width:26px;height:26px;border:0;background:transparent;color:#6e6b80;border-radius:6px;display:grid;place-items:center;cursor:pointer;flex:none}
@@ -632,3 +632,12 @@ body.editando-pontos #viewport{cursor:default}
 .pt-barra button{border:0;background:transparent;color:var(--tx);font:600 11.5px var(--f);padding:6px 9px;border-radius:7px;cursor:pointer;white-space:nowrap}
 .pt-barra button:hover{background:var(--p3)}
 .pt-barra button:last-child{color:#fff;background:var(--sel)}
+
+/* ---------- o baú: abas e os painéis da biblioteca que moram nele (D-0058) ---------- */
+.bj-abas{flex:none;display:flex;flex-wrap:wrap;gap:2px;padding:6px 8px;border-bottom:1px solid var(--line)}   /* quebra em linhas: nenhuma aba some fora da vista */
+.bj-abas button{flex:none;border:0;background:transparent;color:var(--dim);font:600 11.5px var(--f);padding:5px 10px;border-radius:99px;cursor:pointer;white-space:nowrap}
+.bj-abas button:hover{background:var(--p2);color:var(--tx)}
+.bj-abas button.on{background:var(--tx);color:#17161d}
+#bandeja:not([data-aba="ferramentas"]){height:min(78%,620px)}
+.bj-painel{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.bj-painel > aside{flex:1;min-height:0;overflow-y:auto}
