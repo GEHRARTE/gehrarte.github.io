@@ -13,6 +13,7 @@ import { FONTS, fontStack } from '../core/fonts.js';
 import { SHAPE_LIST } from '../core/render.js';
 import { sanitizeSvg } from '../core/sanitize.js';
 import { grupoDaSelecao } from '../core/grupos.js';
+import { entrarPontos } from './pontos.js';
 import { S, on, emit, selEls, mutate, mutateGeom, commit, touch, setPage, byId, select as selecionar, agruparSel, desagruparSel, mutarGrupo } from './state.js';
 import { inkColor, alignSel, distribute, autoStack, resetMobile, fitPageHeight, fitPageHeightTodos, replaceImage } from './tools.js';
 import { measureAll, playEntrance, nodeOf, refreshOverlay } from './stage.js';
@@ -152,6 +153,7 @@ function secShape() {
   const kind = val((e) => e.shape);
   if (kind === 'polygon' || kind === 'star') body.push(num({ label: kind === 'star' ? 'Pontas' : 'Lados', value: val((e) => e.s.sides), min: 3, max: 16, onChange: (v) => set((e) => { e.s.sides = Math.round(v); }) }));
   if (kind === 'star') body.push(range({ label: 'Pontas finas', value: val((e) => e.s.inner), min: 0.1, max: 0.9, step: 0.02, onChange: (v) => set((e) => { e.s.inner = v; }) }));
+  if (S.sel.length === 1) body.push(row(btn({ label: 'Converter em caminho e editar pontos', ic: 'nos', title: 'A forma vira um desenho editável ponto a ponto (perde o que só a forma tem: degradê, tracejado)', onClick: () => entrarPontos(S.sel[0]) })));
   const out = [section('Forma', body)];
   if (!lineLike) {
     const lb = textInput({ label: 'Texto dentro (vira botão se tiver link)', value: val((e) => e.label), onChange: (v) => set((e) => { e.label = v; }) });
@@ -167,6 +169,7 @@ function secShape() {
 
 function secPath() {
   return section('Desenho', [
+    S.sel.length === 1 ? row(btn({ label: 'Editar pontos', ic: 'nos', title: 'Mexer nos pontos e nas alças (Enter, ou duplo clique no desenho)', onClick: () => entrarPontos(S.sel[0]) })) : null,
     row(colorField({ label: 'Traço', value: val((e) => e.s.stroke), onChange: (v) => set((e) => { e.s.stroke = v; }) }),
       num({ label: 'Esp.', value: val((e) => e.s.sw), min: 1, max: 120, onChange: (v) => set((e) => { e.s.sw = v; }) })),
     colorField({ label: 'Preenchimento', value: val((e) => e.s.fill), nullable: true, onChange: (v) => set((e) => { e.s.fill = v; }) }),

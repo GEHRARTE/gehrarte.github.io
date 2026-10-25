@@ -304,7 +304,7 @@ body.pnl-window .pnl{position:absolute;inset:0;width:auto;height:auto;border:0;b
 #center #vpwrap{flex:1;min-height:0}
 #viewport{position:relative;overflow:auto;background:#0e0d13;background-image:radial-gradient(#23222c 1px,transparent 1px);background-size:22px 22px}
 #viewport{touch-action:none}
-#viewport[data-tool="hand"]{cursor:grab} #viewport[data-tool="zoom"]{cursor:zoom-in}
+#viewport[data-tool="hand"]{cursor:grab} #viewport[data-tool="caneta"]{cursor:crosshair} #viewport[data-tool="zoom"]{cursor:zoom-in}
 #viewport[data-tool="text"]{cursor:text} #viewport[data-tool="shape"],#viewport[data-tool="pencil"]{cursor:crosshair}
 #viewport.panning{cursor:grab} #viewport.panning-now{cursor:grabbing}
 #stage{position:relative;margin:0 auto}
@@ -624,3 +624,11 @@ body.compact #reg-canto,body.compact #reg-h,body.compact #reg-v{display:none}
 .ie-h-se{left:100%;top:100%;cursor:nwse-resize}.ie-h-s{left:50%;top:100%;cursor:ns-resize}.ie-h-sw{left:0;top:100%;cursor:nesw-resize}.ie-h-w{left:0;top:50%;cursor:ew-resize}
 @media (max-width:820px){.modal-b.ie-corpo{flex-direction:column;overflow:auto}.ie-bar{width:auto;max-height:none}.ie-area{height:52vh}}
 
+/* ---------- Editar pontos e Caneta (REQ-VT, D-0057) ---------- */
+.ov-pontos{position:absolute;inset:0;pointer-events:none}
+body.editando-pontos #viewport{cursor:default}
+.pt-barra{position:absolute;z-index:61;top:30px;left:50%;transform:translateX(-50%);display:flex;gap:2px;padding:4px;background:var(--p1);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.5);max-width:calc(100% - 40px);overflow-x:auto;scrollbar-width:none}
+.pt-barra[hidden]{display:none}
+.pt-barra button{border:0;background:transparent;color:var(--tx);font:600 11.5px var(--f);padding:6px 9px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.pt-barra button:hover{background:var(--p3)}
+.pt-barra button:last-child{color:#fff;background:var(--sel)}

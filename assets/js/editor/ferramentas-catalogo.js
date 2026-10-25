@@ -10,7 +10,7 @@
 export const CATALOGO = [
   // --- selecionar
   { id: 'select',   nome: 'Selecionar',        atalho: 'V', cat: 'Selecionar', icone: 'cursor',     estado: 'pronta',    via: { tool: 'select' },  dica: 'Escolher e mover elementos' },
-  { id: 'nos',      nome: 'Editar nós',        atalho: 'A', cat: 'Selecionar', icone: 'nos',        estado: 'planejada', via: null,                 dica: 'Mexer nos pontos de um caminho (VT-02)' },
+  { id: 'nos',      nome: 'Editar nós',        atalho: 'A', cat: 'Selecionar', icone: 'nos',        estado: 'pronta',    via: { acao: 'nos' },     dica: 'Mexer nos pontos e nas alças do desenho ou da forma selecionados (também: Enter ou duplo clique no desenho)' },
   { id: 'hand',     nome: 'Mover a vista',     atalho: 'H', cat: 'Selecionar', icone: 'hand',       estado: 'pronta',    via: { tool: 'hand' },    dica: 'Arrastar o canvas' },
   { id: 'zoom',     nome: 'Zoom',              atalho: 'Z', cat: 'Selecionar', icone: 'lupa',       estado: 'pronta',    via: { tool: 'zoom' },    dica: 'Clique aproxima, Alt + clique afasta' },
   // --- desenho
@@ -20,7 +20,7 @@ export const CATALOGO = [
   { id: 'linha',    nome: 'Linha',             atalho: 'L', cat: 'Desenho',    icone: 'linha',      estado: 'pronta',    via: { tool: 'shape', kind: 'line' },    dica: 'Segmento reto' },
   { id: 'seta',     nome: 'Seta',              atalho: '',  cat: 'Desenho',    icone: 'seta',       estado: 'pronta',    via: { tool: 'shape', kind: 'arrow' },   dica: 'Linha com ponta' },
   { id: 'pencil',   nome: 'Lápis',             atalho: 'P', cat: 'Desenho',    icone: 'pencil',     estado: 'pronta',    via: { tool: 'pencil' },  dica: 'Traço livre' },
-  { id: 'caneta',   nome: 'Caneta',            atalho: 'B', cat: 'Desenho',    icone: 'caneta',     estado: 'planejada', via: null,                 dica: 'Desenhar nó a nó, com curvas (VT-13)' },
+  { id: 'caneta',   nome: 'Caneta',            atalho: 'B', cat: 'Desenho',    icone: 'caneta',     estado: 'pronta',    via: { tool: 'caneta' }, dica: 'Clique faz um ponto; clique e arraste faz uma curva; clicar no primeiro ponto fecha; Enter termina; Esc cancela' },
   { id: 'borracha', nome: 'Borracha',          atalho: '',  cat: 'Desenho',    icone: 'borracha',   estado: 'ideia',     via: null,                 dica: 'Apagar traço' },
   // --- texto
   { id: 'text',     nome: 'Texto',             atalho: 'T', cat: 'Texto',      icone: 'text',       estado: 'pronta',    via: { tool: 'text' },    dica: 'Caixa de texto' },

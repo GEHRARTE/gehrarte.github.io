@@ -5,6 +5,7 @@ import { W, frameOf, setFrame, pageH, pageW, aabb, unionBox, bgCss } from '../co
 import { clamp, round } from '../core/util.js';
 import { S, on, emit, byId, selEls, select, mutateGeom, mutate, commit, touch, assetUrl, setTool, removeEls, duplicate, reorder } from './state.js';
 import { ocultoEfetivo, travadoEfetivo, alvoDoClique, entrarNoGrupo, aindaDentro } from '../core/grupos.js';
+import { initPontos, ativo as pontosAtivo, pontosDown, pontosDbl, penaDown, penaDbl, entrarPontos, desenhando as penaAtiva } from './pontos.js';
 
 let entrouEm = null;   // grupo em que a pessoa entrou com duplo clique (estado de tela): ver core/grupos.js › alvoDoClique
 import { createShape, createText, createPath, insertImageFile, ensureHeight, defaultShapeSize, inkColor } from './tools.js';
@@ -192,6 +193,7 @@ const HANDLES = { nw: [0, 0], n: [50, 0], ne: [100, 0], e: [100, 50], se: [100, 
 export function refreshOverlay() {
   if (!selLayer || !S.doc) return;
   selLayer.innerHTML = '';
+  if (pontosAtivo()) return;                       // no modo Editar pontos a camada de pontos faz o papel da caixa de seleção
   const els = selEls().filter(guard);
   if (!els.length) return;
   const z = S.zoom;
@@ -544,7 +546,9 @@ export function initStage(refs) {
   gabLayer = h('div', { class: 'ov-gabarito' });
   gradeLayer = h('div', { class: 'ov-grade' });
   alvoLayer = h('div', { class: 'ov-alvo' });
-  refs.overlay.append(gradeLayer, alvoLayer, gabLayer, guiasLayer, selLayer, fxLayer);
+  const pontosLayer = h('div', { class: 'ov-pontos' });
+  refs.overlay.append(gradeLayer, alvoLayer, gabLayer, guiasLayer, selLayer, fxLayer, pontosLayer);
+  initPontos({ camada: pontosLayer, barraHost: vp.parentElement, viewport: vp, dePagina: toDocRaw, sx, zoom: () => S.zoom, tamanho: () => ({ w: stage.offsetWidth, h: stage.offsetHeight }) });
   on('guias', desenharGuias);
   on('grade', desenharGrade);
   on('alvo', desenharAlvo); on('device', desenharAlvo); on('page', desenharAlvo);
@@ -584,6 +588,8 @@ export function initStage(refs) {
     if (e.button === 1 || S.space || S.tool === 'hand') return startPan(e);
     const hd = e.target.closest('[data-h]');
     if (hd) { e.preventDefault(); const k = hd.dataset.h; return k === 'rot' ? startRotate(e) : S.sel.length > 1 ? startGroupScale(k, e) : startResize(k, e); }
+    if (pontosAtivo() && pontosDown(e)) { e.preventDefault(); return; }
+    if (S.tool === 'caneta') { e.preventDefault(); return penaDown(e); }
     if (S.tool === 'wand') { e.preventDefault(); return usarVarinha(e); }
     if (S.tool === 'zoom') { e.preventDefault(); return setZoom(S.zoom * (e.altKey ? 1 / 1.5 : 1.5), e.clientX, e.clientY); }   // clique aproxima; Alt + clique afasta, sempre no ponto clicado
     if (S.tool !== 'select') { e.preventDefault(); return startDraw(e); }
@@ -604,6 +610,8 @@ export function initStage(refs) {
   });
 
   vp.addEventListener('dblclick', (e) => {
+    if (pontosAtivo()) { pontosDbl(e); return; }
+    if (penaAtiva()) { penaDbl(e); return; }
     const node = e.target.closest('.el');
     if (!node) return;
     const el = byId(node.dataset.id);
@@ -611,6 +619,7 @@ export function initStage(refs) {
     // duplo clique num elemento de grupo ENTRA no grupo (pega o nível de baixo); o seguinte, já no elemento, edita
     const dentro = entrarNoGrupo(S.doc, el.id, entrouEm);
     if (dentro !== entrouEm) { entrouEm = dentro; select(alvoDoClique(S.doc, el.id, entrouEm)); return; }
+    if (el.t === 'path') { entrarPontos(el.id); return; }          // duplo clique no desenho: editar os pontos
     if (el.t === 'text') editText(el.id);
     else if (el.t === 'svg') emit('editsvg', el.id);
     else if (el.t === 'shape') emit('focuslabel', el.id);

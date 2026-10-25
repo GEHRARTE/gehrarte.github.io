@@ -16,6 +16,7 @@ import { initLibraryPanels, abrirCriador } from './library.js';
 import { renderLayers } from './layers.js';
 import { initDock } from './dock.js';
 import { initFerramentas } from './barra.js';
+import { pontosTecla, ativo as pontosAtivo, desenhando as penaAtiva, entrarPontos } from './pontos.js';
 import { initFolhaPanel } from './folha.js';
 import { instalar as vigiarAreaVisivel } from '../core/janelas.js';
 import { trava, retomar, aplicarNoAr } from './publicacao.js';
@@ -256,6 +257,8 @@ function bindKeys(doc) {
     if (doc.querySelector('.modal-back,.pv-back')) return;
     const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
 
+    if ((pontosAtivo() || penaAtiva()) && pontosTecla(e)) { e.preventDefault(); return; }   // Editar pontos e Caneta têm o teclado só para eles
+
     if (mod && k === '\\') { e.preventDefault(); dock?.toggleAll(); return; }
 
     if (k === ' ') { S.space = true; vp.classList.add('panning'); e.preventDefault(); return; }
@@ -284,7 +287,7 @@ function bindKeys(doc) {
       nudge(k === 'arrowleft' ? -n : k === 'arrowright' ? n : 0, k === 'arrowup' ? -n : k === 'arrowdown' ? n : 0);
       return;
     }
-    if (k === 'enter') { const el = selEls()[0]; if (el?.t === 'text' && S.sel.length === 1) { e.preventDefault(); editText(el.id); } return; }
+    if (k === 'enter') { const el = selEls()[0]; if (el?.t === 'text' && S.sel.length === 1) { e.preventDefault(); editText(el.id); } else if (el?.t === 'path' && S.sel.length === 1) { e.preventDefault(); entrarPontos(el.id); } return; }
     if (k === ']') return reorder(S.sel, e.shiftKey ? 'front' : 'up');
     if (k === '[') return reorder(S.sel, e.shiftKey ? 'back' : 'down');
     // a letra só liga a ferramenta se ela estiver NA BARRA desta pessoa: a barra é a seleção rápida dela (D-0055)
