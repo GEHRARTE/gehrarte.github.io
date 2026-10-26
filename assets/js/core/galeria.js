@@ -7,7 +7,7 @@ import { TAGS, TAG_IDS } from './model.js';
 import { loadFonts } from './fonts.js';
 import { pageW, bgCss } from './model.js';
 import { downloadBlob } from './util.js';
-import { validarModelo, paginaDoModelo, ehModeloDeSite, modeloNaTag } from './modelos.js';
+import { validarModelo, paginaDoModelo, ehModeloDeSite, modeloNaTag, ehBackupDeProjeto, modeloDeProjeto } from './modelos.js';
 
 const semAcento = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
@@ -29,13 +29,16 @@ export function miniaturaModelo(modelo) {
 
 export const baixarModelo = (modelo) => downloadBlob(`artatk-modelo-${modelo.id}.json`, new Blob([JSON.stringify(modelo, null, 1)], { type: 'application/json' }));
 
-// Lê um arquivo .json de modelo escolhido pela pessoa. Lança Error com mensagem clara.
+// Lê um arquivo .json escolhido pela pessoa: um modelo (artatk-modelo) ou um backup de projeto (gehrarte-projeto), que vira modelo.
+// Devolve { modelo, avisos }. Lança Error com mensagem clara.
 export async function lerArquivoDeModelo(file) {
   let m;
   try { m = JSON.parse(await file.text()); } catch { throw new Error('Esse arquivo não é um JSON válido.'); }
+  let avisos = [];
+  if (ehBackupDeProjeto(m)) ({ modelo: m, avisos } = modeloDeProjeto(m));
   const v = validarModelo(m);
   if (!v.ok) throw new Error(v.erros[0]);
-  return m;
+  return { modelo: m, avisos };
 }
 
 // opts: { catalogo: async () => modelos[], meus: criarMeusModelos(), onUsar(modelo), onGerar?(), compacta?, rotuloUsar? }
@@ -56,7 +59,14 @@ export function montarGaleria(raiz, opts) {
   const arq = h('input', { type: 'file', accept: '.json,application/json', hidden: true, onchange: async () => {
     const f = arq.files[0]; arq.value = '';
     if (!f) return;
-    try { meus.salvar(await lerArquivoDeModelo(f)); aviso.hidden = true; await recarregar(); } catch (e) { aviso.textContent = e.message; aviso.hidden = false; }
+    try {
+      const { modelo, avisos } = await lerArquivoDeModelo(f);
+      meus.salvar(modelo); await recarregar();
+      // backup de projeto convertido: diz o que mudou (imagens viram quadros) em vez de calar
+      aviso.classList.remove('erro');
+      aviso.textContent = avisos.length ? `Projeto convertido em modelo “${modelo.nome}”. ${avisos.length} imagem(ns) enviada(s) viraram quadros para você trocar.` : '';
+      aviso.hidden = !avisos.length;
+    } catch (e) { aviso.classList.add('erro'); aviso.textContent = e.message; aviso.hidden = false; }
   } });
   barra.append(input);
   if (onGerar) barra.append(h('button', { type: 'button', class: 'gal-btn', onclick: () => onGerar(recarregar) }, 'Gerar modelo…'));

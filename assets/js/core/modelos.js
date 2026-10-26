@@ -9,7 +9,7 @@
 // A especificação (spec) é uma descrição declarativa de seções (topo, hero, cards…) que o gerador converte nos
 // elementos do canvas, com layout de PC (1200) e de celular (390). É por ela que se produz um modelo novo a
 // partir de um briefing — por exemplo, o do setor de design do MUVVI — sem desenhar elemento por elemento.
-import { newDoc, makeElement, W, garantirSite, ABAS_PADRAO, TAG_IDS } from './model.js';
+import { newDoc, makeElement, W, garantirSite, normalizeDoc, ABAS_PADRAO, TAG_IDS } from './model.js';
 import { guardarAbaAtual, carregarAbaAtiva, docDeAba } from './sites.js';
 import { uid, clone } from './util.js';
 
@@ -98,6 +98,18 @@ export function modeloDeDoc(doc, meta = {}) {
     doc: d,
   };
   return { modelo, avisos };
+}
+
+// Backup de projeto ("Exportar projeto", format 'gehrarte-projeto') → modelo. Serve para quem tenta importar o backup na galeria:
+// o conteúdo vira um modelo (imagens enviadas viram quadros, como em modeloDeDoc) em vez de um "Formato desconhecido".
+export const FORMATOS_PROJETO = ['gehrarte-projeto', 'geharte-projeto'];
+export const ehBackupDeProjeto = (d) => FORMATOS_PROJETO.includes(d?.format) && !!d?.doc && typeof d.doc === 'object';
+const TAG_DO_KIND = { site: 'site', perfil: 'perfil', artigo: 'artigos' };
+export function modeloDeProjeto(projeto) {
+  const doc = normalizeDoc(clone(projeto.doc), '');
+  if (projeto.kind && !doc.kind) doc.kind = projeto.kind;
+  const tag = TAG_DO_KIND[doc.kind];
+  return modeloDeDoc(doc, { nome: doc.title || projeto.id || 'Projeto importado', origem: 'projeto', categoria: 'Meus modelos', tags: tag ? [tag] : [] });
 }
 
 export const slugModelo = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50) || 'modelo';
